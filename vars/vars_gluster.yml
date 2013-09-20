@@ -1,0 +1,10 @@
+gluster:
+  master: 'jupiter'
+  hosts:  ['jupiter', 'neptune']
+  count_hosts: 2
+  place: '/mnt/gluster_disk'
+  file_indicator: '/etc/glusterd/vols/test_gluster/run/jupiter-mnt-gluster_disk.pid'
+  mount: '/mnt/vms'
+  src_mount: '/etc/glusterd/vols/test_gluster/test_gluster-fuse.vol'
+  volume: 'test_gluster'
+  bricks: 'neptune:/mnt/gluster_disk jupiter:/mnt/gluster_disk'
