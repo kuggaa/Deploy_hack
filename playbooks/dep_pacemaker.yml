@@ -19,6 +19,10 @@
     
     - name: конфигруция ip адресов
       lineinfile: dest=$corosync_conf regexp=bindnetaddr line=bindnetaddr:$corosync_ip_addr
+    - name: включение логирования
+      ineinfile: dest=$corosync_conf regexp=to_logfile line=to_logfile: yes
+    - name: выключение вывода в stderr
+      ineinfile: dest=$corosync_conf regexp=to_stderr line=to_stderr: no
       
    #- name: перeзапуск corosync
    #  service: name=corosync state=restarted
@@ -29,6 +33,3 @@
     
     - name: установка ip адреса кластера 
       command: crm configure primitive hacluster_ip ocf:heartbeat:IPaddr2 params ip=$cluster_ip iflabel="haip" op monitor interval="5"
-    
-    
-  
