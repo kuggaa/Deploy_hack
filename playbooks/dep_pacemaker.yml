@@ -19,6 +19,8 @@
     
     - name: конфигруция ip адресов
       lineinfile: dest=$corosync_conf regexp=bindnetaddr line=bindnetaddr:$corosync_ip_addr
+    - name: включение mcp
+      lineinfile: dest=$corosync_conf regexp=ver line=ver: 1
     - name: включение логирования
       ineinfile: dest=$corosync_conf regexp=to_logfile line=to_logfile: yes
     - name: выключение вывода в stderr
