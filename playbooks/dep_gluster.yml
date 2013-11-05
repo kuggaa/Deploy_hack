@@ -48,7 +48,7 @@
    
     - name: монтирование каталогов
       mount: name=${gluster.mount}
-             src=${gluster.resource}
+             src=${gluster.src_mount}
              fstype=glusterfs
              opts='defaults,_netdev'
              dump=1 state=mounted
