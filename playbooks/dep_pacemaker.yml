@@ -1,14 +1,8 @@
-
-
 ---
 - hosts: ha_hosts
   user: root
-
-  vars_files:
-    - ../vars/vars_gluster.yml
-
+  
   vars:
-    is_master: "'$inventory_hostname' == '${gluster.master}'"
     corosync_conf: "/etc/corosync/corosync.conf"
     corosync_srv_conf: "/etc/default/corosync"
     corosync_ip_addr: "192.168.50.0"
@@ -19,17 +13,18 @@
       apt: pkg=$item update_cache=yes state=latest
       with_items:
         - pacemaker
-        - pacemaker-mgmt
         
     - name: активация автозагрузки corosync
       lineinfile: dest=$corosync_srv_conf regexp=^START= line=START=yes
     
-    - name: this command prints FAILED when it fails
-      command: /usr/bin/GGG -x -y -z
-      when: is_master
-
     - name: конфигруция ip адресов
       lineinfile: dest=$corosync_conf regexp=bindnetaddr line=bindnetaddr:$corosync_ip_addr
+    - name: включение mcp
+      lineinfile: dest=$corosync_conf regexp=ver line=ver: 1
+    - name: включение логирования
+      ineinfile: dest=$corosync_conf regexp=to_logfile line=to_logfile: yes
+    - name: выключение вывода в stderr
+      ineinfile: dest=$corosync_conf regexp=to_stderr line=to_stderr: no
       
    #- name: перeзапуск corosync
    #  service: name=corosync state=restarted
@@ -38,7 +33,6 @@
       command: crm configure property no-quorum-policy="ignore"
     - command: crm configure property stonith-enabled="false"
     
-    #- name: установка ip адреса кластера
-    #  command: crm configure primitive hacluster_ip ocf:heartbeat:IPaddr2 params ip=$cluster_ip iflabel="haip" op monitor interval="5"
+   # - name: установка ip адреса кластера 
+   #   command: crm configure primitive hacluster_ip ocf:heartbeat:IPaddr2 params ip=$cluster_ip iflabel="haip" op monitor interval="5"
 
-  
