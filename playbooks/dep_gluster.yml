@@ -20,7 +20,7 @@
          - start_and_mounting
          
     - name: создаем директории, где будет glusterfs (bricks)
-      file: path=${gluster.place} state=directory
+      file: path=${gluster.placedir} state=directory
       
     - name: добавление узлов в кластер ${gluster.hosts}
       command: gluster peer probe $item
@@ -37,6 +37,7 @@
     - name: запуск тома ${gluster.volume}
       command: gluster volume start ${gluster.volume} creates=${gluster.file_indicator} 
       when: is_master
+      ignore_errors: True
       tags:
          - start_and_mounting
       
@@ -51,7 +52,6 @@
              src=${gluster.src_mount}
              fstype=glusterfs
              opts='defaults,_netdev'
-             dump=1 state=mounted
-      tags:
-         - start_and_mounting
+             dump=1
+             state=mounted
 

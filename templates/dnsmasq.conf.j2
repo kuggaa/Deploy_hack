@@ -1,0 +1,4 @@
+dhcp-boot=pxelinux.0,{{ inventory_hostname }},{{ hostmaster_ip }}
+dhcp-range={{ ip_subset[0] }},{{ ip_subset[1] }},24h
+dhpc-option=3,{{ hostmaster_ip }}
+

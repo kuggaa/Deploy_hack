@@ -1,0 +1,12 @@
+<Directory {{ path_to_cd }}>
+Options Indexes FollowSymLinks
+Allowoverride None
+</Directory>
+
+<Directory {{ path_to_tftp_conf }}>
+Options Indexes FollowSymLinks
+Allowoverride None
+</Directory>
+		
+Alias /{{ installer_name }} "{{ path_to_cd }}"
+Alias /tftpboot "{{ path_to_tftp_conf }}"

@@ -1,42 +1,45 @@
 ---
 - hosts: ha_hosts
   user: root
-      
-  vars:
-    disk_name: "lodisk"
-    dev_name: "/dev/loop0"
-    vg_name: "vg_for_ha"
-    lv_name: "lv_for_ha"
-  
-  tasks:
-    - name: создание файла ${disk_name} для loopback диска
-      command: dd if=/dev/zero of=/mnt/$disk_name count=1 bs=2G creates=/mnt/$disk_name
-      tags:
-        - create_disk
 
-    - name: освобождение ${dev_name}
-      command: losetup -d $dev_name
-      ignore_errors: True
-      tags:
-        - create_disk
+  vars_files:
+    - ../vars/vars_gluster.yml
+
+  vars:
+    lv_name: "storage"
+
+  tasks:
+#    - name: создание файла ${disk_name} для loopback диска
+#      command: dd if=/dev/zero of=/mnt/$disk_name count=1 bs=2G creates=/mnt/$disk_name
+#      tags:
+#        - create_disk
+
+#    - name: освобождение ${dev_name}
+#      command: losetup -d $dev_name
+#      ignore_errors: True
+#      tags:
+#        - create_disk
         
-    - name: создание loopback устройства из файла ${disk_name}
-      command: losetup -f --show  /mnt/$disk_name
-      tags:
-        - create_disk
+#    - name: создание loopback устройства из файла ${disk_name}
+#      command: losetup -f --show  /mnt/$disk_name
+#      tags:
+#        - create_disk
         
-    - name: создание группы томов lvm из ${dev_name}
-      lvg: vg=${vg_name} pvs=${dev_name} state=present
-      tags:
-        - manage_lvm
+#    - name: создание группы томов lvm из ${dev_name}
+#      lvg: vg=${vg_name} pvs=${dev_name} state=present
+#      tags:
+#        - manage_lvm
     
-    - name: создание логического тома ${lv_name}
-      lvol: vg=${vg_name} lv=${lv_name} size=100%FREE state=present
-      tags:
-        - manage_lvm
+#    - name: создание логического тома ${lv_name}
+#      lvol: vg=${vg_name} lv=${lv_name} size=100%FREE state=present
+#      tags:
+#       - manage_lvm
         
-    - name: создание файловой системы на /dev/mapper/${vg_name}-${lv_name}
-      filesystem: fstype=ext4 dev=/dev/mapper/${vg_name}-${lv_name}
-      tags:
-        - manage_lvm
- 
+#    - name: создание файловой системы на /dev/mapper/${vg_name}-${lv_name}
+#      filesystem: fstype=ext4 dev=/dev/mapper/${vg_name}-${lv_name}
+#      tags:
+#        - manage_lvm
+    - name: создаем директории, где будет glusterfs (bricks)
+      file: path=${gluster.placedir} state=directory
+    - name: изменение в fstab на каждом узле
+      mount: name=${gluster.placedir} src=/dev/${inventory_hostname}/${lv_name} fstype=ext4 state=mounted

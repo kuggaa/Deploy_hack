@@ -1,0 +1,61 @@
+---
+- hosts: host_for_netinst_os
+  user: root
+
+  vars:
+    installer_name: 'astra'
+    hostmaster_ip: '192.168.50.219'
+    path_to_cd: '/media/artem/Astra\ smolensk\ amd64'
+    path_to_tftp_conf: '/srv/tftp'
+    default_hostname: 'testmachine'
+    default_domain: 'kvg'
+    ip_subset: ['192.168.50.10','192.168.50.15']
+    
+  tasks:
+    - name: установка tftpd-hpa, dnsmasq, apache2
+      apt: pkg=$item update_cache=yes state=latest
+      with_items:
+        - tftpd-hpa
+        - dnsmasq
+        - apache2
+        
+    - name: создание каталогов для tftpd-hpa
+      file: path=${path_to_tftp_conf}/pxelinux.cfg state=directory  owner=tftp group=tftp mode=0755
+    
+    - copy: src=${path_to_cd}/netinst/initrd.gz dest=${path_to_tftp_conf}  owner=tftp group=tftp mode=0644
+    - copy: src=${path_to_cd}/netinst/linux dest=${path_to_tftp_conf}  owner=tftp group=tftp mode=0644
+    - copy: src=${path_to_cd}/netinst/pxelinux.0 dest=${path_to_tftp_conf}  owner=tftp group=tftp mode=0644
+    
+    - name: создание файла c конфигурацией tftpd-hpa
+      template: src=../templates/tftp.conf.j2 dest=${path_to_tftp_conf}/pxelinux.cfg/default owner=tftp group=tftp mode=0644
+    
+    - name: создание файла автоматической установки для tftpd-hpa
+      template: src=../templates/preseed.cfg.j2 dest=${path_to_tftp_conf}/preseed.cfg owner=tftp group=tftp mode=0644
+      
+    - name: корректировка конфигурационных файлов dnsmasq
+      template: src=../templates/dnsmasq.conf.j2 dest=/etc/dnsmasq.conf backup=yes owner=dnsmasq mode=0775
+      # добавить что-то типа (из $ip_subset)
+      # 192.168.50.1    node1
+      # 192.168.50.2    node2
+      # в /etc/hosts на машине, где поднят dhcp сервер, чтобы автоматически назначить hostname на целевые машины
+      
+    - name: корректировка конфигурационных файлов apache2
+      template: src=../templates/httpd.conf.j2 dest=/etc/apache2/httpd.conf owner=www-data group=www-data mode=0775
+      
+    - name: корректировка vhosts.conf
+      lineinfile:
+        dest=/etc/apache2/conf.d/vhosts.conf 
+        state=present
+        regexp=$inventory_hostname
+        line="ServerName $inventory_hostname"
+        owner=www-data group=www-data mode=0775
+
+    - name: перезапуск службы tftpd-hpa
+      service: name=tftpd-hpa state=restarted
+      
+    - name: перезапуск службы dnsmasq
+      service: name=dnsmasq state=restarted
+          
+    - name: перезапуск службы apache2
+      service: name=apache2 state=restarted
+

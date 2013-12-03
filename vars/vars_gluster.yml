@@ -2,9 +2,9 @@ gluster:
   master: 'jupiter'
   hosts:  ['jupiter', 'neptune']
   count_hosts: 2
-  place: '/mnt/gluster_disk'
-  file_indicator: '/etc/glusterd/vols/test_gluster/run/jupiter-mnt-gluster_disk.pid'
-  mount: '/mnt/vms'
-  src_mount: '/etc/glusterd/vols/test_gluster/test_gluster-fuse.vol'
-  volume: 'test_gluster'
-  bricks: 'neptune:/mnt/gluster_disk jupiter:/mnt/gluster_disk'
+  placedir: '/var/glustervol'
+  volume: 'gfs_images_storage'
+  mount: '/srv'
+  src_mount: '/etc/glusterd/vols/${gluster.volume}/${gluster.volume}-fuse.vol'
+  file_indicator: '/etc/glusterd/vols/${gluster.volume}/run/${gluster.master}-srv.pid'
+  bricks: 'neptune:${gluster.placedir} jupiter:${gluster.placedir}'
