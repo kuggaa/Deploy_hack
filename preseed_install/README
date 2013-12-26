@@ -1,0 +1,25 @@
+Copyright (c) 2013 Severnoe DB JSC December 2013
+
+preseed_install это ansible скрипт для установки и настройки хост-машины, 
+которая должна стать сервером для установки ОС на целевых машинах (узлах) по сети.
+
+Используются следующие пакеты:
+- dnsmasq
+- tftpd-hpa
+- apache
+
+Данная конфигурация настроена на установку по сети ОС Astra Linux Special Edition,
+
+для чего был доработан инсталлятор (по отношению к netinst c оригинального диска с ОС):
+- изменен usr/share/localechooser/languagelist поддержка русскому языку изменена с 2 на 1.
+  было ru;2;RU;ru_RU.UTF-8;;console-setup стало ru;1;RU;ru_RU.UTF-8;;console-setup
+- добавлен модуль dca.ko в lib/modules/3.2.0-27-generic/kernel/drivers/dca/
+- добавлены модули dm-log.ko dm-mirror.ko dm-mod.ko dm-region-hash.ko в lib/modules/3.2.0-27-generic/kernel/drivers/md/
+- добавлены ключи spkb-archive-keyring.gpg от собственного репа (он служит зеркалом при установке) в usr/share/keyrings
+
+для установки используется собственный репозиторий пакетов, в котором:
+- добавлен пакет  grub-installer_1.78ubuntu8_amd64.udeb, поскольку grub-installer_1.70astra.se4_amd64.udeb содержит 
+  ошибки при установке групп на soft&fake raid.
+
+
+

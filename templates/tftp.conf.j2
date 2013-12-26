@@ -1,7 +1,0 @@
-DEFAULT {{ installer_name }}
-		
-LABEL {{ installer_name }}
-kernel linux
-append auto=true initrd=initrd.gz debian-installer/locale=ru_RU astra-license/license=true console-keymaps-at/keymap=ru hostname={{ default_hostname }} domain={{ default_domain.upper() }} url=http://{{ hostmaster_ip }}/srv/tftp/preseed.cfg interface=auto netcfg/dhcp_timeout=120
-		
-TIMEOUT 1

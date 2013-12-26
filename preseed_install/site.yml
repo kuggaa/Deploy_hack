@@ -1,0 +1,7 @@
+---
+# The main playbook to set up installation server
+
+- hosts: inst_servers
+  user: root
+  roles:
+   - workstation
