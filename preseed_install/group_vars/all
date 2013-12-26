@@ -1,5 +1,5 @@
 # common vars
-    nodemod_enabled: True
+    nodemod_enabled: False
     os_name: 'astra'
     path_to_packages_mirror: '/srv/nfs4/share/se13'
     link_to_packages_mirror: '/astra'

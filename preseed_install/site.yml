@@ -4,4 +4,4 @@
 - hosts: inst_servers
   user: root
   roles:
-   - workstation
+   - common
