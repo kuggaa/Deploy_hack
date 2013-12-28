@@ -3,7 +3,7 @@
   user: root
   
   vars_files:
-    - ../vars/vars_gluster.yml
+    - vars/vars_gluster.yml
 
   vars:
     is_master: "'$inventory_hostname' == '${gluster.master}'"

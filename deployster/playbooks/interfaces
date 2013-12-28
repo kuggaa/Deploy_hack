@@ -1,0 +1,35 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# bond0 is the bonding NIC and can be used like any other normal NIC.
+# bond0 is configured using static network information.
+auto bond0
+iface bond0 inet static
+    address 192.168.50.51
+    gateway 192.168.50.224
+    dns-search npdb.
+    dns-nameservers 192.168.50.1
+    netmask 255.255.255.0
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves eth0 eth3
+    bond-primary eth0 eth3
+
+# bond1 is the bonding NIC and can be used like any other normal NIC.
+# bond1 is configured using static network information.
+auto bond1
+iface bond1 inet static
+    address 10.10.50.51
+    #gateway 10.168.50.224
+    #dns-search npdb.
+    #dns-nameservers 192.168.50.1
+    netmask 255.255.254.0
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves eth1 eth2
+    bond-primary eth1 eth2
+

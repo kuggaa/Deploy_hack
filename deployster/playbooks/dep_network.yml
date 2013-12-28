@@ -1,0 +1,21 @@
+---
+- hosts: ha_hosts
+  user: root
+  
+  tasks:
+    - name: создание sources.list
+      copy: src=sources.list dest=/etc/apt/ 
+    
+#    - name: установка ifenslave-2.6 c предварительным обновлением кэша
+#      apt: pkg=$item update_cache=yes state=latest force=yes
+#      with_items:
+#        - ifenslave-2.6
+        
+#    - name: добавление модуля bonding в /etc/modules
+#      lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+      
+    # вырубить wicd через chkconfig  
+    # etc/hosts
+      
+#    - name: reboot the servers
+#      command: /sbin/reboot -t now

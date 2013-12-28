@@ -1,6 +1,7 @@
 [ha_hosts]
-neptune ansible_connection=ssh  ansible_ssh_user=root
-jupiter ansible_connection=ssh  ansible_ssh_user=root
+hacnode1 ansible_connection=ssh  ansible_ssh_user=root
+hacnode2 ansible_connection=ssh  ansible_ssh_user=root
+hacnode3 ansible_connection=ssh  ansible_ssh_user=root
 [virt_hosts]
 astra-cluster-1 ansible_connection=ssh  ansible_ssh_user=root
 astra-cluster-2 ansible_connection=ssh  ansible_ssh_user=root
