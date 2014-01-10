@@ -8,3 +8,5 @@ astra-cluster-2 ansible_connection=ssh  ansible_ssh_user=root
 astra-cluster-3 ansible_connection=ssh  ansible_ssh_user=root
 [host_for_netinst_os]
 kimslaptop ansible_connection=ssh  ansible_ssh_user=root
+[testmachine]
+127.0.0.1
