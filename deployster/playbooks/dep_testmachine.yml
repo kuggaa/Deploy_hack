@@ -9,7 +9,7 @@
     - name: установка python-setuptools, pacemaker-mgmt, python-netsnmp 
       apt: pkg={{ item }} update_cache=yes state=latest force=yes
       with_items:
-        - [python-setuptools, pacemaker-mgmt, python-netsnmp]
+        - [python-setuptools, python-netsnmp, ipmitool]
       sudo: yes
         
     - name: клонирование cluster_tools
