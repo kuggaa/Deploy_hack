@@ -1,5 +1,5 @@
 ---
-# script for deploy test framework on the workstation
+# script for deploy test framework on the workstation ('testmachine' should be define in stage\host file like a 127.0.0.1)
 - hosts: testmachine
   connection: local
 
