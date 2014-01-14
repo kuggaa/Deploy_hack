@@ -1,5 +1,5 @@
 ---
-# install&conf apache
+# install&conf tftp-hpa
 
     - name: установка tftpd-hpa
       apt: pkg=tftpd-hpa update_cache=yes state=latest

@@ -1,0 +1,32 @@
+---
+# setup main settings of glusterfs
+
+    - name: добавление узлов в glusterfs
+      command: gluster peer probe {{ item }}
+      with_items:
+         groups.nodes
+      when: inventory_hostname == common.master_node
+
+    - name: создание тома ${gluster.volume}
+      command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}
+             transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
+             creates=/etc/glusterd/vols/{{ gluster.volume }}
+      when: inventory_hostname == common.master_node
+
+    - name: запуск тома ${gluster.volume}
+      command: gluster volume start {{ gluster.volume }}
+               creates=/etc/glusterd/vols/{{ gluster.volume }}/run/{{ common.master_node }}-srv.pid
+      when: inventory_hostname == common.master_node
+      ignore_errors: True
+
+    - name: создание точки монтирования
+      file: path={{ gluster.mount }} state=directory
+      ignore_errors: True
+
+    - name: монтирование каталогов
+      mount: name={{ gluster.mount }}
+             src=/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol
+             fstype=glusterfs
+             opts='defaults,_netdev'
+             dump=1
+             state=mounted

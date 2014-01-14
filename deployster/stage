@@ -1,12 +1,17 @@
-[ha_hosts]
-hacnode1 ansible_connection=ssh  ansible_ssh_user=root
-hacnode2 ansible_connection=ssh  ansible_ssh_user=root
-hacnode3 ansible_connection=ssh  ansible_ssh_user=root
-[virt_hosts]
-astra-cluster-1 ansible_connection=ssh  ansible_ssh_user=root
-astra-cluster-2 ansible_connection=ssh  ansible_ssh_user=root
-astra-cluster-3 ansible_connection=ssh  ansible_ssh_user=root
-[host_for_netinst_os]
-kimslaptop ansible_connection=ssh  ansible_ssh_user=root
-[testmachine]
-127.0.0.1
+# machine names for our testbenches
+# real cluster's nodes:
+# hacnode1
+# hacnode2
+# hacnode3
+# virtual cluster's nodes (only for software manipulation):
+# astra-cluster-1
+# astra-cluster-2
+# astra-cluster-3
+
+[nodes]
+hacnode1
+hacnode2
+hacnode3
+
+[admin_stations]
+unknown

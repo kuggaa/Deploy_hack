@@ -1,2 +1,4 @@
 ---
-- include: playbooks/dep_gluster.yml
+# The main playbook for deploy HA Cluster and infrastructure.
+- include: cluster_nodes.yml
+#- include: workstations.yml

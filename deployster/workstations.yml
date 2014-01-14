@@ -1,0 +1,6 @@
+---
+# for deploy workstation for manage cluster
+- hosts: admin_stations
+  user: root
+  roles:
+#   - common

@@ -1,0 +1,5 @@
+# specific gluster variables
+gluster:
+  placedir: '/srv'
+  volume: 'vm_storage_volume'
+  mount: '/var/vm_images'

@@ -1,0 +1,4 @@
+# general variables
+
+common:
+  master_node: "{{ groups.nodes[0] }}"

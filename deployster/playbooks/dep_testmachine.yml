@@ -1,27 +1,28 @@
 ---
+# script for deploy test framework on the workstation
 - hosts: testmachine
   connection: local
-  
+
   vars:
     path_for_test_tools: "/home/artem/test_hac"
-  
+
   tasks:
-    - name: установка python-setuptools, pacemaker-mgmt, python-netsnmp 
+    - name: установка python-setuptools, pacemaker-mgmt, python-netsnmp
       apt: pkg={{ item }} update_cache=yes state=latest force=yes
       with_items:
         - [python-setuptools, python-netsnmp, ipmitool]
       sudo: yes
-        
+
     - name: клонирование cluster_tools
       git: repo=git@git.devcloud:vp/testutil_hac.git dest={{ path_for_test_tools }}/cluster_tools
-      
+
     - name: клонирование lobster
       git: repo=git@git.devcloud:vp/lobster.git dest={{ path_for_test_tools }}/lobster
 
     - name: установка cluster_tools
       command: python setup.py develop chdir={{ path_for_test_tools }}/cluster_tools
-      sudo: yes  
-      
+      sudo: yes
+
     - name: установка lobster
       command: python setup.py develop chdir={{ path_for_test_tools }}/lobster
       sudo: yes

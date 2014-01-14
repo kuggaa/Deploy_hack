@@ -1,0 +1,6 @@
+---
+# for deploy cluster nodes
+- hosts: nodes
+  user: root
+  roles:
+   - glusterfs
