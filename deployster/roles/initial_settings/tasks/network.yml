@@ -1,0 +1,32 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# setup network interfaces
+
+    - name: установка ifenslave-2.6 c предварительным обновлением кэша
+      apt: pkg=ifenslave-2.6 state=latest force=yes
+
+    - name: добавление модуля bonding в /etc/modules
+      lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+
+    - name: запрещаем запуск wicd-daemon
+      service: name=wicd state=stopped enabled=no
+    # command: chkconfig -s wicd off
+
+    - name: настройка interfaces
+      template: src=interfaces_{{ inventory_hostname }}.j2 dest=/etc/network/interfaces
+      register: interfaces
+      tags: ept
+
+    - name: перезапуск узла
+      command: /sbin/shutdown -r -t 3 now Rebooted by ansible
+      when: interfaces.changed
+
+    - name: ожидание остановки ssh соединения
+      local_action: wait_for host=${inventory_hostname} port=22 state=stopped
+      when: interfaces.changed
+
+    - name: ожидание запуска ssh соединения
+      local_action: wait_for host=${inventory_hostname} port=22 state=started delay=45
+      when: interfaces.changed

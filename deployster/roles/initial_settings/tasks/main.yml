@@ -1,0 +1,8 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# make a initial settings on nodes
+    - include: repo.yml
+    - include: hugepage.yml
+    - include: network.yml

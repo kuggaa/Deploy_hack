@@ -1,0 +1,15 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+- name: создание sources.list
+  template: src=sources.list.j2 dest=/etc/apt/sources.list backup=yes
+
+- name: обновление списка пакетов
+  apt: update_cache=yes
+
+- name: установка ключей
+  apt: pkg=spkb-archive-keyring state=latest force=yes
+
+- name: обновление списка пакетов
+  apt: update_cache=yes

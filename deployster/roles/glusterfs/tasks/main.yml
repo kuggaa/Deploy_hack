@@ -1,3 +1,6 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
 ---
 # deploy glusterfs
     - include: setup_glusterfs_pkg.yml

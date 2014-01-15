@@ -1,6 +1,14 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
 ---
 # for deploy cluster nodes
 - hosts: nodes
   user: root
   roles:
-   - glusterfs
+   - initial_settings
+#(done)   - glusterfs
+##   - libvirt
+##   - пк управления
+##   - ALD
+##   - pacemaker + resources

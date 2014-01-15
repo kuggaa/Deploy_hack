@@ -1,3 +1,6 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
 ---
 # for deploy workstation for manage cluster
 - hosts: admin_stations

@@ -1,3 +1,6 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
 ---
 # script for deploy test framework on the workstation ('testmachine' should be define in stage\host file like a 127.0.0.1)
 - hosts: testmachine
@@ -7,7 +10,7 @@
     path_for_test_tools: "/home/artem/test_hac"
 
   tasks:
-    - name: установка python-setuptools, pacemaker-mgmt, python-netsnmp
+    - name: установка python-setuptools, ipmitool, python-netsnmp
       apt: pkg={{ item }} update_cache=yes state=latest force=yes
       with_items:
         - [python-setuptools, python-netsnmp, ipmitool]

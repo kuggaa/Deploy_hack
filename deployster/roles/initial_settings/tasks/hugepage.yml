@@ -1,0 +1,20 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+    - name: создаем директории, для hugepages
+      file: path=/hugepages state=directory
+
+    - name: монтирование каталога hugepages
+      mount: name=/hugepages
+             src=hugetlbfs
+             fstype=hugetlbfs
+             opts='defaults'
+             state=mounted
+
+    - name: установка переменныx sysctl
+      copy: src=vm.conf dest=/etc/sysctl.d owner=root group=root mode=0644
+
+    - name: применение параметров sysctl
+      command: sysctl -p
+
