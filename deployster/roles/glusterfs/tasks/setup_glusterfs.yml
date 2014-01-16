@@ -21,15 +21,3 @@
                creates=/etc/glusterd/vols/{{ gluster.volume }}/run/{{ common.master_node }}-srv.pid
       when: inventory_hostname == common.master_node
       ignore_errors: True
-
-    - name: создание точки монтирования
-      file: path={{ gluster.mount }} state=directory
-      ignore_errors: True
-
-    - name: монтирование каталогов
-      mount: name={{ gluster.mount }}
-             src=/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol
-             fstype=glusterfs
-             opts='defaults,_netdev'
-             dump=1
-             state=mounted

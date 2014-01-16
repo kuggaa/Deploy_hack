@@ -5,3 +5,4 @@
 # deploy glusterfs
     - include: setup_glusterfs_pkg.yml
     - include: setup_glusterfs.yml
+    - include: mount.yml

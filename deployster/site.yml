@@ -3,5 +3,6 @@
 #
 ---
 # The main playbook for deploy HA Cluster and infrastructure.
-- include: cluster_nodes.yml
 #- include: workstations.yml
+#- include: cluster_nodes.yml
+#- include: add_cluster_node.yml

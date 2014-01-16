@@ -4,7 +4,7 @@
 ---
 # setup network interfaces
 
-    - name: установка ifenslave-2.6 c предварительным обновлением кэша
+    - name: установка ifenslave-2.6
       apt: pkg=ifenslave-2.6 state=latest force=yes
 
     - name: добавление модуля bonding в /etc/modules
@@ -24,9 +24,9 @@
       when: interfaces.changed
 
     - name: ожидание остановки ssh соединения
-      local_action: wait_for host=${inventory_hostname} port=22 state=stopped
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=stopped
       when: interfaces.changed
 
     - name: ожидание запуска ssh соединения
-      local_action: wait_for host=${inventory_hostname} port=22 state=started delay=45
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=45
       when: interfaces.changed

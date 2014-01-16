@@ -13,5 +13,8 @@ hacnode1
 hacnode2
 hacnode3
 
+[new_nodes]
+astra-cluster-1
+
 [admin_stations]
 unknown
