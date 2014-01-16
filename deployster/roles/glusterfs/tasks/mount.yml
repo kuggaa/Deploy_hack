@@ -1,0 +1,17 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# correction /etc/fstab
+
+    - name: создание точки монтирования
+      file: path={{ gluster.mount }} state=directory
+      ignore_errors: True
+
+    - name: монтирование каталогов
+      mount: name={{ gluster.mount }}
+             src=/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol
+             fstype=glusterfs
+             opts='defaults,_netdev'
+             dump=1
+             state=mounted
