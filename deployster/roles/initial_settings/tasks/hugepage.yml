@@ -16,5 +16,5 @@
       copy: src=vm.conf dest=/etc/sysctl.d owner=root group=root mode=0644
 
     - name: применение параметров sysctl
-      command: sysctl -p
+      command: sysctl --system
 
