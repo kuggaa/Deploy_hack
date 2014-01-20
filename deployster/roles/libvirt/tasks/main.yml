@@ -1,0 +1,7 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# make libvirt settings on nodes
+    - include: setup_libvirt_pkg.yml
+    - include: setup_libvirt.yml

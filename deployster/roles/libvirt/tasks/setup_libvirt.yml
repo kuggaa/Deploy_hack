@@ -1,0 +1,21 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# setup main settings of libvirt
+    
+    - name: создание libvirt.conf и qemu.conf
+      copy: src={{ item }} dest=/etc/libvirt owner=root group=root mode=0644
+      with_items: ['libvirt.conf', 'qemu.conf']
+      
+    - name: открытие TCP порта
+      lineinfile: dest=/etc/default/libvirt-bin
+                  line="libvirtd_opts=\"-d -l\""
+                  regexp="^libvirtd_opts="
+                  state=present
+
+    - name: отключение O_DIRECT
+      lineinfile: dest=/etc/default/libvirt-bin
+                  line="export LD_PRELOAD=/lib/liboindirect.so"
+                  regexp="^export LD_PRELOAD="
+                  state=present

@@ -1,0 +1,15 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+    - name: отключение ограничений на размер файлов (hard)
+      lineinfile: dest=/etc/security/limits.conf
+                  line="#* hard fsize 10000000"
+                  regexp="^\* hard fsize"
+                  state=present
+
+    - name: отключение ограничений на размер файлов (soft)
+      lineinfile: dest=/etc/security/limits.conf
+                  line="#* soft fsize 5000000"
+                  regexp="^\* soft fsize"
+                  state=present
