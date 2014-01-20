@@ -4,8 +4,8 @@
 ---
 # install glusterfs packages and restart service
 
-    - name: установка glusterfs-server c предварительным обновлением кэша
-      apt: pkg={{ item }} update_cache=yes state=latest force=yes
+    - name: установка glusterfs-server
+      apt: pkg={{ item }} state=latest force=yes
       with_items:
         - glusterfs-server
 

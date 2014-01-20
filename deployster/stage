@@ -9,12 +9,16 @@
 # astra-cluster-3
 
 [nodes]
-hacnode1
-hacnode2
-hacnode3
+#hacnode1
+#hacnode2
+#hacnode3
+astra-cluster-1
+astra-cluster-2
+astra-cluster-3
 
 [new_nodes]
 astra-cluster-1
 
 [admin_stations]
-unknown
+astra-cluster-1
+

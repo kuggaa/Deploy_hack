@@ -1,0 +1,7 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# set up firefox
+    - include: setup_firefox_pkg.yml
+    - include: setup_firefox_and_vnc.yml

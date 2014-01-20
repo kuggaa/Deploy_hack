@@ -1,0 +1,12 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+    - name: настройка firefox
+      copy: src=firefox.js dest=/etc/firefox/pref owner=root group=root mode=0644
+
+    - name: создание домашней страницы для firefox
+      copy: src=index.html dest=/etc/firefox/pref owner=root group=root mode=0644
+
+    - name: создание прокси vncviewer для открытия vnc-ссылок из firefox
+      copy: src=vncviewer-firefox dest=/usr/bin owner=root group=root mode=0777

@@ -6,4 +6,4 @@
 - hosts: admin_stations
   user: root
   roles:
-#   - common
+   - firefox_vnc
