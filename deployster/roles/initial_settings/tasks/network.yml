@@ -14,6 +14,7 @@
       service: name=wicd state=stopped enabled=no
     # command: chkconfig -s wicd off
 
+    # обкатать bridging для bond* и запилить в шаблончик
     - name: настройка interfaces
       template: src=interfaces_{{ inventory_hostname }}.j2 dest=/etc/network/interfaces
       register: interfaces

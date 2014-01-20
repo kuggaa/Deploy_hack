@@ -15,6 +15,11 @@
              transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
              creates=/etc/glusterd/vols/{{ gluster.volume }}
       when: inventory_hostname == common.master_node
+      
+    - name: выключение NFS
+      command: gluster volume set {{ gluster.volume }} nfs.disable on
+      when: inventory_hostname == common.master_node
+      ignore_errors: True
 
     - name: запуск тома ${gluster.volume}
       command: gluster volume start {{ gluster.volume }}
