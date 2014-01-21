@@ -1,3 +1,12 @@
-# TODO:
-write instructions here
+0. Запуск ansible-playbook -i <файл с описание хостов> <yml-файл c playbook>
+1. Для запуска playbook на локальном хосте
+добавляем строчку "connection: local" после:
+- hosts: компьютер1
+  user: root
+  <cюда>
+2. Для использования sudo добавляем по строку "sudo: True"
+   по аналогии с п.1, не забываем при запуске (см. п.0) добавлять --ask-sudo-pass
+
+
+
 

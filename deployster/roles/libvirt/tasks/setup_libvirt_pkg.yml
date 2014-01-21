@@ -7,13 +7,13 @@
     - name: установка libvirt-bin
       apt: pkg={{ item }} state=latest force=yes
       with_items: ['libvirt-bin', 'virtinst']
-      
+
     - name: патч для O_DIRECT
       copy: src=liboindirect.so
             dest=/lib/liboindirect.so
             owner=root
             group=root
             mode=0644
-    
+
     - name: перезапуск службы libvirt-bin
       service: name=libvirt-bin  state=restarted  enabled=yes

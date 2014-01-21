@@ -2,11 +2,15 @@
 # © ОАО «Северное ПКБ», 2013
 #
 ---
+    - name: создание каталога для настроек firefox
+      file: path={{ firefox.path_to_settings }} state=directory
+      ignore_errors: True
+
     - name: настройка firefox
-      copy: src=firefox.js dest=/etc/firefox/pref owner=root group=root mode=0644
+      copy: src=firefox.js dest={{ firefox.path_to_settings }} owner=root group=root mode=0644
 
     - name: создание домашней страницы для firefox
-      copy: src=index.html dest=/etc/firefox/pref owner=root group=root mode=0644
+      template: src=index.html.j2 dest={{ firefox.path_to_settings }}/index.html
 
     - name: создание прокси vncviewer для открытия vnc-ссылок из firefox
       copy: src=vncviewer-firefox dest=/usr/bin owner=root group=root mode=0777

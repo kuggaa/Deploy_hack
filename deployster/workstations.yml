@@ -4,7 +4,8 @@
 ---
 # for deploy workstation for manage cluster
 - hosts: admin_stations
-  connection: local
-  sudo: True
+  user: root
+#  connection: local
+#  sudo: True
   roles:
    - firefox_vnc

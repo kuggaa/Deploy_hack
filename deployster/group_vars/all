@@ -10,3 +10,7 @@ repository:
     # Адреса репозиториев с пакетами для ПК КВГ
     hac_common: http://packages.npdb/virt/se13/common
     hac: http://packages.npdb/virt/se13/vplatform
+
+hac_cntrl:
+    # url ПК управления КВГ
+    url: http://localhost

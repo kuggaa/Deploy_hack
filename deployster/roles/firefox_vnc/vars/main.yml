@@ -1,0 +1,3 @@
+# specific firefox variables
+firefox:
+  path_to_settings: '/usr/lib/firefox/defaults/pref'
