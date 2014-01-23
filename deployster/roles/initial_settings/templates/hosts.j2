@@ -1,0 +1,16 @@
+127.0.0.1	localhost
+{% if network.control.dns_search %}
+127.0.1.1	{{ inventory_hostname }}.{{ network.control.dns_search }}	{{ inventory_hostname }}
+{% else %}
+127.0.1.1	{{ inventory_hostname }}
+{% endif %}
+{% for key, value in nodes_ip.iteritems() %}
+{{ network.control.address }}.{{ value }} {{ key }}
+{% endfor %}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters

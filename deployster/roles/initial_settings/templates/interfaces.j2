@@ -1,0 +1,45 @@
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# bond0 for network of cluster control (private network)
+auto bond0
+iface bond0 inet static
+    address {{ network.control.address }}.{{ nodes_ip[inventory_hostname] }}
+{% if network.control.gateway %}
+    gateway {{ network.control.gateway }}
+{% endif %}
+{% if network.control.dns_search %}
+    dns-search {{ network.control.dns_search }}.
+{% endif %}
+{% if network.control.dns_nameservers %}
+    dns-nameservers {{ network.control.dns_nameservers }}
+{% endif %}
+    netmask {{ network.control.mask }}
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves {{ network.control.eth[0] }} {{ network.control.eth[1] }}
+    bond-primary {{ network.control.eth[0] }} {{ network.control.eth[1] }}
+
+# bond1 for network of cluster data (public network)
+auto bond1
+iface bond1 inet manual
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+    bond-primary {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+
+auto {{ network.bridge }}
+iface {{ network.bridge }} inet static
+    bridge_ports bond1
+    address {{ network.public.address }}.{{ nodes_ip[inventory_hostname] }}
+{% if network.public.gateway %}
+    gateway {{ network.public.gateway }}
+{% endif %}
+{% if network.public.dns_search %}
+    dns-search {{ network.public.dns_search }}.
+{% endif %}
+{% if network.public.dns_nameservers %}
+    dns-nameservers {{ network.public.dns_nameservers }}
+{% endif %}
+    netmask {{ network.public.mask }}

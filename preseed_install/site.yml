@@ -3,5 +3,7 @@
 
 - hosts: inst_servers
   user: root
+#  connection: local
+#  sudo: True
   roles:
    - common
