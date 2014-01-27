@@ -1,0 +1,17 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# setup packages for hac_cntrl
+    - name: установка пакетов для ПК Управления КВГ
+      apt: pkg={{ item }} state=latest force=yes
+      with_items:
+         - firefox
+         - python-django
+         - python-setuptools
+         - apache2
+         - libapache2-mod-wsgi
+         - pacemaker-mgmt
+         - python-netsnmp
+         - ipmitool
+# add deb package with hac_cntrl

@@ -1,7 +1,7 @@
 # general variables
 
 common:
-  master_node: "{{ groups.nodes[0] }}"
+  master_node: '{{ groups.nodes[0] }}'
 
 # !важно! имена и количество узлов должны совпадать cо списком узлов в файле stage в разделе [nodes]
 nodes_ip: { hacnode1: 49, hacnode2: 50, hacnode3: 51 }
@@ -17,3 +17,10 @@ repository:
 hac_cntrl:
     # url ПК управления КВГ
     url: http://localhost
+
+# точка монтирования glusterfs
+# todo сейчас используется в glusterfs role, должно быть перенесено в pacemaker
+gluster_mount_point: '/var/glusterfs'
+
+dirs:
+    vm_images: '{{ gluster_mount_point }}/var_images'
