@@ -7,6 +7,7 @@
   user: root
   roles:
    - initial_settings
+   - ald_setup
 #   - glusterfs
 #   - libvirt
 ##   - пк управления

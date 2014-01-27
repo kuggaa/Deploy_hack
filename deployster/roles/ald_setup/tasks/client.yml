@@ -1,0 +1,25 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- name: install ald packages for ald client
+  apt: pkg=$item state=latest
+  with_items:
+    - ald-client-common
+    - ald-admin
+    - ald-admin-parsec-mac
+
+- template: src=../../ald-server/templates/ald.conf.j2 dest=/etc/ald/ald.conf
+
+- lineinfile: dest=/etc/ald/ald.conf
+              regexp='^SERVER_ON='
+              line='SERVER_ON=0'
+
+- lineinfile: dest=/etc/ald/ald.conf
+              regexp='^CLIENT_ON='
+              line='CLIENT_ON=1'
+
+              
+#- copy: src=../../ald-server/files/pass-file dest=/root/pass-file mode=0600
+
+#- ald: task=init_client pass_file=/root/pass-file
