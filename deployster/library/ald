@@ -3,7 +3,7 @@
 # vim: ft=python: tw=80
 #
 # Модуль Ansible для работы с ALD
-# © ОАО «Северное ПКБ», 2013
+# © ОАО «Северное ПКБ», 2014
 
 # Runs ald-init init in forced mode with pass-file
 # Can run cat /dev/sda > /dev/random ro increase entropy

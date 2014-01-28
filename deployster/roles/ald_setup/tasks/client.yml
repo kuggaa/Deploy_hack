@@ -8,18 +8,22 @@
     - ald-client-common
     - ald-admin
     - ald-admin-parsec-mac
-
-- template: src=../../ald-server/templates/ald.conf.j2 dest=/etc/ald/ald.conf
-
+              
+- name: создание файла настройки пользователей
+  template: src=pass-file.j2 dest=/root/pass-file mode=0600
+  tags: [ pass-file ]
+  
+- name: создание файла настройки ALD (/etc/ald/ald.conf)
+  template: src=ald.conf.j2 dest=/etc/ald/ald.conf
+  register: ald_config
+  tags: [ config ] 
+  
 - lineinfile: dest=/etc/ald/ald.conf
               regexp='^SERVER_ON='
               line='SERVER_ON=0'
 
 - lineinfile: dest=/etc/ald/ald.conf
               regexp='^CLIENT_ON='
-              line='CLIENT_ON=1'
+              line='CLIENT_ON=1'  
 
-              
-#- copy: src=../../ald-server/files/pass-file dest=/root/pass-file mode=0600
-
-#- ald: task=init_client pass_file=/root/pass-file
+- ald: task=init_client pass_file=/root/pass-file
