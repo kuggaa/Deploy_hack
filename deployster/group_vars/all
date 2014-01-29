@@ -40,6 +40,13 @@ ald:
     # Значения: none, nfs, cifs.
     fs_type: cifs
     
+    # Список групп
+    groups: [administrators, users]
+    
+    # Имя администратора
+    kvg_admin_name: kvg_admin
+      
+    
 # точка монтирования glusterfs
 # todo сейчас используется в glusterfs role, должно быть перенесено в pacemaker
 gluster_mount_point: '/var/glusterfs'
