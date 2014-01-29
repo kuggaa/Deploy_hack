@@ -1,0 +1,138 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# vim: ft=python: tw=80
+#
+# Модуль Ansible для работы с ALD
+# © ОАО «Северное ПКБ», 2014
+
+# Runs ald-init init in forced mode with pass-file
+# Can run cat /dev/sda > /dev/random ro increase entropy
+
+DOCUMENTATION = '''
+---
+module: ald_init
+short_description: Runs ald commands in forced mode with pass-file
+options:
+    task:
+        #TODO: add doc
+    user:
+        #TODO: add doc
+    pass_file:
+        description:
+            - path to pass-file
+        required: true
+        default: None
+author: Ilarion Ishkulov
+'''
+
+from subprocess import Popen, PIPE, STDOUT
+import time
+
+def init(module):
+
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+    stdout = subprocess.check_output(['ald-init', 'init', '-f', pass_file_opt],
+                 stderr=None)
+
+    return { 'changed' : True, 'stdout' : stdout }
+
+def init_client(module):
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+    stdout = subprocess.check_output(['ald-client', 'commit-config',
+        '-f', pass_file_opt], stderr=None)
+
+    stdout += subprocess.check_output(['ald-client', 'start',
+        '-f', pass_file_opt], stderr=None)
+
+    return { 'changed' : True, 'stdout' : stdout }
+
+def user_list(module):
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+
+    stdout = subprocess.check_output(['ald-admin', 'user-list',
+        '-f', pass_file_opt], stderr=None)
+
+    return stdout.splitlines()
+
+def host_list(module):
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+
+    stdout = subprocess.check_output(['ald-admin', 'host-list',
+        '-f', pass_file_opt], stderr=None)
+
+    return stdout.splitlines()
+
+def group_list(module):
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+
+    stdout = subprocess.check_output(['ald-admin', 'group-list',
+        '-f', pass_file_opt], stderr=None)
+
+    return stdout.splitlines()
+
+def user_add(module):
+    user = module.params['user']
+
+    if user in user_list(module):
+        return { 'changed' : False }
+
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+    stdout = subprocess.check_output(['ald-admin', 'user-add', user,
+        '-f', pass_file_opt], stderr=None)
+
+    return { 'changed' : True, 'stdout': stdout }
+
+def group_add(module):
+    group = module.params['group']
+
+    if group in group_list(module):
+        return { 'changed' : False }
+
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+    stdout = subprocess.check_output(['ald-admin', 'group-add', group,
+        '-f', pass_file_opt], stderr=None)
+
+    return { 'changed' : True, 'stdout': stdout }
+
+def host_add(module):
+    host = module.params['host']
+
+    if host in host_list(module):
+        return { 'changed' : False }
+
+    pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+    stdout = subprocess.check_output(['ald-admin', 'host-add', host,
+        '-f', pass_file_opt], stderr=None)
+
+    return { 'changed' : True, 'stdout': stdout }
+
+tasks = {'init_server': init,
+         'user': user_add,
+         'group': group_add,
+         'init_client': init_client,
+         'host': host_add}
+
+def main():
+    choices = ['init_server', 'init_client', 'user', 'host', 'group']
+    argument_spec = {'task': {'choices': choices, 'required': True},
+                     'user': dict(),
+                     'host': dict(),
+                     'group': dict(),
+                     'pass_file': dict(required=True)}
+    module = AnsibleModule(argument_spec=argument_spec)
+    task = module.params['task']
+    try:
+        f_task = tasks.get(task)
+        if f_task is None:
+            module.fail_json(msg="Unknown task '%s'." % task)
+
+        out = f_task(module)
+        module.exit_json(**out)
+    except Exception as ex:
+        module.fail_json(msg=str(ex))
+
+#include magic from lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+
+if __name__ == '__main__':
+    main()

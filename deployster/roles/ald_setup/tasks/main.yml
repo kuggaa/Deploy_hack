@@ -1,0 +1,5 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- include: setup.yml tags=ald

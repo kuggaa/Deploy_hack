@@ -1,0 +1,9 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+- shell: kadmin.local -q 'modprinc ${attr} ${principal}' 2>&1
+  register: result
+
+- name: fail if principal is not modfied
+  fail: msg='${result.stdout}'
+  when: result.stdout.find('Principal \"' + principal + '@' + ald.krb_domain +'\" modified.') == -1

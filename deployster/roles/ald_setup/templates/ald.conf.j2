@@ -1,0 +1,34 @@
+VERSION=1.5
+
+{% if inventory_hostname == ald.master_ald_srv %}
+SERVER={{ ald.master_ald_srv }}.{{ ald.domain}}
+SERVER_ID=1
+{% endif %}
+{% if inventory_hostname == ald.slave_ald_srv %}
+SERVER={{ ald.master_ald_srv }}.{{ ald.domain}}
+SERVER_ID=2
+{% endif %}
+{% if inventory_hostname != ald.slave_ald_srv and inventory_hostname != ald.slave_ald_srv %}
+SERVER={{ ald.master_ald_srv }}.{{ ald.domain}}
+SERVER_ID=1
+{% endif %}
+DOMAIN=.{{ ald.domain }}
+DESCRIPTION=
+MINIMUM_UID=2500
+DEFAULT_LOGIN_SHELL=/bin/bash
+DEFAULT_LOCAL_GROUPS=users,audio,video,scanner
+ALLOWED_LOCAL_GROUPS=users,audio,video,scanner,cdrom,floppy,fuse
+TICKET_MAX_LIFE=10h
+TICKET_MAX_RENEWABLE_LIFE=7d
+NETWORK_FS_TYPE={{ ald.fs_type }}
+SERVER_EXPORT_DIR=/ald_export_home
+SERVER_ARCHIVE_DIR=/ald_archive_home
+CLIENT_MOUNT_DIR=/ald_home
+SERVER_FS_KRB_MODES=krb5i
+CLIENT_FS_KRB_MODE=krb5i
+SERVER_POLLING_PERIOD=60
+SERVER_PROPAGATE_PERIOD=600
+CACHE_REFRESH_PERIOD=600
+UTF8_GECOS=1
+SERVER_ON=1
+CLIENT_ON=1
