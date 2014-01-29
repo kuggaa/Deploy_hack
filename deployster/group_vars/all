@@ -15,12 +15,14 @@ repository:
     hac: http://packages.npdb/virt/se13/vplatform
 
 hac_cntrl:
-    # url ПК управления КВГ
+    ip: 192.168.50.55
+    name: cluster
     url: http://localhost
 
 # точка монтирования glusterfs
-# todo сейчас используется в glusterfs role, должно быть перенесено в pacemaker
-gluster_mount_point: '/var/glusterfs'
+# todo сейчас используется в glusterfs role, будет монтироваться pacemaker'ом
+gluster:
+   mount_point: '/var/glusterfs'
 
 dirs:
-    vm_images: '{{ gluster_mount_point }}/var_images'
+    vm_images: '{{ gluster.mount_point }}/var_images'

@@ -20,3 +20,15 @@
                   regexp="^export LD_PRELOAD="
                   state=present
       notify: restart libvirt-bin
+
+    - name: создание каталога для ВМ (образы и файлы конфигурации)
+      file: path={{ dirs.vm_images }} state=directory
+      register: create_vm_images
+
+    - name: перемещение файлов /etc/libvirt/qemu на glusterfs
+      command: mv -f /etc/libvirt/qemu {{ dirs.vm_images }}
+      when: create_vm_images.changed
+
+    - name: делаем ссылку qemu в /etc/libvirt/
+      file: src={{ dirs.vm_images }}/qemu dest=/etc/libvirt/qemu state=link
+      when: create_vm_images.changed
