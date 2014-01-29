@@ -7,7 +7,7 @@
   user: root
   roles:
 #   - initial_settings
-#   - glusterfs
+   - glusterfs
    - libvirt
 #    - hac_cntrl
 ##   - ALD
