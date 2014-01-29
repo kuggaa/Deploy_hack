@@ -1,0 +1,7 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# set up hac_cntrl
+  - include: setup_pkg.yml
+  - include: confgure_hac_cntrl.yml

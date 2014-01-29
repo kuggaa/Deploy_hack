@@ -11,16 +11,21 @@
 - hosts: new_nodes
   user: root
   tasks:
-     - include: roles/glusterfs/tasks/setup_glusterfs_pkg.yml
+   - include: roles/glusterfs/tasks/setup_glusterfs_pkg.yml
 
 - hosts: nodes
   user: root
   vars_files: ['roles/glusterfs/vars/main.yml']
   roles:
-     - { role: add_node, gluster.placedir: $from_main, gluster.volume: $from_main, gluster.mount: $from_main }
+   - { role: add_node, gluster.placedir: $from_main, gluster.volume: $from_main }
 
 - hosts: new_nodes
   user: root
   vars_files: ['roles/glusterfs/vars/main.yml']
   tasks:
-     - include: roles/glusterfs/tasks/mount.yml
+   - include: roles/glusterfs/tasks/mount.yml
+
+# added libvirt
+# install pacemaker and just added node to cluster
+# install ald client
+# install hac_cntrl

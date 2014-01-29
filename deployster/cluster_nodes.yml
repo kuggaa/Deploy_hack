@@ -6,10 +6,10 @@
 - hosts: nodes
   user: root
   roles:
-   - initial_settings
-   - ald_setup
+#   - initial_settings
 #   - glusterfs
 #   - libvirt
-##   - пк управления
+    - hac_cntrl
 ##   - ALD
 ##   - pacemaker + resources
+   #- ald_setup

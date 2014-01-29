@@ -1,0 +1,3 @@
+# specific gluster variables
+hac_cntrl:
+  path: '/root'

@@ -20,4 +20,3 @@
                   regexp="^export LD_PRELOAD="
                   state=present
       notify: restart libvirt-bin
-
