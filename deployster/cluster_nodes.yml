@@ -8,8 +8,8 @@
   roles:
 #   - initial_settings
 #   - glusterfs
-#   - libvirt
-    - hac_cntrl
+   - libvirt
+#    - hac_cntrl
 ##   - ALD
 ##   - pacemaker + resources
    #- ald_setup
