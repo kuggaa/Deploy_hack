@@ -54,4 +54,4 @@ gluster:
     placedir: '/srv'
     volume: 'vm_storage_volume'
 dirs:
-    vm_images: '{{ gluster.mount_point }}/var_images'
+    vm_images: '{{ gluster.mount_point }}/vm_images_config'
