@@ -6,9 +6,9 @@
 - hosts: nodes
   user: root
   roles:
-#   - initial_settings
-   - glusterfs
-   - libvirt
+   - initial_settings
+#   - glusterfs
+#   - libvirt
 #    - hac_cntrl
 ##   - ALD
 ##   - pacemaker + resources

@@ -6,19 +6,38 @@
 - hosts: nodes
   user: root
 
-  vars_files: ['../group_vars/all']
-
-  vars:
-    vms:
-     - {config: '/home/artem/ha_cluster/mega-vm.xml', image: '/home/artem/ha_cluster/mega-vm.img'}
-     - {config: '/home/artem/ha_cluster/mega2-vm.xml', image: '/home/artem/ha_cluster/mega2-vm.img'}
-
+  vars_files: ['../group_vars/all', 'vm_create_vars.yml']
 
   tasks:
-    #- name: получение имени ВМ из конфигурации
-    #  local_action: command grep '<name>' ../../mega-vm.xml | sed -e 's/<name>//;s/<\/name>//'
 
-    - debug: msg='Hello Wolrd!'
+    - debug: msg='{{ item.name }}'
+      with_items: vms
       when: inventory_hostname == common.master_node
 
-    - debug: msg='{{ ip }}'
+    - name: копирование конфигурации ВМ
+      copy: src={{ item.path }}{{ item.config }} dest=/etc/libvirt/qemu/
+      with_items: vms
+      when: inventory_hostname == common.master_node
+
+ # todo Раскомментировать на нормальном raid!
+ #   - name: копирование образа ВМ
+ #     copy: src={{ item.path }}{{ item.image }} dest={{ dirs.vm_images }}/
+ #     with_items: vms
+ #     when: inventory_hostname == common.master_node
+
+    - name: создание ресурса VirtualDomain в КВГ
+      command: crm configure primitive {{ item.name }} ocf:heartbeat:VirtualDomain \
+               meta allow-migrate="true" target-role="Stopped" \
+               params hypervisor="qemu:///system" config="/etc/libvirt/qemu/{{ item.name }}.xml" migration_transport="tcp" \
+               operations $id="{{ item.name }}-operations" \
+               op monitor interval="10" timeout="30" \
+               op migrate_from interval="0" timeout="90" \
+               op migrate_to interval="0" timeout="90"
+      with_items: vms
+      when: inventory_hostname == common.master_node
+
+    - name: создание групп из VirtualDomain
+      command: crm configure group {{ item.name }} {{ item.vm_list }}
+      with_items: vm_groups
+      when: inventory_hostname == common.master_node
+

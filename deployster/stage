@@ -9,17 +9,11 @@
 # astra-cluster-3
 
 [nodes]
-hacnode1 ip=49
-hacnode2 ip=50
-hacnode3 ip=51
-
-#astra-cluster-1
-#astra-cluster-2
-#astra-cluster-3
+hacnode[1:3]
+#astra-cluster-[1:3]
 
 [new_nodes]
 astra-cluster-1
 
 [admin_stations]
 astra-cluster-1
-
