@@ -1,0 +1,27 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+# script for make a VM in ha cluster
+  - name: копирование конфигурации ВМ
+    copy: src={{ item.path }}{{ item.config }} dest=/etc/libvirt/qemu/{{ item.name }}.xml
+    with_items: vms
+    when: inventory_hostname == common.master_node
+
+ # todo Раскомментировать на нормальном raid!
+ #   - name: копирование образа ВМ
+ #     copy: src={{ item.path }}{{ item.image }} dest={{ dirs.vm_images }}/{{ item.name }}.img
+ #     with_items: vms
+ #     when: inventory_hostname == common.master_node
+
+  - name: создание ресурса VirtualDomain в КВГ
+    command: crm configure primitive {{ item.name }} ocf:heartbeat:VirtualDomain \
+             meta allow-migrate="true" target-role="Stopped" \
+             params hypervisor="qemu:///system" config="/etc/libvirt/qemu/{{ item.name }}.xml" migration_transport="tcp" \
+             operations $id="{{ item.name }}-operations" \
+             op monitor interval="10" timeout="30" \
+             op migrate_from interval="0" timeout="90" \
+             op migrate_to interval="0" timeout="90"
+    with_items: vms
+    when: inventory_hostname == common.master_node
+
