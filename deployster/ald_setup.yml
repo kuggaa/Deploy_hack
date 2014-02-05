@@ -13,6 +13,6 @@
    # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
     confirm: yes    
     default: "admin"
-
+    
   roles:
     - ald_setup
