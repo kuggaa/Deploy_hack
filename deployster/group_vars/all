@@ -1,8 +1,8 @@
 # general variables
 
 common:
-  master_node: "{{ groups.nodes[0] }}"
-  slave_node: "{{ groups.nodes[1] }}"  
+    master_node: '{{ groups.nodes[0] }}'
+    slave_node: '{{ groups.nodes[1] }}'
 
 # !важно! имена и количество узлов должны совпадать cо списком узлов в файле stage в разделе [nodes]
 nodes_ip: { hacnode1: 49, hacnode2: 50, hacnode3: 51 }
@@ -30,28 +30,28 @@ ald:
     domain: npdb
 
     # Расположение информации в LDAP.
-    ldap_domain: dc=${ald.domain}
+    ldap_domain: dc='{{ ald.domain }}'
 
     # Домен в записи Kerberos в верхнем регистре.
     # Должен совпадать
-    krb_domain: ${ald.domain.upper()}
+    krb_domain: '{{ ald.domain.upper() }}'
 
     # Тип файловой системы для организации удаленного доступа
     # к пользовательским каталогам.
     # Значения: none, nfs, cifs.
     fs_type: cifs
-    
+
     # Список групп
     groups: [administrators, users]
-    
+
     # Имя администратора
     kvg_admin_name: kvg_admin
-      
-    
+
 # точка монтирования glusterfs
 # todo сейчас используется в glusterfs role, будет монтироваться pacemaker'ом
 gluster:
-   mount_point: '/var/glusterfs'
-
+    mount_point: '/var/glusterfs'
+    placedir: '/srv'
+    volume: 'vm_storage_volume'
 dirs:
-    vm_images: '{{ gluster.mount_point }}/var_images'
+    vm_images: '{{ gluster.mount_point }}/vm_images_and_config'

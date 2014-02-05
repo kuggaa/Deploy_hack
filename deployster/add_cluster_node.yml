@@ -15,13 +15,15 @@
 
 - hosts: nodes
   user: root
-  vars_files: ['roles/glusterfs/vars/main.yml']
   roles:
-   - { role: add_node, gluster.placedir: $from_main, gluster.volume: $from_main }
+   - { role: add_node }
+#  vars_files: ['roles/glusterfs/vars/main.yml']
+#  roles:
+#   - { role: add_node, gluster.placedir: $from_main, gluster.volume: $from_main }
 
+# todo remove it!
 - hosts: new_nodes
   user: root
-  vars_files: ['roles/glusterfs/vars/main.yml']
   tasks:
    - include: roles/glusterfs/tasks/mount.yml
 

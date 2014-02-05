@@ -1,0 +1,7 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+# make a VM's and vm_group_create
+  - include: vm_create.yml
+  - include: vm_group_create.yml

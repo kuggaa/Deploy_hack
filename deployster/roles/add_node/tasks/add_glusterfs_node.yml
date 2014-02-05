@@ -9,12 +9,12 @@
          groups.new_nodes
       when: inventory_hostname == common.master_node
 
-    - name: добавление нового узла в том ${gluster.volume}
+    - name: добавление нового узла в том
       command: gluster volume add-brick {{ gluster.volume }} {{ item }}:{{ gluster.placedir }}
       with_items:
          groups.new_nodes
       when: inventory_hostname == common.master_node
 
-    - name: запуска ребалансировки тома ${gluster.volume}
+    - name: запуска ребалансировки тома
       command: gluster volume rebalance {{ gluster.volume }} start
       when: inventory_hostname == common.master_node

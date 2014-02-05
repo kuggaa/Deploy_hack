@@ -1,0 +1,8 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+  - name: создание групп из VirtualDomain
+    command: crm configure group {{ item.name }} {{ item.vm_list }}
+    with_items: vm_groups
+    when: inventory_hostname == common.master_node and vm_groups is defined

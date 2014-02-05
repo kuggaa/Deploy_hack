@@ -2,16 +2,15 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-
 - hosts: nodes
   user: root
 
-  vars_prompt: 
+  vars_prompt:
   - name: "my_password"
     prompt: "Enter password for admin"
     private: yes
    # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
-    confirm: yes    
+    confirm: yes
     default: "admin"
     
   roles:
