@@ -16,9 +16,9 @@ repository:
     hac: http://packages.npdb/virt/se13/vplatform
 
 hac_cntrl:
+    #TODO адрес должен быть из сети public
     ip: 192.168.50.55
     name: cluster
-    url: http://localhost
 
 # Настройки Astra Linux Directory
 ald:
