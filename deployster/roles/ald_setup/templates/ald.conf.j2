@@ -20,9 +20,16 @@ ALLOWED_LOCAL_GROUPS=users,audio,video,scanner,cdrom,floppy,fuse
 TICKET_MAX_LIFE=10h
 TICKET_MAX_RENEWABLE_LIFE=7d
 NETWORK_FS_TYPE={{ ald.fs_type }}
+{% if ald.fs_type != 'none' %}
 SERVER_EXPORT_DIR={{ gluster.mount_point }}/ald_export_home
 SERVER_ARCHIVE_DIR={{ gluster.mount_point }}/ald_archive_home
 CLIENT_MOUNT_DIR=/ald_home
+{% endif %}
+{% if ald.fs_type == 'none' %}
+SERVER_EXPORT_DIR=/ald_export_home
+SERVER_ARCHIVE_DIR=/ald_archive_home
+CLIENT_MOUNT_DIR=/ald_home
+{% endif %}
 SERVER_FS_KRB_MODES=krb5i
 CLIENT_FS_KRB_MODE=krb5i
 SERVER_POLLING_PERIOD=60

@@ -30,11 +30,11 @@ ald:
     domain: npdb
 
     # Расположение информации в LDAP.
-    ldap_domain: dc='{{ ald.domain }}'
+    ldap_domain: dc=${ald.domain}
 
     # Домен в записи Kerberos в верхнем регистре.
     # Должен совпадать
-    krb_domain: '{{ ald.domain.upper() }}'
+    krb_domain: ${ald.domain.upper()}
 
     # Тип файловой системы для организации удаленного доступа
     # к пользовательским каталогам.
