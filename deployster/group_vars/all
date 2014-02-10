@@ -39,14 +39,17 @@ ald:
     # Тип файловой системы для организации удаленного доступа
     # к пользовательским каталогам.
     # Значения: none, nfs, cifs.
-    fs_type: cifs
+    fs_type: none
 
     # Список групп
     groups: [administrators, users]
 
     # Имя администратора
     kvg_admin_name: kvg_admin
-
+    
+    # Сервисы
+    services_list: [krb5-kdc, krb5-admin-server, slapd, nslcd, nscd, aldd, aldcd]
+    
 # точка монтирования glusterfs
 # todo сейчас используется в glusterfs role, будет монтироваться pacemaker'ом
 gluster:

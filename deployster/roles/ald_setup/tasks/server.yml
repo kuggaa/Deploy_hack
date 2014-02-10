@@ -1,22 +1,28 @@
 #
 # © ОАО «Северное ПКБ», 2014
 #
----     
+---        
 - name: установка haveged
-  apt: pkg=haveged state=latest
-  #when: setup.haveged
+  apt: pkg=haveged state=latest  
   tags: [ packages ]
 
-- name: установка ald пакетов
+- name: установка пакетов для сервера ALD
   apt: pkg=$item state=latest
   with_items:
-    - ald-admin-common
-    - ald-server-common
-    - ald-client-common    
-    - ald-client-fs    
-    - ald-server-dc
-    - smolensk-security-ald
+    - ald-server
+    - ald-server-common     
   tags: [ packages ]
+                
+#- name: установка ald пакетов
+  #apt: pkg=$item state=latest
+  #with_items:
+    #- ald-admin-common
+    #- ald-server-common
+    #- ald-client-common    
+    #- ald-client-fs    
+    #- ald-server-dc
+    #- smolensk-security-ald
+  #tags: [ packages ]
   
 - name: создание файла настройки пользователей
   template: src=pass-file.j2 dest=/root/pass-file mode=0600
@@ -26,7 +32,8 @@
   template: src=ald.conf.j2 dest=/etc/ald/ald.conf
   register: ald_config
   tags: [ config ]
-
+  when: inventory_hostname == ald.master_ald_srv
+            
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
      
@@ -46,28 +53,15 @@
   
 - name: Добавление привелегий для пользователя
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1  
-  
-- name: установка модулей ALD для панели SMC
-  apt: pkg=$item state=latest
-  with_items:
-      - smc-ald-audit
-      - smc-ald-capabilities
-      - smc-ald-device-ctrl
-      - smc-ald-hosts
-      - smc-ald-mac
-      - smc-ald-policies
-      - smc-ald-services
-      - smc-ald-tasks
-      - smc-ald-users      
-  tags: [ packages ]
-                                  
-- lineinfile: dest=/etc/ald/ald.conf
-              regexp='^SERVER='
-              line='SERVER={{ ald.master_ald_srv }}.{{ ald.domain}}'
+                                   
+- include: ald-master.yml tags=ald-master
+  when: inventory_hostname == ald.master_ald_srv
+
+- include: ald-slave.yml tags=ald-slave
   when: inventory_hostname == ald.slave_ald_srv      
 
+- service: name={{ item }} enabled=false
+  with_items: ald.services_list
   
-- name: настройка резервного сервера ALD
-  command: ald-client slavesrv-init -f --pass-file=/root/pass-file
-  when: inventory_hostname == ald.slave_ald_srv
-  
+- service: name={{ item }} state=stop
+  with_items: ald.services_list  

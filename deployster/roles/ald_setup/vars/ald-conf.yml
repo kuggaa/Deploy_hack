@@ -1,0 +1,58 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+
+ald_files:
+  - /etc/ald/ald.conf
+  - /etc/default/slapd
+  - /etc/inetd.conf
+  - /etc/fstab
+  - /etc/nsswitch.conf
+  - /etc/parsec/mswitch.conf
+  - /etc/parsec/mswitch.conf
+  - /etc/samba/smb.conf
+  - /etc/exports
+  - /etc/krb5.conf
+  - /etc/ldap/ldap.conf
+  - /etc/default/nfs-kernel-server
+  - /etc/idmapd.conf
+  - /etc/default/nfs-common
+  - /etc/nss-ldapd.conf
+  - /etc/nslcd.conf
+  - /etc/parsec/mldap.conf
+  - /etc/parsec/privsock.conf
+  - /etc/samba/smb.conf
+  - /etc/krb5kdc/kdc.conf
+  - /etc/krb5kdc/kadm5.acl
+  - /etc/default/krb5-kdc
+  - /etc/ldap/schema/ald15.ldif
+  - /etc/ldap/schema/exim-mail.ldif
+  - /usr/lib/sasl2/slapd.conf
+  - /etc/default/slapd
+  - /etc/krb5kdc/kadm5.keytab
+  - /etc/krb5kdc/stash
+  - /etc/krb5.keytab
+  - /etc/ldap/slapd.keytab
+  - /var/lib/ald/ald-server.status
+  - /var/lib/ald/ald-client.status
+  - /var/lib/ald/ald-client-fs.status
+
+ldap_files:
+  - cn=config/olcDatabase={2}hdb.ldif
+  - cn=config/cn=module{0}.ldif
+  - cn=config/olcDatabase={-1}frontend.ldif
+  - cn=config/cn=schema.ldif
+  - cn=config/olcDatabase={2}hdb/olcOverlay={0}syncprov.ldif
+  - cn=config/olcDatabase={1}frontend.ldif
+  - cn=config/cn=schema/cn={8}ald-parsec14-mac.ldif
+  - cn=config/cn=schema/cn={2}inetorgperson.ldif
+  - cn=config/cn=schema/cn={7}ald-parsec14-devac.ldif
+  - cn=config/cn=schema/cn={5}exim-mail.ldif
+  - cn=config/cn=schema/cn={4}ald-ldap-schema.ldif
+  - cn=config/cn=schema/cn={6}ald-parsec14-aud.ldif
+  - cn=config/cn=schema/cn={0}core.ldif
+  - cn=config/cn=schema/cn={1}cosine.ldif
+  - cn=config/cn=schema/cn={3}nis.ldif
+  - cn=config/olcDatabase={0}config.ldif
+  - cn=config/olcBackend={0}hdb.ldif
+  - cn=config.ldif

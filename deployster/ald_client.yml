@@ -10,7 +10,7 @@
     prompt: "Enter password for ALD server administrator"
     private: yes
    # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
-    confirm: yes    
-            
+    confirm: yes      
+    
   roles:
     - ald_setup
