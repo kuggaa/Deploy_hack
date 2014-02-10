@@ -12,8 +12,8 @@
 
     - name: создание тома
       command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}
-             transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
-             creates=/etc/glusterd/vols/{{ gluster.volume }}
+               transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
+               creates=/etc/glusterd/vols/{{ gluster.volume }}
       when: inventory_hostname == common.master_node
 
     - name: выключение NFS
