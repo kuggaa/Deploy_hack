@@ -2,10 +2,39 @@
 # © ОАО «Северное ПКБ», 2013
 #
 ---
-# for deploy workstation for manage cluster
+# for deploy workstation for manage ha cluster
 - hosts: admin_stations
   user: root
 #  connection: local
 #  sudo: True
+  vars_files: ['roles/initial_settings/vars/main.yml']
+  vars_prompt:
+   - name: "my_password"
+     prompt: "Enter password for ALD server administrator"
+     private: yes
+    # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
+     confirm: yes
+
+  pre_tasks:
+    - include: roles/initial_settings/tasks/repo.yml
+
   roles:
    - firefox_vnc
+#   - ald_setup
+
+  post_tasks:
+   - name: настройка /etc/hosts
+     lineinfile: dest=/etc/hosts
+                 regexp='.*{{ network.public.address }}.{{ nodes_ip[item] }}'
+                 line='{{ network.public.address }}.{{ nodes_ip[item] }} {{ item }}'
+                 state=present
+     with_items: groups.nodes
+
+   - debug: msg='{{ network.public.address }}.{{ nodes_ip[item] }}'
+     with_items: groups.nodes
+
+   - name: настройка /etc/hosts
+     lineinfile: dest=/etc/hosts
+                 regexp='.*{{ hac_cntrl.ip }}'
+                 line='{{hac_cntrl.ip}} {{ hac_cntrl.name }}'
+                 state=present
