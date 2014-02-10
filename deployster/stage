@@ -1,19 +1,13 @@
-# machine names for our testbenches
-# real cluster's nodes:
-# hacnode1
-# hacnode2
-# hacnode3
-# virtual cluster's nodes (only for software manipulation):
-# astra-cluster-1
-# astra-cluster-2
-# astra-cluster-3
+# list machines and nodes grouping by roles
 
 [nodes]
 hacnode[1:3]
-#astra-cluster-[1:3]
 
 [new_nodes]
 astra-cluster-1
 
+[remove_nodes]
+
 [admin_stations]
 admin-station1
+

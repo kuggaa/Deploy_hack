@@ -6,11 +6,13 @@
 
     - name: создание точки монтирования
       file: path={{ gluster.mount_point }} state=directory
+      ignore_errors: true
 
-    - name: монтирование каталогов
-      mount: name={{ gluster.mount_point }}
-             src=/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol
-             fstype=glusterfs
-             opts='defaults,_netdev'
-             dump=1
-             state=mounted
+# todo remove it
+ #   - name: монтирование каталогов
+ #     mount: name={{ gluster.mount_point }}
+ #            src=/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol
+ #            fstype=glusterfs
+ #            opts='defaults,_netdev'
+ #            dump=1
+ #            state=mounted

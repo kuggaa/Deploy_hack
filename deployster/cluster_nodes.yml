@@ -5,11 +5,19 @@
 # for deploy cluster nodes
 - hosts: nodes
   user: root
+
+  vars_prompt:
+  - name: "my_password"
+    prompt: "Enter password for admin"
+    private: yes
+   # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
+    confirm: yes
+    default: "admin"
+
   roles:
-   - initial_settings
+#   - initial_settings
 #   - glusterfs
-#   - libvirt
-#    - hac_cntrl
-##   - ALD
+   - libvirt
+#   - hac_cntrl
+#   - ald_setup
 ##   - pacemaker + resources
-   #- ald_setup
