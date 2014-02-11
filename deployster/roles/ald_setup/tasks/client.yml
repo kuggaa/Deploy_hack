@@ -2,7 +2,7 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-- name: install ald packages for ald client
+- name: install ald packages for ALD client
   apt: pkg=$item state=latest
   with_items:
     - ald-client-common
