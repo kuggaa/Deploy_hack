@@ -14,6 +14,7 @@ repository:
     # Адреса репозиториев с пакетами для ПК КВГ
     hac_common: http://packages.npdb/virt/se13/common
     hac: http://packages.npdb/virt/se13/vplatform
+    globula: http://packages.npdb/cloud/se13/globula
 
 hac_cntrl:
     #TODO адрес должен быть из сети public
@@ -24,29 +25,31 @@ hac_cntrl:
 ald:
     # Узел сервера
     master_ald_srv: '{{ common.master_node }}'
-    slave_ald_srv: '{{ common.slave_node }}'
 
     # Домен
     domain: npdb
 
     # Расположение информации в LDAP.
-    ldap_domain: dc='{{ ald.domain }}'
+    ldap_domain: dc=${ald.domain}
 
     # Домен в записи Kerberos в верхнем регистре.
     # Должен совпадать
-    krb_domain: '{{ ald.domain.upper() }}'
+    krb_domain: ${ald.domain.upper()}
 
     # Тип файловой системы для организации удаленного доступа
     # к пользовательским каталогам.
     # Значения: none, nfs, cifs.
-    fs_type: cifs
+    fs_type: none
 
     # Список групп
     groups: [administrators, users]
 
     # Имя администратора
     kvg_admin_name: kvg_admin
-
+    
+    # Сервисы
+    services_list: [krb5-kdc, krb5-admin-server, slapd, nslcd, nscd, aldd, aldcd]
+    
 # точка монтирования glusterfs
 # todo сейчас используется в glusterfs role, будет монтироваться pacemaker'ом
 gluster:

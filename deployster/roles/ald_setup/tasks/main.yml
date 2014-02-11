@@ -1,5 +1,7 @@
 #
 # © ОАО «Северное ПКБ», 2014
 #
----
-- include: setup.yml tags=ald
+---   
+- include: server.yml tags=ald-server
+
+- include: client.yml tags=ald-client

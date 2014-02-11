@@ -33,33 +33,33 @@
 - name: создание файла настройки пользователей
   template: src=pass-file.j2 dest=/root/pass-file mode=0600
   tags: [ pass-file ]
-  when: inventory_hostname != ald.master_ald_srv and inventory_hostname != ald.slave_ald_srv
+  when: inventory_hostname not in groups.nodes
   
 - name: создание файла настройки ALD (/etc/ald/ald.conf)
   template: src=ald.conf.j2 dest=/etc/ald/ald.conf
   register: ald_config
   tags: [ config ] 
-  when: inventory_hostname != ald.master_ald_srv and inventory_hostname != ald.slave_ald_srv
+  when: inventory_hostname not in groups.nodes
     
 - lineinfile: dest=/etc/ald/ald.conf
               regexp='^SERVER_ON='
               line='SERVER_ON=0'
-  when: inventory_hostname != ald.master_ald_srv and inventory_hostname != ald.slave_ald_srv              
+  when: inventory_hostname not in groups.nodes
 
 - lineinfile: dest=/etc/ald/ald.conf
               regexp='^CLIENT_ON='
               line='CLIENT_ON=1'   
-  when: inventory_hostname != ald.master_ald_srv and inventory_hostname != ald.slave_ald_srv              
+  when: inventory_hostname not in groups.nodes
 
 - ald: task=init_client pass_file=/root/pass-file
-  when: inventory_hostname != ald.master_ald_srv and inventory_hostname != ald.slave_ald_srv              
+  when: inventory_hostname not in groups.nodes
 
 - pause: seconds=5
 
 - name: Настройка доступа Администратора
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain}}
   ignore_errors: yes
-  with_items: groups.nodes   
+  with_items: group.nodes
   
 - name: Настройка доступа Администратора на клиентских станциях
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain}}

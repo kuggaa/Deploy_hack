@@ -1,0 +1,60 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- name: копирование файлов настроек для ALD
+  fetch: src=${item} dest=ald-conf
+  with_items: ald_files   
+
+- name: копирование файлов настроек для LDAP
+  fetch: src=/etc/ldap/slapd.d/${item} dest=ald-conf
+  with_items: ldap_files   
+
+- name: создание каталога LDAP на общем хранилище
+  file: path={{ gluster.mount_point }}/ldap state=directory
+        owner=openldap group=openldap mode=0700
+
+- name: остановка OpenLDAP
+  service: name=slapd state=stopped
+
+- name: перенос на Gluster базы LDAP
+  command: cp -pR /var/lib/ldap {{ gluster.mount_point }}
+           creates={{ gluster.mount_point }}/ldap/DB_CONFIG
+
+- name: удаление старой базы LDAP
+  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
+
+- name: подмена каталога /var/lib/ldap
+  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
+
+- name: запуск OpenLDAP
+  service: name=slapd state=started
+
+- name: создание каталога Kerberos на общем хранилище
+  file: path={{ gluster.mount_point }}/krb5kdc state=directory
+        owner=root group=root mode=0700
+
+- name: остановка сервисов Kerberos
+  service: name=${item} state=stopped
+  with_items:
+    - krb5-kdc
+    - krb5-admin-server
+
+- name: перенос на Gluster базы Kerberos
+  command: cp -pR /var/lib/krb5kdc {{ gluster.mount_point }}
+           creates={{ gluster.mount_point }}/krb5kdc/principal
+
+- name: удаление старой базы Kerberos
+  command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
+
+- name: подмена каталога /var/lib/krb5kdc
+  file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
+
+- name: запуск сервисов Kerberos
+  service: name=${item} state=started
+  with_items:
+    - krb5-kdc
+    - krb5-admin-server
+
+- name: замена неверного файла /etc/init.d/nscd
+  copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
