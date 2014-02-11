@@ -1,0 +1,192 @@
+<cib epoch="1699" num_updates="91" admin_epoch="0" validate-with="pacemaker-1.1" crm_feature_set="3.0.6" update-origin="hacnode1" update-client="crm_attribute" cib-last-written="Fri Feb  7 17:48:07 2014" have-quorum="1" dc-uuid="hacnode3">
+  <configuration>
+    <crm_config>
+      <cluster_property_set id="cib-bootstrap-options">
+        <nvpair id="cib-bootstrap-options-dc-version" name="dc-version" value="1.1.7-ee0730e13d124c3d58f00016c3376a1de5323cff"/>
+        <nvpair id="cib-bootstrap-options-cluster-infrastructure" name="cluster-infrastructure" value="openais"/>
+        <nvpair id="cib-bootstrap-options-expected-quorum-votes" name="expected-quorum-votes" value="3"/>
+        <nvpair id="cib-bootstrap-options-last-lrm-refresh" name="last-lrm-refresh" value="1391774087"/>
+      </cluster_property_set>
+    </crm_config>
+    <nodes>
+      <node id="hacnode1" type="normal" uname="hacnode1">
+        <instance_attributes id="nodes-hacnode1">
+          <nvpair id="nodes-hacnode1-standby" name="standby" value="off"/>
+        </instance_attributes>
+      </node>
+      <node id="hacnode2" type="normal" uname="hacnode2">
+        <instance_attributes id="nodes-hacnode2">
+          <nvpair id="nodes-hacnode2-standby" name="standby" value="off"/>
+        </instance_attributes>
+      </node>
+      <node id="hacnode3" type="normal" uname="hacnode3">
+        <instance_attributes id="nodes-hacnode3">
+          <nvpair id="nodes-hacnode3-standby" name="standby" value="off"/>
+        </instance_attributes>
+      </node>
+    </nodes>
+    <resources>
+      <primitive class="stonith" id="stonith_hacnode2" type="external/ipmi">
+        <meta_attributes id="stonith_hacnode2-meta_attributes">
+          <nvpair id="stonith_hacnode2-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="stonith_hacnode2-operations">
+          <op id="stonith_hacnode2-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
+          <op id="stonith_hacnode2-op-start-0" interval="0" name="start" timeout="60"/>
+          <op id="stonith_hacnode2-op-stop-0" interval="0" name="stop" timeout="60"/>
+        </operations>
+        <instance_attributes id="stonith_hacnode2-instance_attributes">
+          <nvpair id="stonith_hacnode2-instance_attributes-hostname" name="hostname" value="hacnode2"/>
+          <nvpair id="stonith_hacnode2-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.41"/>
+          <nvpair id="stonith_hacnode2-instance_attributes-userid" name="userid" value="ADMIN"/>
+          <nvpair id="stonith_hacnode2-instance_attributes-passwd" name="passwd" value="ADMIN"/>
+          <nvpair id="stonith_hacnode2-instance_attributes-interface" name="interface" value="lanplus"/>
+        </instance_attributes>
+      </primitive>
+      <primitive class="ocf" id="ip-second" provider="heartbeat" type="IPaddr">
+        <meta_attributes id="ip-second-meta_attributes">
+          <nvpair id="ip-second-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="ip-second-operations">
+          <op id="ip-second-op-monitor-5s" interval="5s" name="monitor" timeout="20s"/>
+        </operations>
+        <instance_attributes id="ip-second-instance_attributes">
+          <nvpair id="ip-second-instance_attributes-ip" name="ip" value="192.168.50.111"/>
+          <nvpair id="ip-second-instance_attributes-cidr_netmask" name="cidr_netmask" value="255.255.255.0"/>
+        </instance_attributes>
+      </primitive>
+      <group id="test-group">
+        <meta_attributes id="test-group-meta_attributes">
+          <nvpair id="test-group-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="test-group-meta_attributes-is-managed" name="is-managed" value="true"/>
+        </meta_attributes>
+        <primitive class="ocf" id="test1" provider="pacemaker" type="Dummy">
+          <operations id="test1-operations">
+            <op id="test1-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+          </operations>
+          <meta_attributes id="test1-meta_attributes">
+            <nvpair id="test1-meta_attributes-target-role" name="target-role" value="Started"/>
+          </meta_attributes>
+        </primitive>
+        <primitive class="ocf" id="test2" provider="pacemaker" type="Dummy">
+          <meta_attributes id="test2-meta_attributes">
+            <nvpair id="test2-meta_attributes-target-role" name="target-role" value="Started"/>
+            <nvpair id="test2-meta_attributes-is-managed" name="is-managed" value="true"/>
+          </meta_attributes>
+          <operations id="test2-operations">
+            <op id="test2-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+          </operations>
+        </primitive>
+        <primitive class="ocf" id="eba" provider="pacemaker" type="Dummy">
+          <meta_attributes id="eba-meta_attributes">
+            <nvpair id="eba-meta_attributes-target-role" name="target-role" value="Started"/>
+            <nvpair id="eba-meta_attributes-is-managed" name="is-managed" value="true"/>
+          </meta_attributes>
+          <operations id="eba-operations">
+            <op id="eba-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+          </operations>
+        </primitive>
+      </group>
+      <primitive class="ocf" id="hacip_test" provider="heartbeat" type="IPaddr2">
+        <meta_attributes id="hacip_test-meta_attributes">
+          <nvpair id="hacip_test-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="hacip_test-operations">
+          <op id="hacip_test-op-monitor-10s" interval="10s" name="monitor" timeout="20s"/>
+        </operations>
+        <instance_attributes id="hacip_test-instance_attributes">
+          <nvpair id="hacip_test-instance_attributes-ip" name="ip" value="192.168.50.55"/>
+          <nvpair id="hacip_test-instance_attributes-cidr_netmask" name="cidr_netmask" value="24"/>
+        </instance_attributes>
+      </primitive>
+      <primitive class="stonith" id="stonith_hacnode3" type="external/ipmi">
+        <operations id="stonith_hacnode3-operations">
+          <op id="stonith_hacnode3-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
+          <op id="stonith_hacnode3-op-start-0" interval="0" name="start" timeout="60"/>
+          <op id="stonith_hacnode3-op-stop-0" interval="0" name="stop" timeout="60"/>
+        </operations>
+        <instance_attributes id="stonith_hacnode3-instance_attributes">
+          <nvpair id="stonith_hacnode3-instance_attributes-hostname" name="hostname" value="hacnode3"/>
+          <nvpair id="stonith_hacnode3-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.42"/>
+          <nvpair id="stonith_hacnode3-instance_attributes-userid" name="userid" value="ADMIN"/>
+          <nvpair id="stonith_hacnode3-instance_attributes-passwd" name="passwd" value="ADMIN"/>
+          <nvpair id="stonith_hacnode3-instance_attributes-interface" name="interface" value="lanplus"/>
+        </instance_attributes>
+        <meta_attributes id="stonith_hacnode3-meta_attributes">
+          <nvpair id="stonith_hacnode3-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+      </primitive>
+      <primitive class="stonith" id="fence_pcmk1_psu1_off" type="fence_apc_snmp">
+        <instance_attributes id="fence_pcmk1_psu1_off-instance_attributes">
+          <nvpair id="fence_pcmk1_psu1_off-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.43"/>
+          <nvpair id="fence_pcmk1_psu1_off-instance_attributes-action" name="action" value="off"/>
+          <nvpair id="fence_pcmk1_psu1_off-instance_attributes-port" name="port" value="1"/>
+          <nvpair id="fence_pcmk1_psu1_off-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="hacnode1"/>
+        </instance_attributes>
+        <operations>
+          <op id="fence_pcmk1_psu1_off-monitor-60s" interval="60s" name="monitor"/>
+        </operations>
+        <meta_attributes id="fence_pcmk1_psu1_off-meta_attributes">
+          <nvpair id="fence_pcmk1_psu1_off-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+      </primitive>
+      <primitive class="stonith" id="fence_pcmk1_psu2_off" type="fence_apc_snmp">
+        <instance_attributes id="fence_pcmk1_psu2_off-instance_attributes">
+          <nvpair id="fence_pcmk1_psu2_off-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.44"/>
+          <nvpair id="fence_pcmk1_psu2_off-instance_attributes-action" name="action" value="off"/>
+          <nvpair id="fence_pcmk1_psu2_off-instance_attributes-port" name="port" value="1"/>
+          <nvpair id="fence_pcmk1_psu2_off-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="hacnode1"/>
+          <nvpair id="fence_pcmk1_psu2_off-instance_attributes-power_wait" name="power_wait" value="5"/>
+        </instance_attributes>
+        <operations>
+          <op id="fence_pcmk1_psu2_off-monitor-60s" interval="60s" name="monitor"/>
+        </operations>
+      </primitive>
+      <primitive class="stonith" id="stonith_hacnode1" type="external/ipmi">
+        <meta_attributes id="stonith_hacnode1-meta_attributes">
+          <nvpair id="stonith_hacnode1-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="stonith_hacnode1-operations">
+          <op id="stonith_hacnode1-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
+          <op id="stonith_hacnode1-op-start-0" interval="0" name="start" timeout="20"/>
+          <op id="stonith_hacnode1-op-stop-0" interval="0" name="stop" timeout="15"/>
+        </operations>
+        <instance_attributes id="stonith_hacnode1-instance_attributes">
+          <nvpair id="stonith_hacnode1-instance_attributes-hostname" name="hostname" value="hacnode1"/>
+          <nvpair id="stonith_hacnode1-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.40"/>
+          <nvpair id="stonith_hacnode1-instance_attributes-userid" name="userid" value="ADMIN"/>
+          <nvpair id="stonith_hacnode1-instance_attributes-passwd" name="passwd" value="ADMIN"/>
+          <nvpair id="stonith_hacnode1-instance_attributes-interface" name="interface" value="lanplus"/>
+        </instance_attributes>
+      </primitive>
+      <primitive class="stonith" id="fence_pcmk1_psu1_on" type="fence_apc_snmp">
+        <instance_attributes id="fence_pcmk1_psu1_on-instance_attributes">
+          <nvpair id="fence_pcmk1_psu1_on-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.43"/>
+          <nvpair id="fence_pcmk1_psu1_on-instance_attributes-action" name="action" value="on"/>
+          <nvpair id="fence_pcmk1_psu1_on-instance_attributes-port" name="port" value="1"/>
+          <nvpair id="fence_pcmk1_psu1_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="hacnode1"/>
+        </instance_attributes>
+      </primitive>
+      <primitive class="stonith" id="fence_pcmk1_psu2_on" type="fence_apc_snmp">
+        <instance_attributes id="fence_pcmk1_psu2_on-instance_attributes">
+          <nvpair id="fence_pcmk1_psu2_on-instance_attributes-ipaddr" name="ipaddr" value="192.168.50.44"/>
+          <nvpair id="fence_pcmk1_psu2_on-instance_attributes-action" name="action" value="on"/>
+          <nvpair id="fence_pcmk1_psu2_on-instance_attributes-port" name="port" value="1"/>
+          <nvpair id="fence_pcmk1_psu2_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="hacnode1"/>
+        </instance_attributes>
+      </primitive>
+    </resources>
+    <constraints>
+      <rsc_location id="stonith_hacnode2_loc" node="hacnode2" rsc="stonith_hacnode2" score="-INFINITY"/>
+      <rsc_location id="stonith_hacnode3_loc" node="hacnode3" rsc="stonith_hacnode3" score="-INFINITY"/>
+      <rsc_location id="stonith_hacnode1_loc" node="hacnode1" rsc="stonith_hacnode1" score="-INFINITY"/>
+      <rsc_location id="loc1" node="hacnode1" rsc="fence_pcmk1_psu1_off" score="-INFINITY"/>
+      <rsc_location id="loc2" node="hacnode1" rsc="fence_pcmk1_psu2_off" score="-INFINITY"/>
+      <rsc_location id="loc3" node="hacnode1" rsc="fence_pcmk1_psu1_on" score="-INFINITY"/>
+      <rsc_location id="loc4" node="hacnode1" rsc="fence_pcmk1_psu2_on" score="-INFINITY"/>
+    </constraints>
+    <fencing-topology>
+      <fencing-level devices="stonit_hacnode1" id="fencing-level" index="1" target="hacnode1"/>
+      <fencing-level devices="fence_pcmk1_psu1_off,fence_pcmk1_psu2_off,fence_pcmk1_psu1_on,fence_pcmk1_psu2_on" id="fencing-level-0" index="1" target="hacnode1"/>
+    </fencing-topology>
+  </configuration>
