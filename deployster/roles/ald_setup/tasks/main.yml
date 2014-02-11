@@ -3,6 +3,5 @@
 #
 ---   
 - include: server.yml tags=ald-server
-  when: inventory_hostname == ald.master_ald_srv or inventory_hostname == ald.slave_ald_srv
 
 - include: client.yml tags=ald-client

@@ -32,11 +32,16 @@
   template: src=ald.conf.j2 dest=/etc/ald/ald.conf
   register: ald_config
   tags: [ config ]
-  when: inventory_hostname == ald.master_ald_srv
-            
+
+- name: удаление старых каталогов KRB
+  command: rm -r  /var/lib/krb5kdc
+
+- name: удаление старых каталогов LDAP
+  command: rm -r  /var/lib/ldap
+
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
-     
+
 - name: Make keytab for admin/admin
   command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
 
@@ -58,10 +63,10 @@
   when: inventory_hostname == ald.master_ald_srv
 
 - include: ald-slave.yml tags=ald-slave
-  when: inventory_hostname == ald.slave_ald_srv      
+  when: inventory_hostname != ald.master_ald_srv
 
 - service: name={{ item }} enabled=false
   with_items: ald.services_list
   
-- service: name={{ item }} state=stop
+- service: name={{ item }} state=stopped
   with_items: ald.services_list  
