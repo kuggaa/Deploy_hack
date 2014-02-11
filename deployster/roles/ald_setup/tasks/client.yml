@@ -51,6 +51,16 @@
               line='CLIENT_ON=1'   
   when: inventory_hostname not in groups.nodes
 
+- name: удаление старых каталогов KRB
+  command: rm -r  /var/lib/krb5kdc
+  ignore_errors: yes
+  when: inventory_hostname not in groups.nodes
+
+- name: удаление старых каталогов LDAP
+  command: rm -r  /var/lib/ldap
+  ignore_errors: yes
+  when: inventory_hostname not in groups.nodes
+  
 - ald: task=init_client pass_file=/root/pass-file
   when: inventory_hostname not in groups.nodes
 
