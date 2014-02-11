@@ -36,11 +36,6 @@ ald:
     # Должен совпадать
     krb_domain: ${ald.domain.upper()}
 
-    # Тип файловой системы для организации удаленного доступа
-    # к пользовательским каталогам.
-    # Значения: none, nfs, cifs.
-    fs_type: none
-
     # Список групп
     groups: [administrators, users]
 
