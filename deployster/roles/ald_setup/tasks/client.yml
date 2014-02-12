@@ -52,6 +52,7 @@
   when: inventory_hostname not in groups.nodes
   
 - ald: task=init_client pass_file=/root/pass-file
+  when: inventory_hostname == ald.master_ald_srv
 
 
 - name: Настройка доступа Администратора на клиентских станциях
