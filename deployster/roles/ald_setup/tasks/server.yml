@@ -42,6 +42,10 @@
 - name: удаление старых каталогов LDAP
   command: rm -r  /var/lib/ldap
   ignore_errors: yes
+  
+- name: удаление старых keytab
+  command: rm /etc/krb5.keytab
+  ignore_errors: yes  
 
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
