@@ -17,24 +17,20 @@
 
   pre_tasks:
     - include: roles/initial_settings/tasks/repo.yml
+    - name: установка клиента glusterfs
+      apt: pkg=glusterfs-client state=latest force=yes
+
+    - name: установка клиента glusterfs
+
 
   roles:
    - firefox_vnc
 #   - ald_setup
 
   post_tasks:
-   - name: настройка /etc/hosts
-     lineinfile: dest=/etc/hosts
-                 regexp='.*{{ network.public.address }}.{{ nodes_ip[item] }}'
-                 line='{{ network.public.address }}.{{ nodes_ip[item] }} {{ item }}'
-                 state=present
-     with_items: groups.nodes
-
-   - debug: msg='{{ network.public.address }}.{{ nodes_ip[item] }}'
-     with_items: groups.nodes
 
    - name: настройка /etc/hosts
      lineinfile: dest=/etc/hosts
                  regexp='.*{{ hac_cntrl.ip }}'
-                 line='{{hac_cntrl.ip}} {{ hac_cntrl.name }}'
+                 line='{{ hac_cntrl.ip }} {{ hac_cntrl.name }}'
                  state=present

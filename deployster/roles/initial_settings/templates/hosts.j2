@@ -1,9 +1,4 @@
 127.0.0.1	localhost
-{% if network.control.dns_search %}
-127.0.1.1	{{ inventory_hostname }}.{{ network.control.dns_search }}	{{ inventory_hostname }}
-{% else %}
-127.0.1.1	{{ inventory_hostname }}
-{% endif %}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.control.address }}.{{ value }} {{ key }}
 {% endfor %}

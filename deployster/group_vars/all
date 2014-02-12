@@ -14,10 +14,11 @@ repository:
     # Адреса репозиториев с пакетами для ПК КВГ
     hac_common: http://packages.npdb/virt/se13/common
     hac: http://packages.npdb/virt/se13/vplatform
+    # todo only for havedeg!!! add this package to clustert rep!
     globula: http://packages.npdb/cloud/se13/globula
 
 hac_cntrl:
-    #TODO адрес должен быть из сети public
+    #TODO адрес должен быть из сети public!!
     ip: 192.168.50.55
     name: cluster
 
@@ -33,7 +34,6 @@ ald:
     ldap_domain: dc=${ald.domain}
 
     # Домен в записи Kerberos в верхнем регистре.
-    # Должен совпадать
     krb_domain: ${ald.domain.upper()}
 
     # Список групп
@@ -41,10 +41,10 @@ ald:
 
     # Имя администратора
     kvg_admin_name: kvg_admin
-    
+
     # Сервисы
     services_list: [krb5-kdc, krb5-admin-server, slapd, nslcd, nscd, aldd, aldcd]
-    
+
 # точка монтирования glusterfs
 # todo сейчас используется в glusterfs role, будет монтироваться pacemaker'ом
 gluster:
