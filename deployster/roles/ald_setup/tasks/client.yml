@@ -58,5 +58,6 @@
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain}}
   ignore_errors: yes
   with_items: groups.admin_stations 
+  when: inventory_hostname not in groups.nodes
     
  
