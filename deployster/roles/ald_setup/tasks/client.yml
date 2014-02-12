@@ -52,7 +52,7 @@
   when: inventory_hostname not in groups.nodes
   
 - ald: task=init_client pass_file=/root/pass-file
-  when: inventory_hostname == ald.master_ald_srv
+  when: inventory_hostname == ald.master_ald_srv or inventory_hostname in groups.admin_stations
 
 
 - name: Настройка доступа Администратора на клиентских станциях
