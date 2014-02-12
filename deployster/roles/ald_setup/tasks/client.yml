@@ -53,13 +53,6 @@
   
 - ald: task=init_client pass_file=/root/pass-file
   when: inventory_hostname not in groups.nodes
-
-- pause: seconds=5
-
-- name: Настройка доступа Администратора
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain}}
-  ignore_errors: yes
-  with_items: group.nodes
   
 - name: Настройка доступа Администратора на клиентских станциях
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain}}
