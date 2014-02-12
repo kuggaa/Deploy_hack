@@ -53,10 +53,7 @@
   
 - ald: task=init_client pass_file=/root/pass-file
   when: inventory_hostname == ald.master_ald_srv or inventory_hostname in groups.admin_stations
-
-
+  
 - name: Настройка доступа Администратора на клиентских станциях
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain}}
-  ignore_errors: yes
-  with_items: groups.admin_stations 
+  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host=inventory_hostname.{{ ald.domain}}
   when: inventory_hostname not in groups.nodes 
