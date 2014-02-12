@@ -1,5 +1,10 @@
 VERSION=1.5
+{% if inventory_hostname in groups.nodes %}
 SERVER={{ inventory_hostname }}
+{% endif %}
+{% if  inventory_hostname not in groups.nodes %}
+SERVER={{ ald.master_ald_srv }}
+{% endif %}
 SERVER_ID=1
 DOMAIN=.{{ ald.domain }}
 DESCRIPTION=
