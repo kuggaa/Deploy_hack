@@ -1,5 +1,10 @@
 VERSION=1.5
-SERVER={{ inventory_hostname }}
+{% if inventory_hostname in groups.nodes %}
+SERVER={{ inventory_hostname }}.{{ ald.domain }}
+{% endif %}
+{% if  inventory_hostname not in groups.nodes %}
+SERVER={{ ald.master_ald_srv }}.{{ ald.domain }}
+{% endif %}
 SERVER_ID=1
 DOMAIN=.{{ ald.domain }}
 DESCRIPTION=
@@ -10,7 +15,7 @@ ALLOWED_LOCAL_GROUPS=users,audio,video,scanner,cdrom,floppy,fuse
 TICKET_MAX_LIFE=10h
 TICKET_MAX_RENEWABLE_LIFE=7d
 NETWORK_FS_TYPE=none
-SERVER_EXPORT_DIR=/ald_export_home
+SERVER_EXPORT_DIR={{ dirs.ald_env_users }}
 SERVER_ARCHIVE_DIR=/ald_archive_home
 CLIENT_MOUNT_DIR=/ald_home
 SERVER_FS_KRB_MODES=krb5i
