@@ -1,9 +1,9 @@
 VERSION=1.5
 {% if inventory_hostname in groups.nodes %}
-SERVER={{ inventory_hostname }}
+SERVER={{ inventory_hostname }}.{{ ald.domain }}
 {% endif %}
 {% if  inventory_hostname not in groups.nodes %}
-SERVER={{ ald.master_ald_srv }}
+SERVER={{ ald.master_ald_srv }}.{{ ald.domain }}
 {% endif %}
 SERVER_ID=1
 DOMAIN=.{{ ald.domain }}
