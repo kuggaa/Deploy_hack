@@ -12,25 +12,12 @@
    - name: "my_password"
      prompt: "Enter password for ALD server administrator"
      private: yes
-    # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
      confirm: yes
 
   pre_tasks:
     - include: roles/initial_settings/tasks/repo.yml
-    - name: установка клиента glusterfs
-      apt: pkg=glusterfs-client state=latest force=yes
-
-    - name: установка клиента glusterfs
-
 
   roles:
+   - { role: initial_workstation, network.public.address: $from_main, network.public.mask: $from_main, network.control.address: $from_main , network.control.mask: $from_main }
    - firefox_vnc
 #   - ald_setup
-
-  post_tasks:
-
-   - name: настройка /etc/hosts
-     lineinfile: dest=/etc/hosts
-                 regexp='.*{{ hac_cntrl.ip }}'
-                 line='{{ hac_cntrl.ip }} {{ hac_cntrl.name }}'
-                 state=present
