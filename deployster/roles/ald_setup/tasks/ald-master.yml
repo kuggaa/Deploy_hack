@@ -18,8 +18,8 @@
   service: name=slapd state=stopped
 
 - name: перенос на Gluster базы LDAP
-  command: cp -pR /var/lib/ldap {{ gluster.mount_point }}
-           creates={{ gluster.mount_point }}/ldap/DB_CONFIG
+  command: cp -pfR /var/lib/ldap {{ gluster.mount_point }}
+#           creates={{ gluster.mount_point }}/ldap/DB_CONFIG
 
 - name: удаление старой базы LDAP
   command: rm -rf /var/lib/ldap removes=/var/lib/ldap
@@ -41,8 +41,8 @@
     - krb5-admin-server
 
 - name: перенос на Gluster базы Kerberos
-  command: cp -pR /var/lib/krb5kdc {{ gluster.mount_point }}
-           creates={{ gluster.mount_point }}/krb5kdc/principal
+  command: cp -pfR /var/lib/krb5kdc {{ gluster.mount_point }}
+#           creates={{ gluster.mount_point }}/krb5kdc/principal
 
 - name: удаление старой базы Kerberos
   command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
