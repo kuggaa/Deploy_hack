@@ -53,5 +53,5 @@ gluster:
     volume: 'vm_storage_volume'
 dirs:
     vm_images: '{{ gluster.mount_point }}/vm_images_and_config'
-    ald_env_users: '{{ gluster.mount_point }}/ald_env_users'
+    ald_env_users: '{{ gluster.mount_point }}'
     
