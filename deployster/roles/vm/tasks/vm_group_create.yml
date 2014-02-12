@@ -4,5 +4,6 @@
 ---
   - name: создание групп из VirtualDomain
     command: crm configure group {{ item.name }} {{ item.vm_list }}
+             meta target-role="Stopped" is-managed="true" ordered="false" collocated="false"
     with_items: vm_groups
     when: inventory_hostname == common.master_node and vm_groups is defined
