@@ -5,12 +5,16 @@
 # remove node from cluster
     - name: Переводим удалямые узлы в standby режим
       command: crm_standby -v true
-       
+
     - name: Останавливаем corosync на удаляемых узлах
       service: name=corosync state=stopped enabled=no
-      
+
+    - name: Останавливаем работающие сервисы corosync и pacemaker
+      command: killall -s 9 cib stonithd lrmd attrd pengine crmd mgmtd corosync
+      ignore_errors: True
+
     - name: Удаляем пакеты с ПО ВГ
       apt: pkg=$item state=absent force=yes purge=yes
       with_items: [pacemaker, pacemaker-mgmt, corosync]
-      
-      
+
+

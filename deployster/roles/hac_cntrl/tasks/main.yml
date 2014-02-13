@@ -2,6 +2,23 @@
 # © ОАО «Северное ПКБ», 2013
 #
 ---
-# set up hac_cntrl
-  - include: setup_pkg.yml
-  - include: confgure_hac_cntrl.yml
+# setup&configure hac_cntrl
+    - name: установка пакетов для ПК Управления КВГ
+      apt: pkg={{ item }} update_cache=yes state=latest force=yes
+      with_items:
+         - firefox
+         - python-django
+         - python-setuptools
+         - apache2
+         - libapache2-mod-wsgi
+         - pacemaker-mgmt
+         - python-netsnmp
+         - ipmitool
+         - hac-control-apache
+
+    - name: настройка конфигурационных файлов ПК Управления
+      template: src={{ item }}.j2 dest=/etc/hac-control/{{ item }}
+      with_items: ['hac.conf','infrastructure.conf','virt_install_cmd','policy.conf']
+
+    - name: перезапуск службы apache2
+      service: name=apache2 state=restarted

@@ -1,0 +1,16 @@
+[vm]
+# GlusterFS directory to store *.img files.
+vms_dir = {{ dirs.vm_images }}
+
+# Login to access PC with boot CD.
+login_to_access_cd = {{ cd_user }}
+
+max_cpu_qty_per_vm = 4
+# size in MB
+max_ram_per_vm = 2048
+# size im GB
+max_hdd_size_per_vm = 300
+
+[pacemaker-mgmt]
+login = user
+pwd = password

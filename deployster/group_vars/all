@@ -2,10 +2,15 @@
 
 common:
     master_node: '{{ groups.nodes[0] }}'
-    slave_node: '{{ groups.nodes[1] }}'
 
-# !важно! имена и количество узлов должны совпадать cо списком узлов в файле stage в разделе [nodes]
+# !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
+# должны совпадать cо списком узлов в файле stage в разделе [nodes]
 nodes_ip: { hacnode1: 49, hacnode2: 50, hacnode3: 51 }
+nodes_ip_ipmi: { hacnode1: 40, hacnode2: 41, hacnode3: 42 }
+
+# значения в словаре - это номер розетки на pdu, к которой подключен сервер,
+# если pdu дублируются, то узлы должны быть подключены семмитрично, т.е. hacnode1 к 1 розетке на обоих pdu
+pdu_connections: { hacnode1: 1, hacnode2: 2, hacnode3: 3 }
 
 repository:
     # Адрес репозитория с дистрибутивом Астры версии 1.3
@@ -18,7 +23,7 @@ repository:
     globula: http://packages.npdb/cloud/se13/globula
 
 hac_cntrl:
-    #TODO адрес должен быть из сети public!!
+    # todo адрес должен быть из сети public!!
     ip: 192.168.50.55
     name: cluster
 
@@ -36,7 +41,7 @@ ald:
     # Домен в записи Kerberos в верхнем регистре.
     krb_domain: ${ald.domain.upper()}
 
-    # Список групп
+    # Список групп, первой в списке должна всегда быть группа для пользователей с полномочиями администраторов КВГ
     groups: [administrators, users]
 
     # Имя администратора
@@ -54,4 +59,4 @@ gluster:
 dirs:
     vm_images: '{{ gluster.mount_point }}/vm_images_and_config'
     ald_env_users: '{{ gluster.mount_point }}'
-    
+

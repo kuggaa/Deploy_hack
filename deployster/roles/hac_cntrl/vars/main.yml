@@ -1,3 +1,16 @@
 # specific gluster variables
+
 hac_cntrl:
   path: '/root'
+
+# Логин и пароль к IPMI интерфейсу( должен быть одинаковый на всех узлах КВГ)
+ipmi:
+  login: 'ADMIN'
+  password: 'ADMIN'
+
+# Настройки PDU: имя и последняя цифра ip-адреса
+pdu: { pdu_1: 43, pdu_2: 44 }
+
+# пользователь ssh-сеанса для копирования iso-образа диска с ОС для функции создания ВМ
+cd_user: 'root'
+

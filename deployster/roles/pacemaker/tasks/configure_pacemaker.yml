@@ -1,0 +1,20 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: активация автозагрузки corosync
+      lineinfile: dest=/etc/default/corosync regexp=^START= line=START=yes
+
+    - name: создание конфигурации сorosync
+      template: src=corosync.conf dest=$corosync_conf
+
+    - name: перeзапуск corosync
+      service: name=corosync state=restarted
+
+    - name: выключение fencing
+      command: crm configure property stonith-enabled="false"
+
+
+#Для fencing_topology делаем cibadmin -U -X '<cib validate-with="pacemaker-1.1"/>'
+#выливаем cibadmin -Q > /path/to
+#заливаем cibadmin --replace --xml-file /path/to

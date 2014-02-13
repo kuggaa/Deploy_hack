@@ -1,12 +1,12 @@
-- hosts: virt_hosts
+- hosts: nodes
   user: root
-    
+
   tasks:
-  
-    - name: убиванием процессы pacemaker и corosync
+
+    - name: Останавливаем работающие сервисы corosync и pacemaker
       command: killall -s 9 cib stonithd lrmd attrd pengine crmd mgmtd corosync
       ignore_errors: True
-      
+
     - name: удаление pacemaker и сorosync
       apt: pkg=$item purge=yes state=absent
       with_items:
@@ -14,7 +14,7 @@
         - pacemaker-mgmt-client
         - pacemaker
         - corosync
-        
+
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
-         
+
