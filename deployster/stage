@@ -9,5 +9,5 @@ astra-cluster-1
 [remove_nodes]
 
 [admin_stations]
-admin-station1
+admin-station2 ip=60
 

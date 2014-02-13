@@ -17,7 +17,7 @@
   roles:
 #   - initial_settings
 #   - glusterfs
-   - libvirt
+#   - libvirt
 #   - hac_cntrl
 #   - ald_setup
 ##   - pacemaker + resources
