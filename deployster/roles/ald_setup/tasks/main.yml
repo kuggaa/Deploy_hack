@@ -10,7 +10,9 @@
 - service: name={{ item }} enabled=no
   with_items: ald.services_list
   when: inventory_hostname in groups.nodes
-  
+  ignore_errors: yes
+
 - service: name={{ item }} state=stopped
   with_items: ald.services_list  
   when: inventory_hostname in groups.nodes
+  ignore_errors: yes
