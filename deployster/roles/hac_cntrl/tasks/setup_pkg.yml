@@ -16,3 +16,4 @@
          - ipmitool
          - git
 # add deb package with hac_cntrl
+# todo remove git!!

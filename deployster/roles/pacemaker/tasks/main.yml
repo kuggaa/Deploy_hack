@@ -1,0 +1,7 @@
+#
+# © ОАО «Северное ПКБ», 2013
+#
+---
+# setup pacemaker
+  - include: setup_pacemaker_pkg.yml
+  - include: confgure_pacemaker.yml

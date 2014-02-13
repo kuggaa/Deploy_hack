@@ -3,8 +3,7 @@
 #
 ---
 # install pacemaker packages and restart service
-
- - name: установка pacemaker
-   apt: pkg=$item state=latest force=yes
-   with_items: [pacemaker, pacemaker-mgmt, corosync]
+    - name: установка pacemaker
+      apt: pkg=$item state=latest force=yes
+      with_items: [pacemaker, corosync]
 
