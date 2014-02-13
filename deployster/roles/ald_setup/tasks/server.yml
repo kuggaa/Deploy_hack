@@ -12,18 +12,7 @@
     - ald-server
     - ald-server-common     
   tags: [ packages ]
-                
-#- name: установка ald пакетов
-  #apt: pkg=$item state=latest
-  #with_items:
-    #- ald-admin-common
-    #- ald-server-common
-    #- ald-client-common    
-    #- ald-client-fs    
-    #- ald-server-dc
-    #- smolensk-security-ald
-  #tags: [ packages ]
-  
+                     
 - name: создание файла настройки пользователей
   template: src=pass-file.j2 dest=/root/pass-file mode=0600
   tags: [ pass-file ]
@@ -42,6 +31,12 @@
 - name: удаление старых каталогов LDAP
   command: rm -r  /var/lib/ldap
   ignore_errors: yes
+  
+- name: удаление /ald_home
+  command: rm -r /ald_home  
+  
+- name: подмена каталога /ald_home
+  file: src={{ gluster.mount_point }} dest=/ald_home state=link
   
 - name: удаление старых keytab
   command: rm /etc/krb5.keytab
@@ -84,4 +79,4 @@
   when: inventory_hostname != ald.master_ald_srv
 
 - name: удаление временных файлов
-  local_action: command rm -rf ald-conf
+  local_action: command rm -rf ald-conf  
