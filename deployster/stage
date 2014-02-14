@@ -11,3 +11,5 @@ astra-cluster-1
 [admin_stations]
 admin-station2 ip=60
 
+[virtual_server]
+ald-server
