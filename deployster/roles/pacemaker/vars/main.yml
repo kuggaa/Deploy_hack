@@ -1,6 +1,7 @@
-#
+# vars for corosync and pacemaker
 
-bindnetaddr: 
-# 226.95.1.1
-mcastaddr: 239.255.1.1
-mcastport: 4001
+corosync:
+  # 226.95.1.1, 226.94.1.1
+  mcastaddr: 239.255.1.1
+  # 4000
+  mcastport: 4001

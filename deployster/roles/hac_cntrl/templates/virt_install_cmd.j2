@@ -1,0 +1,13 @@
+virt-install
+--name={name}
+--disk path={img_path},bus=virtio,size={hdd_size},cache=none
+--ram={ram}
+--vcpus {cpus_qty}
+--cdrom=/tmp/vm.iso
+--graphics vnc,listen=0.0.0.0
+--accelerate
+--network=bridge:{{ network.bridge }},model=virtio
+--connect=qemu:///system
+--noautoconsole
+--hugepage
+--security type=static,label='0:0'

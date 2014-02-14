@@ -1,0 +1,23 @@
+[rules]
+
+# Rule is an aggregate of groups. Example:
+# rule1 = group1, group2, group3
+
+all = ${ald.groups}
+
+[policy]
+
+# Example:
+# can_manage_node = group1, group2, rule:rule1, rule:rule2
+#
+# To forbid action for everyone:
+# can_manage_node =
+
+can_see_nodes = rule:all
+can_control_nodes = ${ald.groups[0]}
+
+can_see_resources = rule:all
+can_see_resources_timeouts = ${ald.groups[0]}
+can_create_resource = ${ald.groups[0]}
+can_control_resources = ${ald.groups[0]}
+can_open_vm_console = ${ald.groups[0]}

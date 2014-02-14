@@ -1,0 +1,19 @@
+# IPMI devices.
+{% for key, value in nodes_ip_ipmi.iteritems() %}
+
+[ipmi:{{ key }}-ipmi]
+node_id = {{ key }}
+ip = {{ network.control.address }}.{{ value }}
+login = {{ ipmi.login }}
+password = {{ ipmi.password }}
+{% endfor %}
+
+# PDU devices.
+{% for key, value in pdu.iteritems() %}
+
+[pdu:{{ key }}]
+ip = {{ network.control.address }}.{{ value }}
+{% for key, value in pdu_connections.iteritems() %}
+outlet{{ value }} = {{ key }}
+{% endfor %}
+{% endfor %}
