@@ -1,8 +1,8 @@
 VERSION=1.5
-{% if inventory_hostname in groups.nodes %}
+{% if inventory_hostname in groups.virtual_server %}
 SERVER={{ inventory_hostname }}.{{ ald.domain }}
 {% endif %}
-{% if  inventory_hostname not in groups.nodes %}
+{% if  inventory_hostname not in groups.virtual_server %}
 SERVER={{ ald.master_ald_srv }}.{{ ald.domain }}
 {% endif %}
 SERVER_ID=1
