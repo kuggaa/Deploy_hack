@@ -1,0 +1,16 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- hosts: virtual_server
+  user: root
+
+  vars_prompt:
+  - name: "my_password"
+    prompt: "Enter password for admin"
+    private: yes
+    confirm: yes
+    default: "admin"
+
+  roles:
+    - virtual_ald

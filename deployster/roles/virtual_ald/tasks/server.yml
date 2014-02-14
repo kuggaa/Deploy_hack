@@ -1,0 +1,54 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- name: установка haveged
+  apt: pkg=haveged state=latest
+  tags: [ packages ]
+
+- name: установка пакетов для сервера ALD
+  apt: pkg=$item state=latest
+  with_items:
+    - ald-server
+    - ald-server-common
+  tags: [ packages ]
+
+- name: создание файла настройки пользователей
+  template: src=pass-file.j2 dest=/root/pass-file mode=0600
+  tags: [ pass-file ]
+
+- name: создание файла настройки ALD (/etc/ald/ald.conf)
+  template: src=ald.conf.j2 dest=/etc/ald/ald.conf
+  register: ald_config
+  tags: [ config ]
+
+- name: удаление старых каталогов KRB
+  command: rm -r  /var/lib/krb5kdc
+  ignore_errors: yes
+
+- name: удаление старых каталогов LDAP
+  command: rm -r  /var/lib/ldap
+  ignore_errors: yes
+
+- name: удаление старых keytab
+  command: rm /etc/krb5.keytab
+  ignore_errors: yes  
+
+- name: настройка ALD сервера
+  command: ald-init init -f --pass-file=/root/pass-file
+
+- name: Make keytab for admin/admin
+  command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
+
+- name: создание группы в ALD
+  ald: task=group group={{ item }} pass_file=/root/pass-file
+  with_items: ald.groups
+
+- name: создание пользователя администратора в ALD
+  command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[0] }} --full-name='Admininstator' --user-desc='HAC administrator' {{ ald.kvg_admin_name }}
+
+- name: Добавление привелегий для пользователя
+  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1  
+
+- name: Настройка доступа Администратора
+  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain}}

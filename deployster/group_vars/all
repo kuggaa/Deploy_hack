@@ -25,7 +25,8 @@ hac_cntrl:
 # Настройки Astra Linux Directory
 ald:
     # Узел сервера
-    master_ald_srv: '{{ common.master_node }}'
+#    master_ald_srv: '{{ common.master_node }}'
+    master_ald_srv: '{{ groups.virtual_server[0] }}'
 
     # Домен
     domain: npdb

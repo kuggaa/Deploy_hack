@@ -1,0 +1,8 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- include: server.yml tags=ald-virtual-server
+  when: inventory_hostname in groups.virtual_server
+
+- include: client.yml tags=ald-client

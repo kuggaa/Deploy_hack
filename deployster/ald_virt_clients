@@ -1,0 +1,16 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- hosts: admin_stations
+  user: root
+  
+  vars_prompt: 
+  - name: "my_password"
+    prompt: "Enter password for ALD server administrator"
+    private: yes
+   # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
+    confirm: yes
+
+  roles:
+    - virtual_ald
