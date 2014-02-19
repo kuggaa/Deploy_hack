@@ -17,17 +17,19 @@
   user: root
   roles:
    - { role: add_node }
-#  vars_files: ['roles/glusterfs/vars/main.yml']
-#  roles:
-#   - { role: add_node, gluster.placedir: $from_main, gluster.volume: $from_main }
 
-# todo remove it!
 - hosts: new_nodes
   user: root
-  tasks:
-   - include: roles/glusterfs/tasks/mount.yml
+  vars_files: ['roles/initial_settings/vars/main.yml']
+  vars_prompt:
+   - name: "my_password"
+     prompt: "Enter password for ALD server administrator"
+     private: yes
+     confirm: yes
+  roles:
+   - libvirt
+   - {role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
+   - virtual_ald
 
-# added libvirt
 # install pacemaker and just added node to cluster
-# install ald client
-# install hac_cntrl
+

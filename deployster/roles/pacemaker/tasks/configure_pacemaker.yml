@@ -2,19 +2,24 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-    - name: активация автозагрузки corosync
-      lineinfile: dest=/etc/default/corosync regexp=^START= line=START=yes
-
-    - name: создание конфигурации сorosync
-      template: src=corosync.conf dest=$corosync_conf
-
-    - name: перeзапуск corosync
-      service: name=corosync state=restarted
-
     - name: выключение fencing
-      command: crm configure property stonith-enabled="false"
+      command: crm_attribute --attr-name stonith-enabled --attr-value false
+      
+    - name: установка схемы валидации с поддержкой fencing-topology
+      command: cibadmin -U -X '<cib validate-with="pacemaker-1.1"/>'
+      
+    - name: установка quorum-policy
+      command: crm_attribute --attr-name no-quorum-policy --attr-value ignore
 
+    #- name: подготовка секции resources из шаблона
+    
+    #- name: подготовка секции fencing-topology из шаблона
+    
+    #- name: подготовка секции constraints из шаблона
+   
+    #- name: выключение fencing
+    #  command: crm_attribute --attr-name stonith-enabled --attr-value true
+    
+    - name: установка quorum-policy
+      command: crm_attribute --attr-name no-quorum-policy --attr-value stop
 
-#Для fencing_topology делаем cibadmin -U -X '<cib validate-with="pacemaker-1.1"/>'
-#выливаем cibadmin -Q > /path/to
-#заливаем cibadmin --replace --xml-file /path/to

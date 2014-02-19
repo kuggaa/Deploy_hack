@@ -1,0 +1,7 @@
+- hosts: nodes
+  user: root
+
+  tasks:
+    - name: update and upgrade repository
+      apt: update_cache=yes upgrade=yes
+

@@ -5,5 +5,4 @@
 # install pacemaker packages and restart service
     - name: установка pacemaker
       apt: pkg=$item state=latest force=yes
-      with_items: [pacemaker, corosync]
-
+      with_items: [pacemaker, corosync, fence-agents]

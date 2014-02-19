@@ -1,5 +1,5 @@
 127.0.0.1	localhost
-{{ hac_cntrl.ip }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
+{{ ald.ip_master_ald }} {{ ald.master_ald_srv }}.{{ ald.domain }} {{ ald.master_ald_srv }}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.control.address }}.{{ value }} {{ key }}
 {% endfor %}

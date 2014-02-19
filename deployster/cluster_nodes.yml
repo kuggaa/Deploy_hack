@@ -6,17 +6,10 @@
 - hosts: nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
-  vars_prompt:
-  - name: "my_password"
-    prompt: "Enter password for admin"
-    private: yes
-    confirm: yes
-    default: "admin"
-
   roles:
 #   - initial_settings
-#   - glusterfs
-#   - libvirt
-   - {role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
-#    - { role: pacemaker, network.control.address: $from_main }
+#  - glusterfs
+  - libvirt
+#   - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
+#   - { role: pacemaker, network.control.address: $from_main }
 #   - ald_setup

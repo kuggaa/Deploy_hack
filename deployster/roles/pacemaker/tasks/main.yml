@@ -4,4 +4,6 @@
 ---
 # setup pacemaker
   - include: setup_pacemaker_pkg.yml
-  - include: confgure_pacemaker.yml
+  - include: configure_corosync.yml
+  - include: configure_pacemaker.yml
+    when: inventory_hostname == common.master_node

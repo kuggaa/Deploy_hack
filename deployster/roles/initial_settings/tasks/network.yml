@@ -39,5 +39,6 @@
       when: interfaces.changed
 
     - name: ожидание запуска ssh соединения
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=45
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=150
       when: interfaces.changed
+      

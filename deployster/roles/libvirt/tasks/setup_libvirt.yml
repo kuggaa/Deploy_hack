@@ -28,9 +28,13 @@
       ignore_errors: true
 
     - name: перемещение файлов /etc/libvirt/qemu на glusterfs
-      command: mv -f /etc/libvirt/qemu {{ dirs.vm_images }}
+      command: cp -rf /etc/libvirt/qemu {{ dirs.vm_images }}
       when: create_vm_images.changed and inventory_hostname == common.master_node
+      
+    - name: удаление /etc/libvirt/qemu
+      command: rm -rf /etc/libvirt/qemu
+      when: create_vm_images.changed  
 
     - name: делаем ссылку qemu в /etc/libvirt/
       file: src={{ dirs.vm_images }}/qemu dest=/etc/libvirt/qemu state=link
-      when: create_vm_images.changed and inventory_hostname == common.master_node
+      when: create_vm_images.changed

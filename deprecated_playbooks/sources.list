@@ -1,4 +1,0 @@
-deb http://packages.npdb/se13 stable main contrib non-free
-deb http://packages.npdb/virt/se13/common testing main contrib non-free
-deb http://packages.npdb/virt/se13/vplatform testing main contrib non-free
-#deb http://packages.npdb/se13-general testing main

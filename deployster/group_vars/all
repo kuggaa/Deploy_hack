@@ -5,8 +5,8 @@ common:
 
 # !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
-nodes_ip: { hacnode1: 49, hacnode2: 50, hacnode3: 51 }
-nodes_ip_ipmi: { hacnode1: 40, hacnode2: 41, hacnode3: 42 }
+nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22 }
+nodes_ip_ipmi: { hacnode1: 7, hacnode2: 8, hacnode3: 9 }
 
 # значения в словаре - это номер розетки на pdu, к которой подключен сервер,
 # если pdu дублируются, то узлы должны быть подключены семмитрично, т.е. hacnode1 к 1 розетке на обоих pdu
@@ -14,27 +14,25 @@ pdu_connections: { hacnode1: 1, hacnode2: 2, hacnode3: 3 }
 
 repository:
     # Адрес репозитория с дистрибутивом Астры версии 1.3
-    os: http://packages.npdb/se13
+    os: http://172.16.0.77/astra
 
     # Адреса репозиториев с пакетами для ПК КВГ
-    hac_common: http://packages.npdb/virt/se13/common
-    hac: http://packages.npdb/virt/se13/vplatform
-    # todo only for havedeg!!! add this package to clustert rep!
-    globula: http://packages.npdb/cloud/se13/globula
+    hac: http://172.16.0.77/hac
 
 hac_cntrl:
     # todo адрес должен быть из сети public!!
-    ip: 192.168.50.55
+    ip: 10.10.50.99
     name: cluster
 
 # Настройки Astra Linux Directory
 ald:
     # Узел сервера
-#    master_ald_srv: '{{ common.master_node }}'
     master_ald_srv: '{{ groups.virtual_server[0] }}'
+    # должен совпадать с реально установленным в ВМ с ald сервером
+    ip_master_ald: 10.10.50.80
 
     # Домен
-    domain: npdb
+    domain: hac
 
     # Расположение информации в LDAP.
     ldap_domain: dc=${ald.domain}
