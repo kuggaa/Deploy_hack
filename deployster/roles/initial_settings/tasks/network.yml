@@ -13,7 +13,9 @@
 
     - name: запрещаем запуск wicd-daemon
       service: name=wicd state=stopped enabled=no
-    # command: chkconfig -s wicd off
+      
+    - name: запрещаем запуск avahi-daemon
+      service: name=avahi-daemon state=stopped enabled=no
 
     - name: проверка наличия bridge интерфейса
       command: ip a
