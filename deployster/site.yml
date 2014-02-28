@@ -1,8 +1,0 @@
-#
-# © ОАО «Северное ПКБ», 2013
-#
----
-# The main playbook for deploy HA Cluster and infrastructure.
-#- include: workstations.yml
-- include: cluster_nodes.yml
-#- include: add_cluster_node.yml

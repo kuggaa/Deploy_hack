@@ -9,7 +9,7 @@ astra-cluster-1
 [remove_nodes]
 
 [admin_stations]
-admin-station2 ip=60
+172.16.0.100 ip=100
 
 [virtual_server]
 ald-server

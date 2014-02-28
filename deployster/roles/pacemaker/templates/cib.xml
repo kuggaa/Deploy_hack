@@ -1,3 +1,7 @@
+cibadmin -M -c -o resources --xml-file pdu.xml
+
+
+
 <cib admin_epoch="0" cib-last-written="Mon Feb 10 19:51:18 2014" crm_feature_set="3.0.6" dc-uuid="hacnode2" epoch="1736" have-quorum="1" num_updates="3" update-client="mgmtd" update-origin="hacnode2" validate-with="pacemaker-1.1">
   <configuration>
     <crm_config>

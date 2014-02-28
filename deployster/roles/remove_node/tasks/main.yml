@@ -14,7 +14,7 @@
       ignore_errors: True
 
     - name: Удаляем пакеты с ПО ВГ
-      apt: pkg=$item state=absent force=yes purge=yes
+      apt: pkg={{ item }} state=absent force=yes purge=yes
       with_items: [pacemaker, pacemaker-mgmt, corosync]
 
 
