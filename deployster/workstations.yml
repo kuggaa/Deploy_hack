@@ -18,6 +18,6 @@
     - include: roles/initial_settings/tasks/repo.yml
 
   roles:
-   - { role: initial_workstation, network.public.address: $from_main, network.public.mask: $from_main, network.control.address: $from_main , network.control.mask: $from_main }
-   - firefox_vnc
-   - virtual_ald
+    - { role: initial_workstation, network.public.address: $from_main, network.public.mask: $from_main, network.control.address: $from_main , network.control.mask: $from_main }
+    - firefox_vnc
+    #- virtual_ald
