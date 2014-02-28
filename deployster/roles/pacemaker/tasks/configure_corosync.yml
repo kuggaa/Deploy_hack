@@ -1,0 +1,12 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: активация автозагрузки corosync
+      lineinfile: dest=/etc/default/corosync regexp=^START= line=START=yes
+
+    - name: создание конфигурации сorosync
+      template: src=corosync.conf.j2 dest=/etc/corosync/corosync.conf
+
+    - name: перeзапуск corosync
+      service: name=corosync state=restarted
