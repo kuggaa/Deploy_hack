@@ -1,6 +1,6 @@
 virt-install
 --name={name}
---disk path={img_path},bus=virtio,size={hdd_size},cache=none
+--disk path={img_path},bus=ide,size={hdd_size},cache=none
 --ram={ram}
 --vcpus {cpus_qty}
 --cdrom=/tmp/vm.iso
