@@ -17,3 +17,6 @@ network:
     dns_nameservers:
 
   bridge: 'br0'
+
+hugepage:
+   count: 10000
