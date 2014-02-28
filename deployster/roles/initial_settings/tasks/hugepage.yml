@@ -13,7 +13,7 @@
              state=mounted
 
     - name: установка переменныx sysctl
-      copy: src=vm.conf dest=/etc/sysctl.d owner=root group=root mode=0644
+      template: src=vm.conf.j2 dest=/etc/sysctl.d/vm.conf owner=root group=root mode=0644
 
     - name: применение параметров sysctl
       command: sysctl --system
