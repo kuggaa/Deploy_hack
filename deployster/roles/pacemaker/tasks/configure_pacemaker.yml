@@ -2,33 +2,34 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
+    - name: очистка статусов узлов
+      command: 'yes yes | crm node clearstate {{ item }}'
+      with_items: groups.nodes
+
     - name: выключение fencing
       command: 'crm_attribute --attr-name stonith-enabled --attr-value false'
     
     - name: установка quorum-policy
       command: 'crm_attribute --attr-name no-quorum-policy --attr-value ignore'  
-    #todo  
-    #- name: установка схемы валидации с поддержкой fencing-topology
-    #  command: " cibadmin -U -X '<cib validate-with="pacemaker-1.1"/>' "
-
-    - name: копировать конфиг
-      copy: src=temp.conf.xml dest=/tmp/temp.conf.xml 
-       
-    - name: подготовка секции resources из шаблона
-      command: 'cibadmin --replace --scope resources --xml-file /tmp/temp.conf.xml'
-    #todo  
-    #- name: подготовка секции fencing-topology из шаблона
-    #  command: 'cibadmin -M -c -o configuration --xml-text '<fencing-topology/>''
-    
-    - name: копировать конфиг
-      copy: src=temp.const.xml dest=/tmp/temp.const.xml
       
-    - name: подготовка секции constraints из шаблона
-      command: 'cibadmin --replace --scope constraints --xml-file /tmp/temp.const.xml'
-   
-    - name: включение fencing
-      command: 'crm_attribute --attr-name stonith-enabled --attr-value true'
+    - name: создание файла описания ресурсов(resources)
+      template: src=resources.xml.j2 dest=/tmp/resources.xml
+
+    - name: создание файла описания топологии(fencing topology)
+      template: src=fencing_topology.xml.j2 dest=/tmp/fencing_topology.xml
+
+    - name: создание файла описания ограничений(constraints)
+      template: src=constraints.xml.j2 dest=/tmp/constraints.xml
+
+    - name: копиование файла c командами сibadmin
+      copy: src=pacemaker.sh dest=/tmp/pacemaker.sh mode=0775
+
+    - name: инициализация кластера
+      shell: pacemaker.sh chdir=/tmp
+
+
+
+
     
-    - name: установка quorum-policy
-      command: 'crm_attribute --attr-name no-quorum-policy --attr-value stop'
+
 

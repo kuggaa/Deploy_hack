@@ -6,10 +6,17 @@ common:
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
 nodes_ip: { hacnode1: 49, hacnode2: 50, hacnode3: 51 }
 nodes_ip_ipmi: { hacnode1: 40, hacnode2: 41, hacnode3: 42 }
+# Логин и пароль к IPMI интерфейсу( должен быть одинаковый на всех узлах КВГ)
+ipmi:
+  login: 'ADMIN'
+  password: 'ADMIN'
 
 # Значения в словаре - это номер розетки на pdu, к которой подключен сервер,
 # если pdu дублируются, то узлы должны быть подключены семмитрично, т.е. hacnode1 к 1 розетке на обоих pdu.
 pdu_connections: { hacnode1: 1, hacnode2: 2, hacnode3: 3 }
+
+# Настройки PDU: имя и последняя цифра ip-адреса
+pdu: { pdu_1: 43, pdu_2: 44 }
 
 repository:
     # Адрес репозитория с дистрибутивом Астры версии 1.3
@@ -21,6 +28,9 @@ repository:
 hac_cntrl:
     ip: 10.10.50.99
     name: cluster
+    # пользователь ssh-сеанса для копирования iso-образа диска с ОС для функции создания ВМ
+    # доступ без пароля должен быть задан на всех узлах кластера (т.е. выполнена команда ssh-copy-id <cd_user>@<ip или hostname>)
+    cd_user: 'root'
 
 # Настройки Astra Linux Directory
 ald:

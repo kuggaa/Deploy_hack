@@ -1,0 +1,123 @@
+<resources>
+{% for host in groups['nodes'] %}
+      <primitive class="stonith" id="stonith_{{ host }}" type="external/ipmi">
+        <meta_attributes id="stonith_{{ host }}-meta_attributes">
+          <nvpair id="stonith_{{ host }}-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="stonith_{{ host }}-operations">
+          <op id="stonith_{{ host }}-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
+          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" timeout="60"/>
+          <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
+        </operations>
+        <instance_attributes id="stonith_{{ host }}-instance_attributes">
+          <nvpair id="stonith_{{ host }}-instance_attributes-hostname" name="hostname" value="{{ host }}"/>
+          <nvpair id="stonith_{{ host }}-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ nodes_ip_ipmi[host] }}"/>
+          <nvpair id="stonith_{{ host }}-instance_attributes-userid" name="userid" value="{{ ipmi.login }}"/>
+          <nvpair id="stonith_{{ host }}-instance_attributes-passwd" name="passwd" value="{{ ipmi.password }}"/>
+          <nvpair id="stonith_{{ host }}-instance_attributes-interface" name="interface" value="lanplus"/>
+        </instance_attributes>
+      </primitive>
+{% for key, value in pdu.iteritems() %}
+      <primitive class="stonith" id="fence_{{ host }}_{{ key }}_on" type="fence_apc_snmp">
+        <instance_attributes id="fence_{{ host }}_{{ key }}_on-instance_attributes">
+          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
+          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-action" name="action" value="on"/>
+          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-port" name="port" value="{{ pdu_connections[host] }}"/>
+          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}/>
+        </instance_attributes>
+      </primitive>
+      <primitive class="stonith" id="fence_{{ host }}_{{ key }}_off" type="fence_apc_snmp">
+        <instance_attributes id="fence_{{ host }}_{{ key }}_off-instance_attributes">
+          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
+          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-action" name="action" value="off"/>
+          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-port" name="port" value="{{ pdu_connections[host] }}"/>
+          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}"/>
+         {% if loop.last %}<nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-power_wait" name="power_wait" value="5"/>{% endif %}
+        </instance_attributes>
+        <operations>
+          <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
+        </operations>
+      </primitive>
+{% endfor %}
+{% endfor %}
+      <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
+        <meta_attributes id="hacip_test-meta_attributes">
+          <nvpair id="hacip_test-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="hacip_test-operations">
+          <op id="hacip_test-op-monitor-10s" interval="10s" name="monitor" timeout="20s"/>
+        </operations>
+        <instance_attributes id="hacip_test-instance_attributes">
+          <nvpair id="hacip_test-instance_attributes-ip" name="ip" value="{{ hac_cntrl.ip }}"/>
+        </instance_attributes>
+      </primitive>
+       <clone id="glusterd">
+        <meta_attributes id="glusterd-meta_attributes">
+          <nvpair id="glusterd-meta_attributes-clone-max" name="clone-max" value="3"/>
+          <nvpair id="glusterd-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="ocf" id="gluster" provider="heartbeat" type="glusterd">
+          <operations id="gluster-operations">
+            <op id="gluster-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+          </operations>
+        </primitive>
+      </clone>
+      <clone id="gluster_volume">
+        <meta_attributes id="gluster_volume-meta_attributes">
+          <nvpair id="gluster_volume-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="ocf" id="gluster_vol" provider="heartbeat" type="volume">
+          <operations id="gluster_vol-operations">
+            <op id="gluster_vol-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+          </operations>
+          <instance_attributes id="gluster_vol-instance_attributes">
+            <nvpair id="gluster_vol-instance_attributes-volname" name="volname" value="{{ gluster.volume }}"/>
+          </instance_attributes>
+          <meta_attributes id="gluster_vol-meta_attributes">
+            <nvpair id="gluster_vol-meta_attributes-target-role" name="target-role" value="Started"/>
+          </meta_attributes>
+        </primitive>
+      </clone>
+      <clone id="mount_gluster">
+        <meta_attributes id="mount_gluster-meta_attributes">
+          <nvpair id="mount_gluster-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="ocf" id="gluster_dest" provider="heartbeat" type="Filesystem">
+          <operations id="gluster_dest-operations">
+            <op id="gluster_dest-op-monitor-20" interval="20" name="monitor" timeout="40"/>
+          </operations>
+          <instance_attributes id="gluster_dest-instance_attributes">
+            <nvpair id="gluster_dest-instance_attributes-device" name="device" value="/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
+            <nvpair id="gluster_dest-instance_attributes-directory" name="directory" value="{{ gluster.mount_point }}"/>
+            <nvpair id="gluster_dest-instance_attributes-fstype" name="fstype" value="glusterfs"/>
+            <nvpair id="gluster_dest-instance_attributes-options" name="options" value="defaults,_netdev"/>
+          </instance_attributes>
+          <meta_attributes id="gluster_dest-meta_attributes">
+            <nvpair id="gluster_dest-meta_attributes-target-role" name="target-role" value="Started"/>
+          </meta_attributes>
+        </primitive>
+      </clone>
+      <template class="ocf" id="vm_template" provider="heartbeat" type="VirtualDomain">
+        <meta_attributes id="vm_template-meta_attributes">
+          <nvpair id="vm_template-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="vm_template-meta_attributes-allow-migrate" name="allow-migrate" value="true"/>
+        </meta_attributes>
+        <operations id="vm_template-operations">
+          <op id="vm_template-op-monitor-20" interval="20" name="monitor" timeout="60"/>
+          <op id="vm_template-op-start-0" interval="0" name="start" timeout="90"/>
+          <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="90"/>
+        </operations>
+        <instance_attributes id="vm_template-instance_attributes">
+          <nvpair id="vm_template-instance_attributes-hypervisor" name="hypervisor" value="qemu:///system"/>
+          <nvpair id="vm_template-instance_attributes-migration_transport" name="migration_transport" value="tcp"/>
+        </instance_attributes>
+      </template>
+      <template class="ocf" id="dummy_template" provider="pacemaker" type="Dummy">
+        <meta_attributes id="dummy_template-meta_attributes">
+          <nvpair id="dummy_template-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <operations id="dummy_template-operations">
+          <op id="dummy_template-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+        </operations>
+      </template>
+</resources>
