@@ -21,7 +21,7 @@
     - name: создание файла описания ограничений(constraints)
       template: src=constraints.xml.j2 dest=/tmp/constraints.xml
 
-    - name: копиование файла c командами сibadmin
+    - name: копирование файла c командами сibadmin
       copy: src=pacemaker.sh dest=/tmp/pacemaker.sh mode=0775
 
     - name: инициализация кластера
