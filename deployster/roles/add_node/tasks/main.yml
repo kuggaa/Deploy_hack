@@ -1,5 +1,0 @@
-#
-# © ОАО «Северное ПКБ», 2013
-#
----
-    - include: add_glusterfs_node.yml

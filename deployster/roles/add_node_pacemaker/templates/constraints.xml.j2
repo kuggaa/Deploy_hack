@@ -1,0 +1,11 @@
+{% for host in groups['new_nodes'] %}
+      <rsc_location id="stonith_{{ host }}_loc" node="{{ host }}" rsc="stonith_{{ host }}" score="-INFINITY"/>
+{% endfor %}      
+{% for host in groups['new_nodes'] %}
+{% for key in pdu.iterkeys() %}
+      <rsc_location id="fence_loc_off_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_off" score="-INFINITY"/>
+{% endfor %}
+{% for key in pdu.iterkeys() %}
+      <rsc_location id="fence_loc_on_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_on" score="-INFINITY"/>
+{% endfor %}{% endfor %}
+

@@ -1,0 +1,7 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+# configure pacemaker
+  - include: configure_pacemaker.yml
+    when: inventory_hostname == common.master_node

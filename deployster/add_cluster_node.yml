@@ -16,7 +16,7 @@
 - hosts: nodes
   user: root
   roles:
-   - { role: add_node }
+   - add_node_glusterfs
 
 - hosts: new_nodes
   user: root
@@ -25,5 +25,14 @@
    - libvirt
    - {role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
 
-# install pacemaker and just added node to cluster
+- hosts: new_nodes
+  user: root
+  roles:
+   - pacemaker
+
+- hosts: nodes
+  user: root
+  vars_files: ['roles/initial_settings/vars/main.yml']
+  roles:
+   - { role: add_node_pacemaker, network.control.address: $from_main }
 

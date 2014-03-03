@@ -1,0 +1,33 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: очистка статусов узлов
+      command: 'yes yes | crm node clearstate {{ item }}'
+      with_items: groups.new_nodes
+ 
+    - name: создание файла описания ресурсов(resources)
+      template: src=resources.xml.j2 dest=/tmp/new_resources.xml
+
+    - name: создание файла описания топологии(fencing topology)
+      template: src=fencing_topology.xml.j2 dest=/tmp/update_fencing_topology.xml
+
+    - name: создание файла описания ограничений(constraints)
+      template: src=constraints.xml.j2 dest=/tmp/new_constraints.xml
+
+    - name: создание ресурсов для новго узла
+      command: 'cibadmin -M -c -o resources --xml-file /tmp/new_resources.xml'
+
+    - name: обновление fencing topology
+      command: 'cibadmin -M -c -o configuration --xml-file /tmp/update_fencing_topology.xml'
+     
+    - name: добавление ораничений для созданных ресурсов
+      command: 'cibadmin -M -c -o constraints --xml-file /tmp/new_constraints.xml'
+
+
+
+
+
+    
+
+
