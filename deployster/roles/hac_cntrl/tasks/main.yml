@@ -21,4 +21,5 @@
       with_items: ['hac.conf','infrastructure.conf','virt_install_cmd','policy.conf']
 
     - name: перезапуск службы apache2
-      service: name=apache2 state=restarted
+      service: name=apache2 state=stopped enabled=no
+

@@ -3,14 +3,8 @@
 #
 ---
     - name: очистка статусов узлов
-      command: 'yes yes | crm node clearstate {{ item }}'
+      command: bash -c 'yes | crm node clearstate {{ item }}'
       with_items: groups.nodes
-
-    - name: выключение fencing
-      command: 'crm_attribute --attr-name stonith-enabled --attr-value false'
-    
-    - name: установка quorum-policy
-      command: 'crm_attribute --attr-name no-quorum-policy --attr-value ignore'  
       
     - name: создание файла описания ресурсов(resources)
       template: src=resources.xml.j2 dest=/tmp/resources.xml
@@ -25,7 +19,7 @@
       copy: src=pacemaker.sh dest=/tmp/pacemaker.sh mode=0775
 
     - name: инициализация кластера
-      shell: pacemaker.sh chdir=/tmp
+      command: /tmp/pacemaker.sh
 
 
 

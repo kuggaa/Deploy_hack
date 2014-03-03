@@ -10,10 +10,33 @@
 - hosts: nodes
   user: root
   tasks:
-   - name: удаление узлов из pacemaker
-     command: 'crm_node -R {{ item }}'
+   - command: 'crm node delete {{ item }}'
      with_items: groups.remove_nodes
-     when: inventory_hostname == common.master_node
+     ignore_errors: yes
+
+   - name: удаление узлов из pacemaker
+     command: 'crm_node --force -R {{ item }}'
+     with_items: groups.remove_nodes
+     ignore_errors: yes
+
+   - name: удаление ipmi ресурсов
+     command: bash -c 'yes | crm configure delete stonith_{{ item }}'
+     with_items: groups.remove_nodes
+     ignore_errors: yes
+
+   - name: удаление fenceapc ресурсов
+     command: bash -c 'yes | crm configure delete fence_{{ item.0 }}_{{ item.1 }}_on'
+     with_nested:
+        - groups.remove_nodes
+        - pdu.keys()
+     ignore_errors: yes
+     
+   - name: удаление fenceapc ресурсов
+     command: bash -c 'yes | crm configure delete fence_{{ item.0 }}_{{ item.1 }}_off'
+     with_nested:
+        - groups.remove_nodes
+        - pdu.keys()
+     ignore_errors: yes   
 
    - name: Удаление brick из glusterfs на удаляемых узлах
      command: bash -c 'yes | gluster volume remove-brick {{ gluster.volume }} {{ item }}:{{ gluster.placedir }}'

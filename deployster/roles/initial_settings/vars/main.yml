@@ -1,17 +1,17 @@
  # specific network variables
 network:
   control:
-    address: '192.168.50'
+    address: '172.16.0'
     mask: '255.255.255.0'
-    eth: [eth1, eth2]
-    gateway: '192.168.50.224'
-    dns_search: 'npdb'
-    dns_nameservers: '192.168.50.1'
+    eth: [eth2, eth3]
+    gateway:
+    dns_search:
+    dns_nameservers:
 
   public:
     address: '10.10.50'
     mask: '255.255.255.0'
-    eth: [eth0, eth3]
+    eth: [eth0, eth1]
     gateway:
     dns_search:
     dns_nameservers:

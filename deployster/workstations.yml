@@ -8,11 +8,6 @@
 #  connection: local
 #  sudo: True
   vars_files: ['roles/initial_settings/vars/main.yml']
-  vars_prompt:
-   - name: "my_password"
-     prompt: "Enter password for ALD server administrator"
-     private: yes
-     confirm: yes
 
   pre_tasks:
     - include: roles/initial_settings/tasks/repo.yml
