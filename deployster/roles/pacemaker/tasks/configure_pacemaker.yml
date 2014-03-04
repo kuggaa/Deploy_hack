@@ -3,8 +3,9 @@
 #
 ---
     - name: очистка статусов узлов
-      command: bash -c 'yes | crm node clearstate {{ item }}'
+      command: 'crm -F node clearstate {{ item }}'
       with_items: groups.nodes
+      ignore_errors: True
       
     - name: создание файла описания ресурсов(resources)
       template: src=resources.xml.j2 dest=/tmp/resources.xml

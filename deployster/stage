@@ -8,7 +8,7 @@ hacnode[1:3]
 [remove_nodes]
 
 [admin_stations]
-172.16.0.100 ip=100
+don ip=101
 
 [virtual_server]
-ald-server
+ald

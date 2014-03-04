@@ -19,24 +19,31 @@
      with_items: groups.remove_nodes
      ignore_errors: yes
 
-   - name: удаление ipmi ресурсов
-     command: bash -c 'yes | crm configure delete stonith_{{ item }}'
+   - name: остановка ipmi ресурсов
+     command: 'crm -F resource stop stonith_{{ item }}'
      with_items: groups.remove_nodes
      ignore_errors: yes
 
-   - name: удаление fenceapc ресурсов
-     command: bash -c 'yes | crm configure delete fence_{{ item.0 }}_{{ item.1 }}_on'
-     with_nested:
-        - groups.remove_nodes
-        - pdu.keys()
+   - name: удаление ipmi ресурсов
+     command: 'crm -F configure delete stonith_{{ item }}'
+     with_items: groups.remove_nodes
      ignore_errors: yes
-     
-   - name: удаление fenceapc ресурсов
-     command: bash -c 'yes | crm configure delete fence_{{ item.0 }}_{{ item.1 }}_off'
+
+   - name: остановка fenceapc ресурсов
+     command: 'crm -F resource stop fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
      with_nested:
         - groups.remove_nodes
         - pdu.keys()
-     ignore_errors: yes   
+        - ['on', 'off']
+     ignore_errors: yes
+
+   - name: удаление fenceapc ресурсов
+     command: 'crm -F configure delete fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
+     with_nested:
+        - groups.remove_nodes
+        - pdu.keys()
+        - ['on', 'off']
+     ignore_errors: yes
 
    - name: Удаление brick из glusterfs на удаляемых узлах
      command: bash -c 'yes | gluster volume remove-brick {{ gluster.volume }} {{ item }}:{{ gluster.placedir }}'

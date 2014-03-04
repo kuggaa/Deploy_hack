@@ -2,8 +2,14 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
+- name: обновление списка пакетов
+  apt: update_cache=yes
+
+- name: установка ключей
+  apt: pkg=spkb-archive-keyring state=latest force=yes
+
 - name: установка haveged
-  apt: pkg=haveged state=latest
+  apt: pkg=haveged state=latest force=yes
   tags: [ packages ]
 
 - name: установка пакетов для сервера ALD

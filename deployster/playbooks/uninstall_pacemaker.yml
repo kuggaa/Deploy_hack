@@ -15,6 +15,9 @@
         - pacemaker
         - corosync
 
+    - name: удаление базы cib
+      command: rm -rf /var/lib/heartbeat
+
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
 

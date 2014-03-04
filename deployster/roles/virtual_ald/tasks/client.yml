@@ -32,31 +32,31 @@
 - name: удаление старых keytab
   command: rm /etc/krb5.keytab
   ignore_errors: yes
-  when: inventory_hostname in groups.admin_stations
+  when: inventory_hostname not in groups.virtual_server
   
 - name: создание файла настройки пользователей
   template: src=pass-file.j2 dest=/root/pass-file mode=0600
   tags: [ pass-file ]
-  when: inventory_hostname in groups.admin_stations
+  when: inventory_hostname not in groups.virtual_server
   
 - name: создание файла настройки ALD (/etc/ald/ald.conf)
   template: src=ald.conf.j2 dest=/etc/ald/ald.conf
   register: ald_config
   tags: [ config ] 
-  when: inventory_hostname in groups.admin_stations
+  when: inventory_hostname not in groups.virtual_server
 
 - lineinfile: dest=/etc/ald/ald.conf
               regexp='^SERVER_ON='
               line='SERVER_ON=0'
-  when: inventory_hostname in groups.admin_stations
+  when: inventory_hostname not in groups.virtual_server
 
 - lineinfile: dest=/etc/ald/ald.conf
               regexp='^CLIENT_ON='
               line='CLIENT_ON=1'   
-  when: inventory_hostname in groups.admin_stations
+  when: inventory_hostname not in groups.virtual_server
 
 - ald: task=init_client pass_file=/root/pass-file
 
 - name: Настройка доступа Администратора на клиентских станциях
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain}}
-  when: inventory_hostname  in groups.admin_stations
+  when: inventory_hostname not in groups.virtual_server

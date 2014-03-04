@@ -9,7 +9,7 @@
 #  Пример: - {name: 'vm_1', config: 'vm_1.xml', image: 'vm_1.img', path: '/home/artem/ha_cluster/'}
 
 vms:
-  - {name: 'vm_2', config: 'vm_2.xml', image: 'vm_2.img', path: '/home/artem/ha_cluster/'}
+  - {name: 'ald', config: 'ald.xml', image: 'ald.img', path: '/home/artem/niitp_testbench/vms/'}
 
 ##########################################################################################################
 ########################################## Перемененные для создания групп ###############################
