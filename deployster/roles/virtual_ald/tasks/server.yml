@@ -12,6 +12,9 @@
   apt: pkg=haveged state=latest force=yes
   tags: [ packages ]
 
+- name: настройка /etc/hosts
+  template: src=hosts.j2 dest=/etc/hosts
+
 - name: установка пакетов для сервера ALD
   apt: pkg=$item state=latest
   with_items:
@@ -43,7 +46,7 @@
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
 
-- name: Make keytab for admin/admin
+- name: Создаем keytab admin/admin
   command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
 
 - name: создание группы в ALD
@@ -58,3 +61,10 @@
 
 - name: Настройка доступа Администратора
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain}}
+
+- name: Создание приципала для ПК Управления
+  command: ald-admin service-add {{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+
+- name: Добавление приципала для ПК Управления в группу mac
+  command: ald-admin sgroup-svc-add {{ hac_cntrl.name }}.{{ ald.domain }} --sgroup=mac -f --pass-file=/root/pass-file
+

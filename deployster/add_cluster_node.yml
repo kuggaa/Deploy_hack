@@ -7,10 +7,7 @@
   user: root
   roles:
    - initial_settings
-
-- hosts: new_nodes
-  user: root
-  tasks:
+  post_tasks:
    - include: roles/glusterfs/tasks/setup_glusterfs_pkg.yml
 
 - hosts: nodes
@@ -24,10 +21,6 @@
   roles:
    - libvirt
    - {role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
-
-- hosts: new_nodes
-  user: root
-  roles:
    - pacemaker
 
 - hosts: nodes

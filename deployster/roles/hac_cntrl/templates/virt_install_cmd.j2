@@ -3,7 +3,7 @@ virt-install
 --disk path={img_path},bus=ide,size={hdd_size},cache=none
 --ram={ram}
 --vcpus {cpus_qty}
---cdrom=/var/glusterfs/vm_images_and_config/vm.iso
+--cdrom={{ dirs.vm_images }}/vm.iso
 --graphics vnc,listen=0.0.0.0
 --accelerate
 --network=bridge:{{ network.bridge }},model=virtio

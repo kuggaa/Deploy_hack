@@ -1,0 +1,26 @@
+<VirtualHost {{ hac_cntrl.ip }}:80>
+    ServerAdmin admin@hac
+    ServerName {{ hac_cntrl.name }}.{{ ald.domain }}
+    ServerAlias {{ hac_cntrl.name }}
+    WSGIScriptAlias / /usr/share/hac-control/django.wsgi
+    WSGIDaemonProcess hac-control user=www-data group=www-data
+    Alias /static /usr/share/hac-control/static/
+
+    <Directory />
+        AuthType Kerberos
+        Krb5Keytab /etc/apache2/krb.keytab
+        KrbServiceName HTTP/{{ hac_cntrl.name }}.{{ ald.domain }}
+        KrbMethodNegotiate on
+        KrbMethodK5Passwd off
+        Require valid-user
+        AllowOverride None
+
+        Order allow,deny
+        Allow from all
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/hac-control-error.log
+    LogLevel debug
+    CustomLog ${APACHE_LOG_DIR}/hac-control-access.log combined
+ </VirtualHost>
