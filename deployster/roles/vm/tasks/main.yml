@@ -4,4 +4,7 @@
 ---
 # make a VM's and vm_group_create
   - include: vm_create.yml
+    when: inventory_hostname == common.master_node
+
   - include: vm_group_create.yml
+    when: inventory_hostname == common.master_node

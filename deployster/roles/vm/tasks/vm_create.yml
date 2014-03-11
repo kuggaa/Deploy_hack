@@ -4,20 +4,17 @@
 ---
 # script for make a VM in ha cluster
   - name: копирование конфигурации ВМ
-    copy: src={{ item.path }}{{ item.config }} dest=/etc/libvirt/qemu/{{ item.name }}.xml
+    copy: src={{ item.path }}{{ item.config }} dest=/etc/libvirt/qemu/{{ item.name }}.xml mode=0777
     with_items: vms
-    when: inventory_hostname == common.master_node
 
   - name: копирование образа ВМ
-    copy: src={{ item.path }}{{ item.image }} dest={{ dirs.vm_images }}/{{ item.name }}.img
+    copy: src={{ item.path }}{{ item.image }} dest={{ dirs.vm_images }}/{{ item.name }}.img mode=0777
     with_items: vms
-    when: inventory_hostname == common.master_node
-  
+
   - name: создание ресурса VirtualDomain в КВГ
     command:  cibadmin -M -c -o resources --xml-text '<primitive id="{{ item.name }}" template="vm_template"><instance_attributes id="{{ item.name }}-instance_attributes"><nvpair id="{{ item.name }}-instance_attributes-config" name="config" value="/etc/libvirt/qemu/{{ item.name }}.xml"/></instance_attributes></primitive>'
     with_items: vms
-    when: inventory_hostname == common.master_node
-  
+
   ## устаревший вариант создания ВМ без шаблона  
   #- name: создание ресурса VirtualDomain в КВГ
   #  command: crm configure primitive {{ item.name }} ocf:heartbeat:VirtualDomain \

@@ -6,7 +6,7 @@
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
           <op id="stonith_{{ host }}-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
-          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" timeout="60"/>
+          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
         <instance_attributes id="stonith_{{ host }}-instance_attributes">
@@ -19,14 +19,25 @@
       </primitive>
 {% for key, value in pdu.iteritems() %}
       <primitive class="stonith" id="fence_{{ host }}_{{ key }}_on" type="fence_apc_snmp">
+        <meta_attributes id="fence_{{ host }}_{{ key }}_on-meta_attributes">
+          <nvpair id="fence_{{ host }}_{{ key }}_on-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
         <instance_attributes id="fence_{{ host }}_{{ key }}_on-instance_attributes">
           <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
           <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-action" name="action" value="on"/>
           <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-port" name="port" value="{{ pdu_connections[host] }}"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}/>
+          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}"/>
         </instance_attributes>
+        <operations>
+          <op id="fence_{{ host }}_{{ key }}_on-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
+        </operations>
       </primitive>
       <primitive class="stonith" id="fence_{{ host }}_{{ key }}_off" type="fence_apc_snmp">
+        <meta_attributes id="fence_{{ host }}_{{ key }}_off-meta_attributes">
+          <nvpair id="fence_{{ host }}_{{ key }}_off-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
         <instance_attributes id="fence_{{ host }}_{{ key }}_off-instance_attributes">
           <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
           <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-action" name="action" value="off"/>
@@ -36,6 +47,8 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
 {% endfor %}
@@ -46,9 +59,12 @@
           <nvpair id="apache_and_ip-meta_attributes-is-managed" name="is-managed" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
-          <meta_attributes id="hac_cntrl_ip-meta_attributes">                                  </meta_attributes>
+          <meta_attributes id="hac_cntrl_ip-meta_attributes">
+          </meta_attributes>
           <operations id="hac_cntrl_ip-operations">
-            <op id="hac_cntrl_ip-op-monitor-10s" interval="10s" name="monitor" timeout="20s"/>
+            <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+            <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="90"/>
+            <op id="hac_cntrl_ip-op-stop-0" interval="0" name="stop" timeout="20"/>
           </operations>
           <instance_attributes id="hac_cntrl_ip-instance_attributes">
             <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="{{ hac_cntrl.ip }}"/>
@@ -57,9 +73,10 @@
         </primitive>
         <primitive class="lsb" id="apache" type="apache2">
           <operations id="apache-operations">
-            <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="30"/>
           </operations>
-          <meta_attributes id="apache-meta_attributes">                      </meta_attributes>
+          <meta_attributes id="apache-meta_attributes">
+          </meta_attributes>
         </primitive>
        </group>
        <clone id="glusterd">
@@ -116,8 +133,6 @@
           <op id="vm_template-op-monitor-20" interval="20" name="monitor" timeout="60"/>
           <op id="vm_template-op-start-0" interval="0" name="start" timeout="90"/>
           <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="90"/>
-          <op id="vm_template-op-migrate_from-0" interval="0" name="migrate_from" timeout="60"/>
-          <op id="vm_template-op-migrate_to-0" interval="0" name="migrate_to" timeout="120"/>
         </operations>
         <instance_attributes id="vm_template-instance_attributes">
           <nvpair id="vm_template-instance_attributes-hypervisor" name="hypervisor" value="qemu:///system"/>

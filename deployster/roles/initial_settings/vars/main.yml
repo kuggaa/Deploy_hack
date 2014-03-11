@@ -3,7 +3,7 @@ network:
   control:
     address: '172.16.0'
     mask: '255.255.255.0'
-    eth: [eth2, eth3]
+    eth: [eth1, eth3]
     gateway:
     dns_search:
     dns_nameservers:
@@ -11,7 +11,7 @@ network:
   public:
     address: '10.10.50'
     mask: '255.255.255.0'
-    eth: [eth0, eth1]
+    eth: [eth0, eth2]
     gateway:
     dns_search:
     dns_nameservers:

@@ -4,11 +4,12 @@
 hacnode[1:3]
 
 [new_nodes]
+hacnode4
 
 [remove_nodes]
 
 [admin_stations]
-don ip=101
+hacnode[1:3]
 
 [virtual_server]
 ald

@@ -4,8 +4,8 @@ common:
 
 # !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
-nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22 }
-nodes_ip_ipmi: { hacnode1: 7, hacnode2: 8, hacnode3: 9 }
+nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22,  hacnode4: 24}
+nodes_ip_ipmi: { hacnode1: 7, hacnode2: 8, hacnode3: 9,  hacnode4: 10}
 # Логин и пароль к IPMI интерфейсу( должен быть одинаковый на всех узлах КВГ)
 ipmi:
   login: 'ADMIN'
@@ -13,7 +13,7 @@ ipmi:
 
 # Значения в словаре - это номер розетки на pdu, к которой подключен сервер,
 # если pdu дублируются, то узлы должны быть подключены семмитрично, т.е. hacnode1 к 1 розетке на обоих pdu.
-pdu_connections: { hacnode1: 1, hacnode2: 2, hacnode3: 3 }
+pdu_connections: { hacnode1: 1, hacnode2: 2, hacnode3: 3, hacnode4: 4}
 
 # Настройки PDU: имя и последняя цифра ip-адреса
 pdu: { pdu_1: 1, pdu_2: 2 }

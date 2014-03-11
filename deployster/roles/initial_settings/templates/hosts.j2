@@ -2,7 +2,7 @@
 {{ ald.ip_master_ald }} {{ ald.master_ald_srv }}.{{ ald.domain }} {{ ald.master_ald_srv }}
 {{ hac_cntrl.ip }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
 {% for key, value in nodes_ip.iteritems() %}
-{{ network.control.address }}.{{ value }} {{ key }}
+{{ network.control.address }}.{{ value }}  {{ key }}.{{ald.domain}} {{ key }}
 {% endfor %}
 
 # The following lines are desirable for IPv6 capable hosts

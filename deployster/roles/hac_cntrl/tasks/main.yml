@@ -19,13 +19,10 @@
 
     - name: настройка конфигурационных файлов ПК Управления
       template: src={{ item }}.j2 dest=/etc/hac-control/{{ item }}
-      with_items: ['hac.conf','infrastructure.conf','virt_install_cmd','policy.conf']
+      with_items: ['hac.conf','infrastructure.conf','virt_install_cmd','policy.conf']  
 
     - name: настройка конфигурационных файлов apache2 для ПК Управления
       template: src=hac-control.j2 dest=/etc/apache2/sites-available/hac-control
-
-    - command: a2dissite default
-    - command: a2ensite hac-control
 
     - name: перезапуск службы apache2
       service: name=apache2 state=stopped enabled=no

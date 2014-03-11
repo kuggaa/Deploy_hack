@@ -15,8 +15,11 @@
 - name: настройка /etc/hosts
   template: src=hosts.j2 dest=/etc/hosts
 
+- name: запрещаем запуск wicd-daemon
+  service: name=wicd state=stopped enabled=no
+
 - name: установка пакетов для сервера ALD
-  apt: pkg=$item state=latest
+  apt: pkg=$item state=latest force=yes
   with_items:
     - ald-server
     - ald-server-common
@@ -46,7 +49,7 @@
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
 
-- name: Создаем keytab admin/admin
+- name: cоздаем keytab admin/admin
   command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
 
 - name: создание группы в ALD
@@ -56,15 +59,21 @@
 - name: создание пользователя администратора в ALD
   command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[0] }} --full-name='Admininstator' --user-desc='HAC administrator' {{ ald.kvg_admin_name }}
 
-- name: Добавление привелегий для пользователя
+- name: добавление привелегий для пользователя
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1  
 
-- name: Настройка доступа Администратора
+- name: настройка доступа Администратора
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain}}
 
-- name: Создание приципала для ПК Управления
-  command: ald-admin service-add {{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+- name: создание приципала для ПК Управления
+  command: ald-admin service-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
 
-- name: Добавление приципала для ПК Управления в группу mac
-  command: ald-admin sgroup-svc-add {{ hac_cntrl.name }}.{{ ald.domain }} --sgroup=mac -f --pass-file=/root/pass-file
+- name: добавление приципала для ПК Управления в группу mac
+  command: ald-admin sgroup-svc-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --sgroup=mac --pass-file=/root/pass-file
+
+- name: создание keytab для apache
+  command: ald-client  update-svc-keytab HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --ktfile=/root/krb.keytab --pass-file=/root/pass-file
+
+- name: сохранение keytab для передачи клиентам ald
+  fetch: src=/root/krb.keytab dest=roles/virtual_ald/files/krb.keytab validate_md5=yes flat=yes fail_on_missing=yes
 
