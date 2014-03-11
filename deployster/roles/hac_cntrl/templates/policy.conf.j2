@@ -1,23 +1,26 @@
-[rules]
+[roles]
 
-# Rule is an aggregate of groups. Example:
-# rule1 = group1, group2, group3
+# Usage:
+# role1 = linux_group1, linux_group2, linux_group3
 
 all = ${ald.groups}
+admins = ${ald.groups[0]}
+operators = ${ald.groups[1]}
 
-[policy]
+[nodes_policy]
+can_see = all
+can_control = admins
 
-# Example:
-# can_manage_node = group1, group2, rule:rule1, rule:rule2
-#
-# To forbid action for everyone:
-# can_manage_node =
+[default_resources_policy]
+can_see = all
+can_control =
+can_open_vm_console = all
 
-can_see_nodes = rule:all
-can_control_nodes = ${ald.groups[0]}
+[resources_policy:VirtualDomain]
+can_see = all
+can_control = admins
+can_open_vm_console = all
 
-can_see_resources = rule:all
-can_see_resources_timeouts = ${ald.groups[0]}
-can_create_resource = ${ald.groups[0]}
-can_control_resources = ${ald.groups[0]}
-can_open_vm_console = ${ald.groups[0]}
+[resources_policy:Dummy]
+can_see = all
+can_control =
