@@ -56,6 +56,9 @@ ald:
     # Имя администратора КВГ
     kvg_admin_name: kvg_admin
 
+    # Пользователь для оператора
+    operator_user: kvg_user
+
     # Сервисы
     services_list: [krb5-kdc, krb5-admin-server, slapd, nslcd, nscd, aldd, aldcd]
 

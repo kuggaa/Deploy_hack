@@ -58,3 +58,6 @@
 
 - name: замена неверного файла /etc/init.d/nscd
   copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
+
+- name: создание каталога для домашних каталогов пользователей
+  file: path=${dirs.ald_env_users} state=directory
