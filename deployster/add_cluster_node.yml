@@ -29,24 +29,4 @@
   roles:
    - { role: add_node_pacemaker, network.control.address: $from_main }
 
-- hosts: new_nodes
-  user: root
-  tasks:
-    - name: создание каталога для ВМ (образы и файлы конфигурации)
-      file: path={{ dirs.vm_images }} state=directory
-      register: create_vm_images
-      when: inventory_hostname == common.master_node
-      ignore_errors: true
-
-    - name: копирование файлов /etc/libvirt/qemu на glusterfs
-      command: cp -rf /etc/libvirt/qemu {{ dirs.vm_images }}
-      when: create_vm_images.changed and inventory_hostname == common.master_node
-
-    - name: удаление /etc/libvirt/qemu
-      command: rm -rf /etc/libvirt/qemu
-      when: create_vm_images.changed
-
-    - name: делаем ссылку qemu в /etc/libvirt/
-      file: src={{ dirs.vm_images }}/qemu dest=/etc/libvirt/qemu state=link
-      when: create_vm_images.changed
 

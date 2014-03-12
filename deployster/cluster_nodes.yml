@@ -10,5 +10,5 @@
 #   - initial_settings
 #   - glusterfs
    - libvirt
-   - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
-   - { role: pacemaker, network.control.address: $from_main }
+#   - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
+#   - { role: pacemaker, network.control.address: $from_main }

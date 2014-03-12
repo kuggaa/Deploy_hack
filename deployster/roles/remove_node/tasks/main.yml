@@ -15,7 +15,7 @@
 
     - name: Удаляем пакеты с ПО ВГ
       apt: pkg={{ item }} state=absent force=yes purge=yes
-      with_items: [pacemaker, pacemaker-mgmt, corosync]
+      with_items: [pacemaker-mgmt, pacemaker-mgmt-client, pacemaker, corosync]
 
     - name: удаление базы cib
       command: rm -rf /var/lib/heartbeat
