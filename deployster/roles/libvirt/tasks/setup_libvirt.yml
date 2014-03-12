@@ -6,7 +6,7 @@
 
     - name: создание libvirt.conf и qemu.conf
       copy: src={{ item }} dest=/etc/libvirt owner=root group=root mode=0644
-      with_items: ['libvirtd.conf', 'qemu.conf']
+      with_items: ['libvirtd.conf']
 
     - name: открытие TCP порта
       lineinfile: dest=/etc/default/libvirt-bin
@@ -20,4 +20,3 @@
                   regexp="^export LD_PRELOAD="
                   state=present
       notify: restart libvirt-bin
-
