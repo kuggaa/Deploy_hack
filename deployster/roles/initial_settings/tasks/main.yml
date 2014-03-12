@@ -7,3 +7,4 @@
     - include: limits.yml
     - include: hugepage.yml
     - include: network.yml
+    - include: ssh.yml
