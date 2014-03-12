@@ -1,0 +1,22 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- name: установка библиотеки подмены имени
+  apt: pkg=libvirthostname1 state=latest
+  tags: [ packages ]
+
+- name: установка виртуального имени узла
+  shell: echo ${ald.master_ald_srv} > /etc/hostname.ald
+  tags: [ config ]
+
+- name: подмена имени для демонов aldd, aldcd
+  lineinfile: dest=$item
+              line='export LD_PRELOAD=/usr/lib/libvirthostname.so'
+              regexp='^export LD_PRELOAD'
+              state=present
+  with_items:
+    - /etc/default/aldd
+    - /etc/default/aldcd
+    - /etc/default/slapd
+  tags: [ config ]

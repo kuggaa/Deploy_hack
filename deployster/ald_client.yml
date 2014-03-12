@@ -13,4 +13,4 @@
     confirm: yes      
     
   roles:
-    - ald_setup
+    - ald_client

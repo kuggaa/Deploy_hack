@@ -1,16 +1,11 @@
 VERSION=1.5
-{% if inventory_hostname in groups.nodes %}
-SERVER={{ inventory_hostname }}.{{ ald.domain }}
-{% endif %}
-{% if  inventory_hostname not in groups.nodes %}
 SERVER={{ ald.master_ald_srv }}.{{ ald.domain }}
-{% endif %}
 SERVER_ID=1
 DOMAIN=.{{ ald.domain }}
-DESCRIPTION=
+DESCRIPTION=ALD HAC
 MINIMUM_UID=2500
 DEFAULT_LOGIN_SHELL=/bin/bash
-DEFAULT_LOCAL_GROUPS=users,audio,video,scanner
+DEFAULT_LOCAL_GROUPS=users,audio,video,scanner,cdrom
 ALLOWED_LOCAL_GROUPS=users,audio,video,scanner,cdrom,floppy,fuse
 TICKET_MAX_LIFE=10h
 TICKET_MAX_RENEWABLE_LIFE=7d

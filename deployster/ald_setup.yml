@@ -13,8 +13,9 @@
     confirm: yes
     default: "admin"
 
-  vars_files:
-    - roles/ald_setup/vars/ald-conf.yml
+
+   #   vars_files:
+   # - roles/ald_setup/vars/ald-conf.yml
   
   roles:
     - ald_setup

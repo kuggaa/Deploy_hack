@@ -56,3 +56,6 @@ ldap_files:
   - cn=config/olcDatabase={0}config.ldif
   - cn=config/olcBackend={0}hdb.ldif
   - cn=config.ldif
+
+virthostname_env:
+    LD_PRELOAD: /usr/lib/libvirthostname.so

@@ -5,28 +5,16 @@
 - name: install ald packages for ALD client
   apt: pkg=$item state=latest
   with_items:
+    - ald-client
     - ald-client-common
     - ald-admin
     - ald-admin-parsec-mac
+  tags: [ packages ]    
     
 - name: установка модулей ALD для панели SMC
   apt: pkg=$item state=latest
   with_items:
-      - smc-ald-audit
-      - smc-ald-capabilities
-      - smc-ald-device-ctrl
-      - smc-ald-hosts
-      - smc-ald-mac
-      - smc-ald-policies
-      - smc-ald-services
-      - smc-ald-tasks
-      - smc-ald-users
       - smolensk-security-ald
-      - ald-client-fs
-      - ald-admin-common
-      - ald-admin-parsec-aud
-      - ald-admin-parsec-devac
-      - aldd      
   tags: [ packages ]    
   
               
