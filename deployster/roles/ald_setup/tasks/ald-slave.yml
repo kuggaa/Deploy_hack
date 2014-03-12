@@ -3,14 +3,14 @@
 #
 --- 
 - name: копирование файлов настроек для ALD
-  copy: src=ald-conf/{{ ald.master_ald_srv }}${item} dest=${item} backup=yes 
+  copy: src=ald-conf/{{ common.master_node }}${item} dest=${item} backup=yes 
   with_items: ald_files
 
 - name: удаление исходной схемы LDAP
   file: path=/etc/ldap/slapd.d state=absent
 
 - name: копирование файлов схемы LDAP
-  copy: src=ald-conf/{{ ald.master_ald_srv }}/etc/ldap/slapd.d dest=/etc/ldap
+  copy: src=ald-conf/{{ common.master_node }}/etc/ldap/slapd.d dest=/etc/ldap
         owner=openldap group=openldap
 
 - name: установка прав на подкаталоги схемы
@@ -40,3 +40,8 @@
 
 - name: подмена каталога /var/lib/krb5kdc
   file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
+
+- name: создание каталога /var/log/kerberos
+  file: path=/var/log/kerberos state=directory
+        owner=root group=root mode=0700
+

@@ -13,3 +13,7 @@
 
 - name: обновление списка пакетов
   apt: update_cache=yes
+
+- name: добавление прав в sudoers для группы администраторов ALD
+  template: src=sudo.hac.j2 dest=/etc/sudoers.d/hacuser mode=0644
+

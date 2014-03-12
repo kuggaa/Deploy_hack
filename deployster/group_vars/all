@@ -36,7 +36,7 @@ hac_cntrl:
 # Настройки Astra Linux Directory
 ald:
     # Узел сервера
-    master_ald_srv: '{{ groups.virtual_server[0] }}'
+    master_ald_srv: cluster
     
     # Должен совпадать с реально установленным ip-адресом ВМ с ald сервером
     ip_master_ald: 10.10.50.100
@@ -53,7 +53,7 @@ ald:
     # Список групп, первой в списке должна всегда быть группа для пользователей с полномочиями администраторов КВГ
     groups: [administrators, users]
 
-    # Имя администратора
+    # Имя администратора КВГ
     kvg_admin_name: kvg_admin
 
     # Сервисы

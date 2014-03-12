@@ -6,58 +6,24 @@
   apt: pkg=haveged state=latest  
   tags: [ packages ]
 
-- name: установка пакетов для сервера ALD
-  apt: pkg=$item state=latest
-  with_items:
-    - ald-server
-    - ald-server-common     
-  tags: [ packages ]
-                     
-- name: создание файла настройки пользователей
-  template: src=pass-file.j2 dest=/root/pass-file mode=0600
-  tags: [ pass-file ]
-  when: inventory_hostname == ald.master_ald_srv
-  
 - name: создание файла настройки ALD (/etc/ald/ald.conf)
   template: src=ald.conf.j2 dest=/etc/ald/ald.conf
   register: ald_config
   tags: [ config ]
-  when: inventory_hostname == ald.master_ald_srv
-
-- name: удаление старых каталогов KRB
-  command: rm -r  /var/lib/krb5kdc
-  ignore_errors: yes
-
-- name: удаление старых каталогов LDAP
-  command: rm -r  /var/lib/ldap
-  ignore_errors: yes
-  
-- name: удаление /ald_home
-  command: rm -r /ald_home  
-  
-- name: подмена каталога /ald_home
-  file: src={{ gluster.mount_point }} dest=/ald_home state=link
-  
-- name: удаление старых keytab
-  command: rm /etc/krb5.keytab
-  ignore_errors: yes  
 
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
-  when: inventory_hostname == ald.master_ald_srv
+  environment: virthostname_env
 
 - name: Make keytab for admin/admin
   command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
-  when: inventory_hostname == ald.master_ald_srv
 
 - name: создание группы в ALD
   ald: task=group group={{ item }} pass_file=/root/pass-file
   with_items: ald.groups  
-  when: inventory_hostname == ald.master_ald_srv
 
 - name: создание пользователя администратора в ALD
   command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[0] }} --full-name='Admininstator' --user-desc='HAC administrator' {{ ald.kvg_admin_name }}
-  when: inventory_hostname == ald.master_ald_srv
   
 #- name: Добавление пользователя в группу administrators
 #  command: ald-admin group-mod {{ item }} -f --pass-file=/root/pass-file --add-users --user={{ ald.kvg_admin_name }} 
@@ -66,17 +32,18 @@
   
 - name: Добавление привелегий для пользователя
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1  
-  when: inventory_hostname == ald.master_ald_srv
  
 - name: Настройка доступа Администратора
   command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ ald.master_ald_srv }}.{{ ald.domain}}
-  when: inventory_hostname == ald.master_ald_srv
 
-- include: ald-master.yml tags=ald-master
-  when: inventory_hostname == ald.master_ald_srv
+- name: создание приципала для ПК Управления
+  command: ald-admin service-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
 
-- include: ald-slave.yml tags=ald-slave
-  when: inventory_hostname != ald.master_ald_srv
+- name: добавление приципала для ПК Управления в группу mac
+  command: ald-admin sgroup-svc-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --sgroup=mac --pass-file=/root/pass-file
 
-- name: удаление временных файлов
-  local_action: command rm -rf ald-conf  
+- name: создание keytab для apache
+  command: ald-client  update-svc-keytab HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --ktfile=/root/krb.keytab --pass-file=/root/pass-file
+
+- name: сохранение keytab для передачи клиентам ald
+  fetch: src=/root/krb.keytab dest=roles/ald_setup/files/krb.keytab validate_md5=yes flat=yes fail_on_missing=yes

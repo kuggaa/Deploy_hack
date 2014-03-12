@@ -1,0 +1,38 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- name: установка пакетов для сервера ALD
+  apt: pkg=$item state=latest
+  with_items:
+    - ald-server
+    - ald-admin
+    - ald-client
+    - ald-server-common     
+  tags: [ packages ]
+                     
+- name: создание файла настройки пользователей
+  template: src=pass-file.j2 dest=/root/pass-file mode=0600
+  tags: [ pass-file ]
+  
+- name: удаление старых каталогов KRB
+  command: rm -rf  /var/lib/krb5kdc
+  ignore_errors: yes
+
+- name: удаление старых каталогов LDAP
+  command: rm -rf  /var/lib/ldap
+  ignore_errors: yes
+  
+- name: удаление /ald_home
+  command: rm -rf /ald_home  
+  
+- name: подмена каталога /ald_home
+  file: src={{ gluster.mount_point }} dest=/ald_home state=link
+  
+- name: удаление старых keytab
+  command: rm -rf /etc/krb5.keytab
+  ignore_errors: yes  
+
+- include: virthostname.yml
+
+
