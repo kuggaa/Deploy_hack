@@ -6,18 +6,64 @@
     - name: Останавливаем работающие сервисы corosync и pacemaker
       command: killall -s 9 cib stonithd lrmd attrd pengine crmd mgmtd corosync
       ignore_errors: True
+      tags: [ pacemaker ]
 
     - name: удаление pacemaker и сorosync
       apt: pkg=$item purge=yes state=absent
-      with_items:
-        - pacemaker-mgmt
-        - pacemaker-mgmt-client
-        - pacemaker
-        - corosync
-
+      with_items: [pacemaker-mgmt, pacemaker-mgmt-client, pacemaker, corosync]
+      tags: [ pacemaker ]
+      
     - name: удаление базы cib
       command: rm -rf /var/lib/heartbeat
+      tags: [ pacemaker ]  
+      
+    - name: продолжить удаление пакетов?
+      pause: prompt="press any key for continue or ctrl+c for cancel"  
+      
+    - name: удаление пакетов 
+      apt: pkg=$item purge=yes state=absent
+      with_items:
+       - libvirt-bin
+       - virtinst
+       - smc-ald-audit
+       - smc-ald-capabilities
+       - smc-ald-device-ctrl
+       - smc-ald-hosts
+       - smc-ald-mac
+       - smc-ald-policies
+       - smc-ald-services
+       - smc-ald-tasks
+       - smc-ald-users
+       - smolensk-security-ald
+       - ald-client-fs
+       - ald-admin-common
+       - ald-admin-parsec-aud
+       - ald-admin-parsec-devac
+       - ald-client-common
+       - ald-admin
+       - ald-admin-parsec-mac
+       - ald-server
+       - ald-server-common
+       - firefox
+       - python-django
+       - python-setuptools
+       - apache2
+       - libapache2-mod-wsgi
+       - libapache2-mod-auth-kerb
+       - pacemaker-mgmt
+       - python-netsnmp
+       - ipmitool
+       - hac-control-apache
+       
+    - name: удалить пакет glusterfs?
+      pause: prompt="press any key for continue or ctrl+c for cancel"  
+    
+    - name: удаление пакетов glusterfs
+      apt: pkg=$item purge=yes state=absent
+      with_items:
+          - glusterfs-server
 
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
+      tags: [ pacemaker ]
 

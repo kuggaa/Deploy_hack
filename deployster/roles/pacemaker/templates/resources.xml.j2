@@ -6,7 +6,7 @@
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
           <op id="stonith_{{ host }}-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
-          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
         <instance_attributes id="stonith_{{ host }}-instance_attributes">
@@ -30,7 +30,7 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_on-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="fence_{{ host }}_{{ key }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
@@ -47,7 +47,7 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="fence_{{ host }}_{{ key }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
@@ -130,13 +130,17 @@
           <nvpair id="vm_template-meta_attributes-allow-migrate" name="allow-migrate" value="true"/>
         </meta_attributes>
         <operations id="vm_template-operations">
-          <op id="vm_template-op-monitor-20" interval="20" name="monitor" timeout="60"/>
-          <op id="vm_template-op-start-0" interval="0" name="start" timeout="90"/>
-          <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="90"/>
+          <op id="vm_template-op-monitor-10" interval="10" name="monitor" timeout="30"/>
+          <op id="vm_template-op-start-0-0" interval="0" name="start" timeout="120"/>
+          <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="120"/>
+          <op id="vm_template-op-migrate_from-0" interval="0" name="migrate_from" timeout="120"/>
+          <op id="vm_template-op-migrate_to-0" interval="0" name="migrate_to" timeout="120"/>
         </operations>
         <instance_attributes id="vm_template-instance_attributes">
           <nvpair id="vm_template-instance_attributes-hypervisor" name="hypervisor" value="qemu:///system"/>
           <nvpair id="vm_template-instance_attributes-migration_transport" name="migration_transport" value="tcp"/>
+          <nvpair id="vm_template-instance_attributes-autoset_utilization_cpu" name="autoset_utilization_cpu" value="false"/>
+          <nvpair id="vm_template-instance_attributes-autoset_utilization_hv_memory" name="autoset_utilization_hv_memory" value="false"/>
         </instance_attributes>
       </template>
       <template class="ocf" id="dummy_template" provider="pacemaker" type="Dummy">
