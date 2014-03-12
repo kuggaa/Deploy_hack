@@ -6,7 +6,7 @@
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
           <op id="stonith_{{ host }}-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
-          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
         <instance_attributes id="stonith_{{ host }}-instance_attributes">
@@ -30,7 +30,7 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_on-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="fence_{{ host }}_{{ key }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
@@ -47,38 +47,56 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="fence_{{ host }}_{{ key }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
 {% endfor %}
 {% endfor %}
-       <group id="apache_and_ip">
-        <meta_attributes id="apache_and_ip-meta_attributes">
-          <nvpair id="apache_and_ip-meta_attributes-target-role" name="target-role" value="Started"/>
-          <nvpair id="apache_and_ip-meta_attributes-is-managed" name="is-managed" value="true"/>
+      <group id="ip_ald_apache">
+        <meta_attributes id="ip_ald_apache-meta_attributes">
+          <nvpair id="ip_ald_apache-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="ip_ald_apache-meta_attributes-is-managed" name="is-managed" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
-          <meta_attributes id="hac_cntrl_ip-meta_attributes">
-          </meta_attributes>
+          <meta_attributes id="hac_cntrl_ip-meta_attributes"/>
           <operations id="hac_cntrl_ip-operations">
             <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
             <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="90"/>
             <op id="hac_cntrl_ip-op-stop-0" interval="0" name="stop" timeout="20"/>
           </operations>
           <instance_attributes id="hac_cntrl_ip-instance_attributes">
-            <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="{{ hac_cntrl.ip }}"/>
-            <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="{{ hac_cntrl.cidr_netmask }}"/>
+            <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="10.10.50.50"/>
+            <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="24"/>
           </instance_attributes>
         </primitive>
+        <primitive class="lsb" id="krb5-kdc" type="krb5-kdc"/>
+        <primitive class="lsb" id="krb5-admin-server" type="krb5-admin-server">
+          <operations id="krb5-admin-server-operations">
+            <op id="krb5-admin-server-op-start-0" interval="0" name="start" timeout="45"/>
+            <op id="krb5-admin-server-op-stop-0" interval="0" name="stop" timeout="45"/>
+          </operations>
+        </primitive>
+        <primitive class="lsb" id="slapd" type="slapd"/>
+        <primitive class="lsb" id="nslcd" type="nslcd"/>
+        <primitive class="lsb" id="nscd" type="nscd"/>
+        <primitive class="lsb" id="aldd" type="aldd">
+          <operations id="aldd-operations">
+            <op id="aldd-op-start-0" interval="0" name="start" timeout="45"/>
+            <op id="aldd-op-stop-0" interval="0" name="stop" timeout="45"/>
+          </operations>
+          <meta_attributes id="aldd-meta_attributes">
+            <nvpair id="aldd-meta_attributes-target-role" name="target-role" value="Started"/>
+          </meta_attributes>
+        </primitive>
+        <primitive class="lsb" id="aldcd" type="aldcd"/>
         <primitive class="lsb" id="apache" type="apache2">
           <operations id="apache-operations">
             <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="30"/>
           </operations>
-          <meta_attributes id="apache-meta_attributes">
-          </meta_attributes>
+          <meta_attributes id="apache-meta_attributes"/>
         </primitive>
-       </group>
+      </group>
        <clone id="glusterd">
         <meta_attributes id="glusterd-meta_attributes">
           <nvpair id="glusterd-meta_attributes-target-role" name="target-role" value="Started"/>
@@ -130,13 +148,17 @@
           <nvpair id="vm_template-meta_attributes-allow-migrate" name="allow-migrate" value="true"/>
         </meta_attributes>
         <operations id="vm_template-operations">
-          <op id="vm_template-op-monitor-20" interval="20" name="monitor" timeout="60"/>
-          <op id="vm_template-op-start-0" interval="0" name="start" timeout="90"/>
-          <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="90"/>
+          <op id="vm_template-op-monitor-10" interval="10" name="monitor" timeout="30"/>
+          <op id="vm_template-op-start-0-0" interval="0" name="start" timeout="120"/>
+          <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="120"/>
+          <op id="vm_template-op-migrate_from-0" interval="0" name="migrate_from" timeout="120"/>
+          <op id="vm_template-op-migrate_to-0" interval="0" name="migrate_to" timeout="120"/>
         </operations>
         <instance_attributes id="vm_template-instance_attributes">
           <nvpair id="vm_template-instance_attributes-hypervisor" name="hypervisor" value="qemu:///system"/>
           <nvpair id="vm_template-instance_attributes-migration_transport" name="migration_transport" value="tcp"/>
+          <nvpair id="vm_template-instance_attributes-autoset_utilization_cpu" name="autoset_utilization_cpu" value="false"/>
+          <nvpair id="vm_template-instance_attributes-autoset_utilization_hv_memory" name="autoset_utilization_hv_memory" value="false"/>
         </instance_attributes>
       </template>
       <template class="ocf" id="dummy_template" provider="pacemaker" type="Dummy">
