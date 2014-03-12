@@ -8,8 +8,8 @@ iface eth0 inet static
     address {{ network.public.address }}.{{ ip }}
     netmask {{ network.public.mask }}
 
-# eth0:0
-auto eth0:0
-iface eth0:0 inet static
+# eth1
+auto eth1
+iface eth1 inet static
     address {{ network.control.address }}.{{ ip }}
     netmask {{ network.control.mask }}

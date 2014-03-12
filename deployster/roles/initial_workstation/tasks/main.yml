@@ -12,26 +12,18 @@
     - name: настройка /etc/hosts
       template: src=hosts.j2 dest=/etc/hosts
 
-    - name: перезапуск узла
-      command: /sbin/shutdown -r -t 3 now Rebooted by ansible
-      when: interfaces.changed
+    - name: создание точки монтирования
+      file: path={{ gluster.mount_point }} state=directory
+      ignore_errors: true
 
-    - name: ожидание остановки ssh соединения
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=stopped
-      when: interfaces.changed
+    - name: установка клиента glusterfs
+      apt: pkg=glusterfs-client state=latest force=yes
 
-    - name: ожидание запуска ssh соединения
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=100
-      when: interfaces.changed
-     
-    ## В текущей реализации ald сервера в ПК КВГ данная настройка не требуется  
-    #- name: установка клиента glusterfs
-    #  apt: pkg=glusterfs-client state=latest force=yes
+    - name: монтирование glusterfs
+      mount: name={{ gluster.mount_point }}
+             src={{ hac_cntrl.ip }}:/{{ gluster.volume}}
+             fstype=glusterfs
+             opts='defaults,_netdev'
+             dump=1
+             state=mounted
 
-    #- name: монтирование glusterfs
-    #  mount: name='/ald_home'
-    #         src={{ network.control.address }}.{{ nodes_ip[common.master_node] }}:/{{ gluster.volume}}
-    #         fstype=glusterfs
-    #         opts='defaults,_netdev'
-    #         dump=1
-    #         state=mounted  
