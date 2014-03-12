@@ -1,0 +1,11 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- hosts:
+    - nodes
+    - admin_stations
+  user: root
+
+  roles:
+    - users

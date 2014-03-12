@@ -1,0 +1,23 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- include: ald.yml tags=users
+
+- include: key.yml tags=users
+  when: inventory_hostname == common.master_node
+
+- include: sudo.yml tags=users
+  when: inventory_hostname in groups.nodes
+
+- name: копирование ключа на узел администрирования
+  copy: src=id_rsa.pub dest=/root/.ssh/admin.pub mode=0600
+  when: inventory_hostname in groups.admin_stations
+
+- name: добавление ключа в список авторизованных
+  shell: cat /root/.ssh/admin.pub >> /root/.ssh/authorized_keys 
+  when: inventory_hostname in groups.admin_stations
+
+- name: удаление файла ключа
+  file: path=/root/.ssh/admin.pub state=absent
+  when: inventory_hostname in groups.admin_stations

@@ -18,24 +18,6 @@
 - name: Make keytab for admin/admin
   command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
 
-- name: создание группы в ALD
-  ald: task=group group={{ item }} pass_file=/root/pass-file
-  with_items: ald.groups  
-
-- name: создание пользователя администратора в ALD
-  command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[0] }} --full-name='Admininstator' --user-desc='HAC administrator' {{ ald.kvg_admin_name }}
-  
-#- name: Добавление пользователя в группу administrators
-#  command: ald-admin group-mod {{ item }} -f --pass-file=/root/pass-file --add-users --user={{ ald.kvg_admin_name }} 
-#  with_items: ald.groups
-#  when: inventory_hostname == ald.master_ald_srv
-  
-- name: Добавление привелегий для пользователя
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1  
- 
-- name: Настройка доступа Администратора
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ ald.master_ald_srv }}.{{ ald.domain}}
-
 - name: создание приципала для ПК Управления
   command: ald-admin service-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
 

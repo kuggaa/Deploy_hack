@@ -22,9 +22,6 @@
 - name: добавление ключа для узла
   command: ald-client update-svc-keytab host/$inventory_hostname.${ald.domain} -f --pass-file=/root/pass-file --ktfile=/etc/krb5.keytab
 
-- name: настройка доступа администратора
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain }}
-
 - name: Создание keytab для apache
   copy: src=krb.keytab dest=/etc/apache2/krb.keytab mode=0644 owner=www-data group=www-data
 

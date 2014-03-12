@@ -1,0 +1,26 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---        
+
+- name: создание группы администраторов в ALD
+  ald: task=group group={{ item }} pass_file=/root/pass-file
+  with_items: ald.groups  
+  when: inventory_hostname == common.master_node
+
+- name: создание пользователя администратора в ALD
+  command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[0] }} --full-name='Администратор' --user-desc='HAC administrator' {{ ald.kvg_admin_name }}
+  when: inventory_hostname == common.master_node
+  
+#- name: Добавление пользователя в группу administrators
+#  command: ald-admin group-mod {{ item }} -f --pass-file=/root/pass-file --add-users --user={{ ald.kvg_admin_name }} 
+#  with_items: ald.groups
+#  when: inventory_hostname == ald.master_ald_srv
+  
+- name: добавление привилегий для пользователя
+  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1  
+  when: inventory_hostname == common.master_node
+ 
+- name: настройка доступа администратора
+  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain }}
+
