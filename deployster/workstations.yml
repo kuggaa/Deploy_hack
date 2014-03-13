@@ -8,11 +8,18 @@
   connection: local
 #  sudo: True
   vars_files: ['roles/initial_settings/vars/main.yml']
+  vars_prompt:
+    - name: "ald_password"
+      prompt: "Введите пароль администратора ALD (admin/admin)"
+      private: yes
+      confirm: no
 
 #  pre_tasks:
 #    - include: roles/initial_settings/tasks/repo.yml
 
   roles:
+   - ald_client
+   - users
    - { role: initial_workstation, network.public.address: $from_main, network.public.mask: $from_main, network.control.address: $from_main , network.control.mask: $from_main }
    - firefox_vnc
 

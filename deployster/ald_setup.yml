@@ -6,16 +6,20 @@
   user: root
 
   vars_prompt:
-  - name: "my_password"
-    prompt: "Enter password for admin"
-    private: yes
-   # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
-    confirm: yes
-    default: "admin"
+    - name: "ald_password"
+      prompt: "Введите пароль для пользователя администратора ALD (admin/admin)"
+      private: yes
+      confirm: yes
 
+    - name: "admin_password"
+      prompt: "Введите пароль для пользователя администратора КВГ (${ald.kvg_admin_name})"
+      private: yes
+      confirm: yes
 
-   #   vars_files:
-   # - roles/ald_setup/vars/ald-conf.yml
-  
+    - name: "user_password"
+      prompt: "Введите пароль для пользователя оператора КВГ (${ald.operator_user})"
+      private: yes
+      confirm: yes
+
   roles:
     - ald_setup

@@ -6,9 +6,27 @@
 - hosts: nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
+  vars_prompt:
+    - name: "ald_password"
+      prompt: "Введите пароль для пользователя администратора ALD (admin/admin)"
+      private: yes
+      confirm: yes
+
+    - name: "admin_password"
+      prompt: "Введите пароль для пользователя администратора КВГ (${ald.kv})"
+      private: yes
+      confirm: yes
+
+    - name: "user_password"
+      prompt: "Введите пароль для пользователя оператора КВГ (kvg_user)"
+      private: yes
+      confirm: yes
+
   roles:
    - initial_settings
    - glusterfs
    - libvirt
+   - ald_setup
+   - users
    - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
    - { role: pacemaker, network.control.address: $from_main }

@@ -11,17 +11,16 @@
     - name: "ald_password"
       prompt: "Введите пароль администратора ALD"
       private: yes
-      # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
       confirm: no
+
     - name: "admin_password"
       prompt: "Введите пароль для пользователя администратора КВГ (kvg_admin)"
       private: yes
-      # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
       confirm: yes
+
     - name: "user_password"
       prompt: "Введите пароль для пользователя оператора КВГ (kvg_user)"
       private: yes
-      # encrypt: "md5_crypt" #passlib must be installed to encrypt vars_prompt values
       confirm: yes
 
   roles:
