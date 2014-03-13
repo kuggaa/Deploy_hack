@@ -4,24 +4,8 @@
 ---
 - hosts:
     - nodes
-    - admin_stations
+#    - admin_stations
   user: root
-
-  vars_prompt:
-    - name: "ald_password"
-      prompt: "Введите пароль администратора ALD"
-      private: yes
-      confirm: no
-
-    - name: "admin_password"
-      prompt: "Введите пароль для пользователя администратора КВГ (kvg_admin)"
-      private: yes
-      confirm: yes
-
-    - name: "user_password"
-      prompt: "Введите пароль для пользователя оператора КВГ (kvg_user)"
-      private: yes
-      confirm: yes
-
+  
   roles:
     - users

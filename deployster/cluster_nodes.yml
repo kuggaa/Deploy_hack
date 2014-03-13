@@ -6,27 +6,54 @@
 - hosts: nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
+  roles:
+   #- initial_settings
+   #- glusterfs
+   #- libvirt
+   - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
+
+- hosts: nodes
+  user: root
+  vars_files: ['roles/initial_settings/vars/main.yml']
   vars_prompt:
     - name: "ald_password"
-      prompt: "Введите пароль для пользователя администратора ALD (admin/admin)"
+      prompt: "Input password ALD admin (admin/admin)"
       private: yes
       confirm: yes
 
     - name: "admin_password"
-      prompt: "Введите пароль для пользователя администратора КВГ (kvg_admin)"
+      prompt: "Input password HAC admin (kvg_admin)"
       private: yes
       confirm: yes
 
     - name: "user_password"
-      prompt: "Введите пароль для пользователя оператора КВГ (kvg_user)"
+      prompt: "Input password HAC user (kvg_user)"
       private: yes
       confirm: yes
-
+  
+  pre_tasks:
+   - name: создание временного alias для virtual ip
+     command: ifconfig {{ network.bridge }}:0 {{ hac_cntrl.ip }}
+     when: inventory_hostname == common.master_node 
+   
+   - name: монтирование glusterfs
+     command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}/  
+      
   roles:
-   - initial_settings
-   - glusterfs
-   - libvirt
    - ald_setup
-   - users
-   - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
-   - { role: pacemaker, network.control.address: $from_main }
+
+  post_tasks:
+   - name: удаление временного alias для virtual ip
+     command: ifconfig {{ network.bridge }}:0 down
+     when: inventory_hostname == common.master_node
+   
+   - name: отмонтирование glusterfs
+     command: umount {{ gluster.mount_point }}
+ 
+- hosts: nodes
+  user: root
+  vars_files: ['roles/initial_settings/vars/main.yml']  
+  roles:   
+    - { role: pacemaker, network.control.address: $from_main } 
+    - users
+

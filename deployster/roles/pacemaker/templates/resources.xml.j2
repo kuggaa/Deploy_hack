@@ -66,8 +66,8 @@
             <op id="hac_cntrl_ip-op-stop-0" interval="0" name="stop" timeout="20"/>
           </operations>
           <instance_attributes id="hac_cntrl_ip-instance_attributes">
-            <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="10.10.50.50"/>
-            <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="24"/>
+            <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="{{ hac_cntrl.ip }}"/>
+            <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="{{hac_cntrl.cidr_netmask}}"/>
           </instance_attributes>
         </primitive>
         <primitive class="lsb" id="krb5-kdc" type="krb5-kdc"/>

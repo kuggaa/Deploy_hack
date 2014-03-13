@@ -1,15 +1,12 @@
 # list machines and nodes grouping by roles
 
 [nodes]
-hacnode[1:3]
+hacnode[1:4]
 
 [new_nodes]
-hacnode4
 
 [remove_nodes]
 
 [admin_stations]
-don
+don ip=101
 
-[virtual_server]
-ald

@@ -4,7 +4,7 @@ common:
 
 # !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
-nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22,  hacnode4: 24}
+nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22,  hacnode4: 23}
 nodes_ip_ipmi: { hacnode1: 7, hacnode2: 8, hacnode3: 9,  hacnode4: 10}
 # Логин и пароль к IPMI интерфейсу( должен быть одинаковый на всех узлах КВГ)
 ipmi:
