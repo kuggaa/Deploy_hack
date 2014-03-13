@@ -8,10 +8,12 @@
   with_items: ald.groups  
 
 - name: создание учетной записи администратора в ALD
-  command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[0] }} --full-name='Administrator' --user-desc='Administrator HAC' {{ ald.kvg_admin_name }}
+  ald: task=user pass_file=/root/pass-file group={{ ald.groups[0] }}
+       full_name='Administrator' user_desc='Administrator HAC' user={{ ald.kvg_admin_name }}
   
 - name: создание учетной записи оператора в ALD
-  command: ald-admin user-add -f --pass-file=/root/pass-file --create-home --group={{ ald.groups[1] }} --full-name='User' --user-desc='User HAC' {{ ald.operator_user }}
+  ald: task=user pass_file=/root/pass-file group={{ ald.groups[1] }}
+       full_name='User' user_desc='User HAC' user={{ ald.operator_user }}
   
 #- name: Добавление пользователя в группу administrators
 #  command: ald-admin group-mod {{ item }} -f --pass-file=/root/pass-file --add-users --user={{ ald.kvg_admin_name }} 

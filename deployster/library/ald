@@ -76,9 +76,21 @@ def user_add(module):
     if user in user_list(module):
         return { 'changed' : False }
 
+    group_opt = ''
+    fullname_opt = ''
+    userdesc_opt = ''
+
     pass_file_opt = '--pass-file=%s' % module.params['pass_file']
+    if module.params['group']:
+        group_opt = '--group=%s' % module.params['group']
+    if module.params['user_desc']:
+        userdesc_opt = "--user-desc='%s'" % module.params['user_name']
+    if module.params['full_name']:
+        fullname_opt = "--full-name='%s'" % module.params['full_name']
+
     stdout = subprocess.check_output(['ald-admin', 'user-add', user,
-        '-f', pass_file_opt], stderr=None)
+        '-f', pass_file_opt, '--create-home',
+        group_opt, userdesc_opt, fullname_opt], stderr=None)
 
     return { 'changed' : True, 'stdout': stdout }
 
@@ -118,6 +130,8 @@ def main():
                      'user': dict(),
                      'host': dict(),
                      'group': dict(),
+                     'user_desc': dict(),
+                     'full_name': dict(),
                      'pass_file': dict(required=True)}
     module = AnsibleModule(argument_spec=argument_spec)
     task = module.params['task']
