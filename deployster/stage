@@ -1,12 +1,12 @@
 # list machines and nodes grouping by roles
 
 [nodes]
-hacnode[1:4]
+hacnode4
 
 [new_nodes]
 
 [remove_nodes]
 
 [admin_stations]
-don ip=101
+adminstation ip=101
 

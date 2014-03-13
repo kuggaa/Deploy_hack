@@ -5,6 +5,16 @@
     - name: запрещаем запуск wicd-daemon
       service: name=wicd state=stopped enabled=no
 
+    - name: запрещаем запуск avahi-daemon
+      service: name=avahi-daemon state=stopped enabled=no   
+
+    - name: установка ifenslave-2.6
+      apt: pkg={{ item }} state=latest force=yes
+      with_items: ['ifenslave-2.6', 'bridge-utils']
+
+    - name: добавление модуля bonding в /etc/modules
+      lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+
     - name: настройка interfaces
       template: src=interfaces.j2 dest=/etc/network/interfaces
       register: interfaces
@@ -26,4 +36,10 @@
              opts='defaults,_netdev'
              dump=1
              state=mounted
+    
+    - name: настройка локального сервера времени
+      template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes
+   
+    - name: запуск сервера времени
+      service: name=ntp state=started enabled=yes
 

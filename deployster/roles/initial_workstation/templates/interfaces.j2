@@ -1,15 +1,39 @@
 # The loopback network interface
+#auto lo
+#iface lo inet loopback
+
+# eth0
+#auto eth0
+#iface eth0 inet static
+#    address {{ network.public.address }}.{{ ip }}
+#    netmask {{ network.public.mask }}
+
+# eth1
+#auto eth1
+#iface eth1 inet static
+#    address {{ network.control.address }}.{{ ip }}
+#    netmask {{ network.control.mask }}
+
+# The loopback network interface
 auto lo
 iface lo inet loopback
 
-# eth0
-auto eth0
-iface eth0 inet static
-    address {{ network.public.address }}.{{ ip }}
-    netmask {{ network.public.mask }}
-
-# eth1
-auto eth1
-iface eth1 inet static
+# bond0 for network of cluster control (private network)
+auto bond0
+iface bond0 inet static
     address {{ network.control.address }}.{{ ip }}
     netmask {{ network.control.mask }}
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves {{ network.control.eth[0] }} {{ network.control.eth[1] }}
+    bond-primary {{ network.control.eth[0] }} {{ network.control.eth[1] }}
+
+# bond1 for network of cluster data (public network)
+auto bond1
+iface bond1 inet static
+    address {{ network.public.address }}.{{ ip }}
+    netmask {{ network.public.mask }}
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+    bond-primary {{ network.public.eth[0] }} {{ network.public.eth[1] }}

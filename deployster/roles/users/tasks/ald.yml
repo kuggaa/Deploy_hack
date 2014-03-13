@@ -10,10 +10,15 @@
 - name: создание учетной записи администратора в ALD
   ald: task=user pass_file=/root/pass-file group={{ ald.groups[0] }}
        full_name='Administrator' user_desc='Administrator HAC' user={{ ald.kvg_admin_name }}
+  register: create_users
   
 - name: создание учетной записи оператора в ALD
   ald: task=user pass_file=/root/pass-file group={{ ald.groups[1] }}
        full_name='User' user_desc='User HAC' user={{ ald.operator_user }}
+
+- name: ожидание создания пользователей
+  pause: seconds=60 prompt="wait please..."
+  when: create_users.changed
   
 #- name: Добавление пользователя в группу administrators
 #  command: ald-admin group-mod {{ item }} -f --pass-file=/root/pass-file --add-users --user={{ ald.kvg_admin_name }} 

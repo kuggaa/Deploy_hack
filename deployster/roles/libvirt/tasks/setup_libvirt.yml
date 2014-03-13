@@ -6,7 +6,7 @@
 
     - name: создание libvirt.conf
       copy: src={{ item }} dest=/etc/libvirt owner=root group=root mode=0644
-      with_items: ['libvirtd.conf']
+      with_items: ['libvirtd.conf', 'qemu.conf']
 
     - name: открытие TCP порта
       lineinfile: dest=/etc/default/libvirt-bin
@@ -25,7 +25,7 @@
       command: rm -rf /etc/libvirt/qemu
 
     - name: монтирование glusterfs
-      command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}/
+      command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
 
     - name: создание каталога для ВМ (образы)
       file: path={{ dirs.vm_images }} state=directory mode=0777

@@ -7,9 +7,9 @@
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
-   #- initial_settings
-   #- glusterfs
-   #- libvirt
+   - initial_settings
+   - glusterfs
+   - libvirt
    - { role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
 
 - hosts: nodes
@@ -34,10 +34,10 @@
   pre_tasks:
    - name: создание временного alias для virtual ip
      command: ifconfig {{ network.bridge }}:0 {{ hac_cntrl.ip }}
-     when: inventory_hostname == common.master_node 
+     when: inventory_hostname == common.master_node
    
    - name: монтирование glusterfs
-     command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}/  
+     command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
       
   roles:
    - ald_setup
