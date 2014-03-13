@@ -27,7 +27,7 @@
   command: rm -rf /ald_home  
   
 - name: подмена каталога /ald_home
-  file: src={{ gluster.mount_point }} dest=/ald_home state=link
+  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
   
 - name: удаление старых keytab
   command: rm -rf /etc/krb5.keytab
