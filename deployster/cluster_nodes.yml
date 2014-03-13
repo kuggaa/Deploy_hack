@@ -13,7 +13,7 @@
       confirm: yes
 
     - name: "admin_password"
-      prompt: "Введите пароль для пользователя администратора КВГ (${ald.kv})"
+      prompt: "Введите пароль для пользователя администратора КВГ (kvg_admin)"
       private: yes
       confirm: yes
 

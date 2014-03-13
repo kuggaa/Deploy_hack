@@ -5,10 +5,10 @@
 - name: установка пакетов для сервера ALD
   apt: pkg=$item state=latest
   with_items:
-    - ald-server
     - ald-admin
     - ald-client
-    - ald-server-common     
+    - ald-client-common
+    - smolensk-security-ald
   tags: [ packages ]
                      
 - name: создание файла настройки пользователей
