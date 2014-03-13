@@ -33,6 +33,3 @@
 - name: настройка клиента ALD
   command: ald-client commit-config -f --pass-file=/root/pass-file 
 
-- name: настройка доступа администратора
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain}}
-
