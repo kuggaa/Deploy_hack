@@ -18,6 +18,12 @@
 - include: sudo.yml tags=users
   when: inventory_hostname in groups.nodes
 
+- name: установка прав на ключи
+  file: path=/ald_home/${ald.kvg_admin_name}/.ssh
+        owner=${ald.kvg_admin_name} group=${ald.groups[0]}
+        state=directory recurse=yes
+  when: inventory_hostname in groups.admin_stations
+
 - name: копирование ключа на узел администрирования
   copy: src=id_rsa.pub dest=/root/.ssh/admin.pub mode=0600
   when: inventory_hostname in groups.admin_stations

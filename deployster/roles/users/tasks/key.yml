@@ -11,10 +11,5 @@
   command: ssh-keygen -q -t rsa -N '' -f $admin_home/.ssh/id_rsa
            creates=$admin_home/.ssh/id_rsa
 
-- name: установка прав на ключи
-  file: path=$admin_home/.ssh
-        owner=${ald.kvg_admin_name} group=${ald.groups[0]}
-        state=directory recurse=yes
-
 - name: извлечение публичного ключа
   fetch: src=$admin_home/.ssh/id_rsa.pub dest=roles/users/files/id_rsa.pub flat=yes fail_on_missing=yes
