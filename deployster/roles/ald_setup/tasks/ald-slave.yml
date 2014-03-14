@@ -2,6 +2,10 @@
 # © ОАО «Северное ПКБ», 2014
 #
 --- 
+- name: остановка сервисов ALD
+  service: name={{ item }} state=stopped
+  with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
+
 - name: копирование файлов настроек для ALD
   copy: src=ald-conf/{{ common.master_node }}${item} dest=${item} backup=yes 
   with_items: ald_files

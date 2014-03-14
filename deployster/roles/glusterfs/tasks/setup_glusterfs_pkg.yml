@@ -10,5 +10,4 @@
         - glusterfs-server
 
     - name: перезапуск службы glusterfs-server
-      service: name=glusterfs-server state=restarted
-      # enabled=yes
+      service: name=glusterfs-server state=restarted enabled=yes

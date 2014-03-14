@@ -2,13 +2,18 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
+- name: удаление БД LDAP
+  command: rm -rf {{ item }}
+  with_items:
+    - /etc/ldap
+    - /var/lib/ldap
+
+- name: создание каталога /etc/ald
+  file: path=/etc/ald state=directory
+
 - name: установка пакетов для сервера ALD
   apt: pkg=$item state=latest
-  with_items:
-    - ald-server
-    - ald-admin
-    - ald-client
-    - ald-server-common     
+  with_items: [ald-server, ald-admin, ald-client, ald-server-common]
   tags: [ packages ]
                      
 - name: создание файла настройки пользователей
@@ -34,5 +39,4 @@
   ignore_errors: yes  
 
 - include: virthostname.yml
-
 

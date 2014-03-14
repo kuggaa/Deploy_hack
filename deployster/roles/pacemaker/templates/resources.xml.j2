@@ -59,7 +59,9 @@
           <nvpair id="ip_ald_apache-meta_attributes-is-managed" name="is-managed" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
-          <meta_attributes id="hac_cntrl_ip-meta_attributes"/>
+          <meta_attributes id="hac_cntrl_ip-meta_attributes">
+            <nvpair id="hac_cntrl_ip-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
+          </meta_attributes>
           <operations id="hac_cntrl_ip-operations">
             <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
             <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="90"/>
@@ -86,7 +88,7 @@
             <op id="aldd-op-stop-0" interval="0" name="stop" timeout="45"/>
           </operations>
           <meta_attributes id="aldd-meta_attributes">
-            <nvpair id="aldd-meta_attributes-target-role" name="target-role" value="Started"/>
+            <nvpair id="aldd-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
           </meta_attributes>
         </primitive>
         <primitive class="lsb" id="aldcd" type="aldcd"/>
@@ -94,35 +96,11 @@
           <operations id="apache-operations">
             <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="30"/>
           </operations>
-          <meta_attributes id="apache-meta_attributes"/>
-        </primitive>
-      </group>
-       <clone id="glusterd">
-        <meta_attributes id="glusterd-meta_attributes">
-          <nvpair id="glusterd-meta_attributes-target-role" name="target-role" value="Started"/>
-        </meta_attributes>
-        <primitive class="ocf" id="gluster" provider="heartbeat" type="glusterd">
-          <operations id="gluster-operations">
-            <op id="gluster-op-monitor-10" interval="10" name="monitor" timeout="20"/>
-          </operations>
-        </primitive>
-      </clone>
-      <clone id="gluster_volume">
-        <meta_attributes id="gluster_volume-meta_attributes">
-          <nvpair id="gluster_volume-meta_attributes-target-role" name="target-role" value="Started"/>
-        </meta_attributes>
-        <primitive class="ocf" id="gluster_vol" provider="heartbeat" type="volume">
-          <operations id="gluster_vol-operations">
-            <op id="gluster_vol-op-monitor-10" interval="10" name="monitor" timeout="20"/>
-          </operations>
-          <instance_attributes id="gluster_vol-instance_attributes">
-            <nvpair id="gluster_vol-instance_attributes-volname" name="volname" value="{{ gluster.volume }}"/>
-          </instance_attributes>
-          <meta_attributes id="gluster_vol-meta_attributes">
-            <nvpair id="gluster_vol-meta_attributes-target-role" name="target-role" value="Started"/>
+          <meta_attributes id="apache-meta_attributes">
+            <nvpair id="apache-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
           </meta_attributes>
         </primitive>
-      </clone>
+      </group>
       <clone id="mount_gluster">
         <meta_attributes id="mount_gluster-meta_attributes">
           <nvpair id="mount_gluster-meta_attributes-target-role" name="target-role" value="Started"/>

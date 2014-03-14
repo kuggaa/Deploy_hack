@@ -5,7 +5,7 @@
 # for deploy workstation for manage ha cluster
 - hosts: admin_stations
   user: root
-#  connection: local
+  connection: local
 #  sudo: True
   vars_files: ['roles/initial_settings/vars/main.yml']
   vars_prompt:

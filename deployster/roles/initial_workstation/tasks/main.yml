@@ -8,9 +8,9 @@
     - name: запрещаем запуск avahi-daemon
       service: name=avahi-daemon state=stopped enabled=no   
 
-    - name: установка ifenslave-2.6
+    - name: установка пакетов
       apt: pkg={{ item }} state=latest force=yes
-      with_items: ['ifenslave-2.6', 'bridge-utils']
+      with_items: ['ifenslave-2.6', 'bridge-utils', 'haveged']
 
     - name: добавление модуля bonding в /etc/modules
       lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present

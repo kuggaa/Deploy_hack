@@ -84,7 +84,7 @@ def user_add(module):
     if module.params['group']:
         group_opt = '--group=%s' % module.params['group']
     if module.params['user_desc']:
-        userdesc_opt = "--user-desc='%s'" % module.params['user_name']
+        userdesc_opt = "--user-desc='%s'" % module.params['user_desc']
     if module.params['full_name']:
         fullname_opt = "--full-name='%s'" % module.params['full_name']
 

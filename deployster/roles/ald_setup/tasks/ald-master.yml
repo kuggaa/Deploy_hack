@@ -14,8 +14,12 @@
   file: path={{ gluster.mount_point }}/ldap state=directory
         owner=openldap group=openldap mode=0700
 
-- name: остановка OpenLDAP
-  service: name=slapd state=stopped
+- name: остановка OpenLDAP и ALD
+  service: name={{ item }} state=stopped
+  with_items:[aldd, aldcd, nscd, nslcd, slapd]
+
+#- name: остановка домена ALD
+#  command: ald-init stop -f
 
 - name: перенос на Gluster базы LDAP
   command: cp -pfR /var/lib/ldap {{ gluster.mount_point }}
@@ -27,18 +31,13 @@
 - name: подмена каталога /var/lib/ldap
   file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
 
-- name: запуск OpenLDAP
-  service: name=slapd state=started
-
 - name: создание каталога Kerberos на общем хранилище
   file: path={{ gluster.mount_point }}/krb5kdc state=directory
         owner=root group=root mode=0700
 
 - name: остановка сервисов Kerberos
-  service: name=${item} state=stopped
-  with_items:
-    - krb5-kdc
-    - krb5-admin-server
+  service: name={{ item }} state=stopped
+  with_items: [krb5-kdc, krb5-admin-server]
 
 - name: перенос на Gluster базы Kerberos
   command: cp -pfR /var/lib/krb5kdc {{ gluster.mount_point }}
@@ -50,14 +49,16 @@
 - name: подмена каталога /var/lib/krb5kdc
   file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
 
-- name: запуск сервисов Kerberos
-  service: name=${item} state=started
-  with_items:
-    - krb5-kdc
-    - krb5-admin-server
+- name: запуск сервисов ALD
+  service: name={{ item }} state=started
+  with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
 
 - name: замена неверного файла /etc/init.d/nscd
   copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
 
 - name: создание каталога для домашних каталогов пользователей
   file: path=${dirs.ald_env_users} state=directory
+
+#- name: запуск домена ALD
+#  command: ald-init start -f
+

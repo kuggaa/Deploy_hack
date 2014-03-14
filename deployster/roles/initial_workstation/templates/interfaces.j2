@@ -25,8 +25,8 @@ iface bond0 inet static
     netmask {{ network.control.mask }}
     bond-mode active-backup
     bond-miimon 100
-    bond-slaves {{ network.control.eth[0] }} {{ network.control.eth[1] }}
-    bond-primary {{ network.control.eth[0] }} {{ network.control.eth[1] }}
+    bond-slaves {{ bond0[0] }} {{ bond0[1] }}
+    bond-primary {{ bond0[0] }} {{ bond0[1] }}
 
 # bond1 for network of cluster data (public network)
 auto bond1
@@ -35,5 +35,5 @@ iface bond1 inet static
     netmask {{ network.public.mask }}
     bond-mode active-backup
     bond-miimon 100
-    bond-slaves {{ network.public.eth[0] }} {{ network.public.eth[1] }}
-    bond-primary {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+    bond-slaves {{ bond1[0] }} {{ bond1[1] }}
+    bond-primary {{ bond1[0] }} {{ bond1[1] }}

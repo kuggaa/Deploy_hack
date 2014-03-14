@@ -44,6 +44,7 @@
        - ald-admin-parsec-mac
        - ald-server
        - ald-server-common
+       - slapd
        - firefox
        - python-django
        - python-setuptools
@@ -54,16 +55,42 @@
        - python-netsnmp
        - ipmitool
        - hac-control-apache
-       
+       - hac-control
+       - python-django-hac
+       - python-hac-tools
+      tags: [ ald ]
+
+    - name: закрываем процессы ALD
+      shell: killall -s 9 {{ item }}
+      with_items: services_list
+      ignore_errors: true
+      tags: [ ald ]
+
     - name: удалить пакет glusterfs?
-      pause: prompt="press any key for continue or ctrl+c for cancel"  
-    
+      pause: prompt="press any key for continue or ctrl+c for cancel"
+
     - name: удаление пакетов glusterfs
       apt: pkg=$item purge=yes state=absent
       with_items:
           - glusterfs-server
+      tags: [ gluster ]
+
+    - name: удаление содержимого glusterfs разделов
+      #command: bash -c "rm -rf /srv/*"
+      shell: rm -rf /srv/*
+      tags: [ gluster ]
+
+    - name: удаление конфигурации glusterd
+      #command: bash -c "rm -rf /etc/glusterd"
+      shell: rm -rf /etc/glusterd
+      tags: [ gluster ]
+
+    - name: удаление конфигурации glusterfs
+      #command: bash -c "rm -rf /etc/glusterfs"
+      shell: rm -rf /etc/glusterfs
+      tags: [ gluster ]
 
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
-      tags: [ pacemaker ]
+      tags: [ pacemaker, gluster ]
 

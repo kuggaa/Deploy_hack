@@ -9,8 +9,7 @@
 {% for key in pdu.iterkeys() %}
       <rsc_location id="fence_loc_on_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_on" score="-INFINITY"/>
 {% endfor %}{% endfor %}      
-      <rsc_order first="glusterd" id="glusterfs_order" then="gluster_volume"/>
-      <rsc_order first="gluster_volume" id="gluster_mount_order" then="mount_gluster"/>
-      <rsc_order first="mount_gluster" id="gluster_vm" then="vm_template"/>
+      <rsc_colocation id="col_ald_glusterfs" rsc="ip_ald_apache" with-rsc="mount_gluster"/>
+      <rsc_colocation id="col_vm_glustrefs" rsc="vm_template" with-rsc="mount_gluster"/>
 </constraints>
 

@@ -3,7 +3,6 @@
 #
 ---
 # setup main settings of libvirt
-
     - name: создание libvirt.conf
       copy: src={{ item }} dest=/etc/libvirt owner=root group=root mode=0644
       with_items: ['libvirtd.conf', 'qemu.conf']
@@ -23,6 +22,16 @@
 
     - name: удаление /etc/libvirt/qemu
       command: rm -rf /etc/libvirt/qemu
+
+    - name: отмонтирование glusterfs
+      command: umount {{ gluster.mount_point }}
+      ignore_errors: true
+
+    - name: перезапуск службы glusterfs-server
+      service: name=glusterfs-server state=restarted
+
+    - name: ожидание перезапуска демон glusterfs
+      pause: seconds=10
 
     - name: монтирование glusterfs
       command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}

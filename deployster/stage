@@ -1,6 +1,9 @@
 # list machines and nodes grouping by roles
 
 [nodes]
+#hacnode[1:4]
+hacnode1
+hacnode2
 hacnode4
 
 [new_nodes]
