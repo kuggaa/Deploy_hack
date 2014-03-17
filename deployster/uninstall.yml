@@ -1,0 +1,9 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- hosts: nodes
+  user: root
+   
+  roles:
+    - uninstall_cluster
