@@ -18,14 +18,29 @@
 - name: Make keytab for admin/admin
   command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
 
-- name: создание приципала для ПК Управления
-  command: ald-admin service-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+- name: создание принципала для узлов кластера
+  ald: task=host host={{ item }}.{{ ald.domain }} pass_file=/root/pass-file
+  with_items: groups.nodes
 
-- name: добавление приципала для ПК Управления в группу mac
-  command: ald-admin sgroup-svc-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --sgroup=mac --pass-file=/root/pass-file
+- name: создание принципалов OpenLDAP
+  command: ald-admin service-add ldap/{{ item }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+  with_items: groups.nodes
 
-- name: создание keytab для apache
-  command: ald-client  update-svc-keytab HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --ktfile=/root/krb.keytab --pass-file=/root/pass-file
+- name: остановка сервисов ALD
+  service: name={{ item }} state=stopped
+  with_items: [aldd, aldcd, samba, nslcd, nscd, slapd, krb5-kdc, krb5-admin-server]
 
-- name: сохранение keytab для передачи клиентам ald
-  fetch: src=/root/krb.keytab dest=roles/ald_setup/files/krb.keytab validate_md5=yes flat=yes fail_on_missing=yes
+- name: замена неверного файла /etc/init.d/nscd
+  copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
+
+- name: изменение /etc/hosts
+  lineinfile: dest=/etc/hosts
+              regexp='{{ ald.master_node }}.{{ ald.domain }} ald'
+              line="{{ hostvars[common.master_node]['ansible_eth0']['ipv4']['address'] }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}"
+              state=present
+  when: inventory_hostname != common.master_node
+
+#- name: копирование файлов настроек для LDAP
+#  fetch: src=/etc/ldap/slapd.d/{{ item }} dest=ald-conf
+#  with_items: ldap_files   
+

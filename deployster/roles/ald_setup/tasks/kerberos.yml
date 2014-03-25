@@ -1,0 +1,73 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+--- 
+- name: добавление принципалов узлов в /etc/krb5.keytab
+  command: kadmin.local -q 'ktadd -norandkey host/{{ item }}.{{ ald.domain }}'
+  with_items: groups.nodes
+  when: inventory_hostname == common.master_node
+
+- name: остановка сервисов Kerberos
+  service: name={{ item }} state=stopped
+  with_items: [krb5-kdc, krb5-admin-server]
+
+- name: настройка /etc/hosts
+  template: src=hosts.j2 dest=/etc/hosts
+
+- name: копирование файлов настроек Kerberos с главного сервера
+  fetch: src={{ item }} dest=krb-conf
+  with_items:
+    - /etc/krb5kdc/kadm5.keytab
+    - /etc/krb5kdc/stash
+    - /etc/krb5.keytab
+  when: inventory_hostname == common.master_node
+
+- name: удаление БД Kerberos
+  command: rm -rf  /var/lib/krb5kdc/*
+  when: inventory_hostname != common.master_node
+
+- name: копирование файлов настроек для Kerberos
+  copy: src=krb-conf/{{ common.master_node }}{{ item }} dest=${item} backup=no
+  with_items:
+    - /etc/krb5kdc/kadm5.keytab
+    - /etc/krb5kdc/stash
+    - /etc/krb5.keytab
+  when: inventory_hostname != common.master_node
+
+- name: установка файла службы для kpropd
+  copy: src=krb5-prop dest=/etc/init.d/krb5-prop owner=root group=root mode=0755
+
+- name: запуск KDC
+  service: name=krb5-kdc state=started
+
+- name: запуск KAdmin
+  service: name=krb5-admin-server state=started
+  when: inventory_hostname == common.master_node
+
+- name: настройка синхронизации Kerberos
+  template: src=kpropd.acl dest=/etc/krb5kdc/kpropd.acl
+  tags: [ config ]
+
+- name: запуск демона синхронизации Kerberos
+  service: name=krb5-prop state=started
+  when: inventory_hostname != common.master_node
+
+- name: создание дампа БД Kerberos
+  command: kdb5_util dump /var/lib/krb5kdc/slave_datatrans
+  when: inventory_hostname == common.master_node
+
+- name: синхронизация БД Kerberos
+  command: kprop {{ item }}
+  with_items: groups.nodes[1:]
+  when: inventory_hostname == common.master_node
+
+- name: настройка периодической синхронизации
+  template: src=krb5prop dest=/etc/cron.hourly owner=root group=root mode=0755
+
+#- name: удаление /etc/krb5.keytab
+#  file: path=/etc/krb5.keytab state=absent
+
+#- name: добавление принципала узла в /etc/krb5.keytab
+#  command: kadmin.local -q 'ktadd -norandkey host/{{ inventory_hostname }}.{{ ald.domain }}'
+
+

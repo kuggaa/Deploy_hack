@@ -7,7 +7,7 @@
   tags: [ packages ]
 
 - name: установка виртуального имени узла
-  shell: echo ${ald.master_ald_srv} > /etc/hostname.ald
+  shell: echo {{ ald.master_node }} > /etc/hostname.ald
   tags: [ config ]
 
 - name: подмена имени для демонов aldd, aldcd

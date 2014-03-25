@@ -29,6 +29,7 @@ hac_cntrl:
     ip: 10.10.50.50
     cidr_netmask: 24
     name: cluster
+    domain: hac
     # пользователь ssh-сеанса для копирования iso-образа диска с ОС для функции создания ВМ
     # доступ без пароля должен быть задан на всех узлах кластера (т.е. выполнена команда ssh-copy-id <cd_user>@<ip или hostname>)
     cd_user: 'root'
@@ -36,7 +37,7 @@ hac_cntrl:
 # Настройки Astra Linux Directory
 ald:
     # Узел сервера
-    master_ald_srv: ${hac_cntrl.name}
+    master_node: ${hac_cntrl.name}
 
     # Домен
     domain: hac

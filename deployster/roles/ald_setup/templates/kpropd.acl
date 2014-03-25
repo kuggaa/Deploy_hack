@@ -1,0 +1,16 @@
+# --ALD_TEMPLATE_COMMENT--
+#
+# This is a template for /etc/krb5kdc/kadm5.acl file. 
+# If altered - the following command should be invoked to update the server:
+#
+# $ ald-init commit-config
+#
+# Do not alter this file unless you know what you are doing.
+#
+# --ALD_COMMENT_END--
+
+
+{% for host in groups.nodes %}
+host/{{ host }}.{{ ald.domain }}@{{ ald.krb_domain }}
+{% endfor %}
+host/{{ ald.master_node }}.{{ ald.domain }}@{{ ald.krb_domain }}

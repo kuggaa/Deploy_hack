@@ -1,0 +1,164 @@
+# --ALD_TEMPLATE_COMMENT--
+#
+# This is a template for slapd.d.ldif file which is used for initial 
+# configuration of LDAP server version < 1.5.
+# If altered - the ald server should be reinitialized by the command:
+#
+# $ ald-init init
+#
+# Do not alter this file unless you know what you are doing.
+#
+# --ALD_COMMENT_END--
+
+
+dn: cn=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: /var/run/slapd/slapd.args
+olcPidFile: /var/run/slapd/slapd.pid
+olcAuthzRegexp: {0}uid=([^,]*),cn=gssapi,cn=auth uid=$1,ou=users,${ldap_domain}
+olcDisallows: bind_simple
+olcLogLevel: sync
+{% for host in groups.nodes %}
+olcServerID: {{ loop.index }} ldap://{{ host }}
+{% endfor %}
+#32767
+#ber filter acl stats
+
+
+dn: cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: schema
+
+
+include: file:///etc/ldap/schema/core.ldif
+
+
+include: file:///etc/ldap/schema/cosine.ldif
+
+
+include: file:///etc/ldap/schema/inetorgperson.ldif
+
+
+include: file:///etc/ldap/schema/nis.ldif
+
+
+include: file:///etc/ldap/schema/ald15.ldif
+
+
+include: file:///etc/ldap/schema/exim-mail.ldif
+
+
+dn: olcDatabase={0}config,cn=config
+objectClass: olcDatabaseConfig
+olcRootDN: uid=admin/admin,ou=users,${ldap_domain}
+
+
+dn: cn=module{0},cn=config
+objectClass: olcModuleList
+cn: module{0}
+olcModulePath: /usr/lib/ldap
+olcModuleLoad: back_hdb.la
+olcModuleLoad: syncprov.la
+
+
+dn: olcBackend=hdb,cn=config
+objectClass: olcBackendConfig
+olcBackend: hdb
+
+
+dn: olcDatabase={1}frontend,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcFrontendConfig
+olcDatabase: {1}frontend
+olcAccess: to dn.regex=^(.+,)?ou=([^\-]+)-services,ou=service-configs,${ldap_domain}$
+   by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
+   by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+   by group.expand=cn=$2-services,ou=ald-config,${ldap_domain} read
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
+   by * none
+olcAccess: to dn.subtree=ou=service-configs,${ldap_domain}
+   by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
+   by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
+   by * none
+olcAccess: to dn.subtree=ou=ald-config,${ldap_domain}
+   by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
+   by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
+   by * none
+olcAccess: to attrs=x-ald-user-cap,x-ald-allowed-hosts,x-ald-allowed-host-groups
+   by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
+   by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
+   by self read
+   by * none
+olcAccess: to *
+   by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
+   by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
+   by * read
+
+
+dn: olcDatabase=hdb,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcHdbConfig
+olcDatabase: hdb
+olcDbDirectory: /var/lib/ldap
+olcSizeLimit: 500
+olcSuffix: ${ldap_domain}
+olcRootDN: uid=admin/admin,ou=users,${ldap_domain}
+olcDbCheckPoint: 512 30
+olcDbConfig: set_cachesize 0 2097152 0
+olcDbConfig: set_lk_max_objects 1500
+olcDbConfig: set_lk_max_locks 1500
+olcDbConfig: set_lk_max_lockers 1500
+olcDbIndex: objectClass eq
+olcDbIndex: member eq
+olcDbIndex: uidNumber eq
+olcDbIndex: uid eq,sub
+olcDbIndex: cn eq,sub
+olcDbIndex: sn eq,sub
+olcDbIndex: ou eq,sub
+olcDbIndex: gidNumber eq
+olcDbIndex: memberUid eq
+olcDbIndex: uniqueMember eq
+olcDbIndex: x-ald-id eq
+olcDbIndex: x-ald-status eq
+olcDbIndex: x-ald-hosts eq
+olcDbIndex: x-ald-allowed-hosts eq
+olcDbIndex: x-ald-allowed-host-groups eq
+olcDbIndex: x-ald-host-flags eq,sub
+olcDbIndex: entryCSN eq
+olcDbIndex: entryUUID eq
+{% for host in groups.nodes %}
+olcSyncrepl: rid=00{{ loop.index }}
+  provider="ldap://{{ host }}"
+  searchbase=${ldap_domain}
+  type=refreshAndPersist
+  retry="30 +"
+  attrs="*,+"
+  schemachecking=on
+  network-timeout=5
+  timeout=30
+  bindmethod=sasl
+  binddn="uid=ldap/{{ inventory_hostname }}.{{ ald.domain }},ou=users,${ldap_domain}"
+{% endfor %}
+olcMirrorMode: TRUE
+
+
+dn: olcOverlay=syncprov,olcDatabase={2}hdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcSyncProvConfig
+olcOverlay: syncprov
+olcSpCheckpoint: 100 5

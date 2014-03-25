@@ -2,63 +2,58 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-- name: копирование файлов настроек для ALD
-  fetch: src=${item} dest=ald-conf
-  with_items: ald_files   
+#- name: остановка OpenLDAP и ALD
+#  service: name={{ item }} state=stopped
+#  with_items: [aldd, aldcd, nscd, nslcd, slapd]
 
-- name: копирование файлов настроек для LDAP
-  fetch: src=/etc/ldap/slapd.d/${item} dest=ald-conf
-  with_items: ldap_files   
+#- name: создание каталога LDAP на общем хранилище
+#  file: path={{ gluster.mount_point }}/ldap state=directory
+#        owner=openldap group=openldap mode=0700
 
-- name: создание каталога LDAP на общем хранилище
-  file: path={{ gluster.mount_point }}/ldap state=directory
-        owner=openldap group=openldap mode=0700
+#- name: перенос на Gluster базы LDAP
+#  command: cp -pfR /var/lib/ldap {{ gluster.mount_point }}
 
-- name: остановка OpenLDAP и ALD
-  service: name={{ item }} state=stopped
-  with_items:[aldd, aldcd, nscd, nslcd, slapd]
+#- name: удаление старой базы LDAP
+#  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
 
-#- name: остановка домена ALD
-#  command: ald-init stop -f
+#- name: подмена каталога /var/lib/ldap
+#  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
+#  mount: name=/var/lib/ldap src={{ gluster.mount_point }}/ldap
+#         fstype=none opts=bind state=mounted
 
-- name: перенос на Gluster базы LDAP
-  command: cp -pfR /var/lib/ldap {{ gluster.mount_point }}
-#           creates={{ gluster.mount_point }}/ldap/DB_CONFIG
+#- name: создание каталога Kerberos на общем хранилище
+#  file: path={{ gluster.mount_point }}/krb5kdc state=directory
+#        owner=root group=root mode=0700
 
-- name: удаление старой базы LDAP
-  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
+#- name: остановка сервисов Kerberos
+#  service: name={{ item }} state=stopped
+#  with_items: [krb5-kdc, krb5-admin-server]
 
-- name: подмена каталога /var/lib/ldap
-  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
+#- name: перенос на Gluster базы Kerberos
+#  command: cp -pfR /var/lib/krb5kdc {{ gluster.mount_point }}
 
-- name: создание каталога Kerberos на общем хранилище
-  file: path={{ gluster.mount_point }}/krb5kdc state=directory
-        owner=root group=root mode=0700
+#- name: удаление старой базы Kerberos
+#  command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
 
-- name: остановка сервисов Kerberos
-  service: name={{ item }} state=stopped
-  with_items: [krb5-kdc, krb5-admin-server]
-
-- name: перенос на Gluster базы Kerberos
-  command: cp -pfR /var/lib/krb5kdc {{ gluster.mount_point }}
-#           creates={{ gluster.mount_point }}/krb5kdc/principal
-
-- name: удаление старой базы Kerberos
-  command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
-
-- name: подмена каталога /var/lib/krb5kdc
-  file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
+#- name: подмена каталога /var/lib/krb5kdc
+#  file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
+#  mount: name=/var/lib/krb5kdc src={{ gluster.mount_point }}/krb5kdc
+#         fstype=none opts=bind state=mounted
 
 - name: запуск сервисов ALD
   service: name={{ item }} state=started
   with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
 
-- name: замена неверного файла /etc/init.d/nscd
-  copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
+- name: создание приципала для ПК Управления
+  command: ald-admin service-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
 
-- name: создание каталога для домашних каталогов пользователей
-  file: path=${dirs.ald_env_users} state=directory
+- name: добавление приципала для ПК Управления в группу mac
+  command: ald-admin sgroup-svc-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --sgroup=mac --pass-file=/root/pass-file
 
-#- name: запуск домена ALD
-#  command: ald-init start -f
+- name: создание keytab для apache
+  command: ald-client update-svc-keytab HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} --ktfile=/root/krb.keytab --pass-file=/root/pass-file
+
+- name: сохранение keytab для передачи клиентам ald
+  fetch: src=/root/krb.keytab dest=roles/ald_setup/files/krb.keytab validate_md5=yes flat=yes fail_on_missing=yes
+
 
