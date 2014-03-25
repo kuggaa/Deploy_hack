@@ -5,11 +5,13 @@
     - name: отключение ограничений на размер файлов (hard)
       lineinfile: dest=/etc/security/limits.conf
                   line="#* hard fsize 10000000"
-                  regexp="^\* hard fsize"
+                  regexp="^\*? hard fsize"
+                  backrefs=yes
                   state=present
 
     - name: отключение ограничений на размер файлов (soft)
       lineinfile: dest=/etc/security/limits.conf
                   line="#* soft fsize 5000000"
-                  regexp="^\* soft fsize"
+                  regexp="^\*? soft fsize"
+                  backrefs=yes
                   state=present
