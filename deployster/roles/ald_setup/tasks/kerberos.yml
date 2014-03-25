@@ -11,8 +11,8 @@
   service: name={{ item }} state=stopped
   with_items: [krb5-kdc, krb5-admin-server]
 
-- name: настройка /etc/hosts
-  template: src=hosts.j2 dest=/etc/hosts
+#- name: настройка /etc/hosts
+#  template: src=hosts.j2 dest=/etc/hosts
 
 - name: копирование файлов настроек Kerberos с главного сервера
   fetch: src={{ item }} dest=krb-conf
