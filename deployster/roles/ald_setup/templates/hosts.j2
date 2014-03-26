@@ -1,9 +1,8 @@
 127.0.0.1	localhost
-{% for host in groups['nodes'] %}
-{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }} {{ host }}.{{ ald.domain }} {{ host }}
+{{ network.public.address }}.{{ nodes_ip[inventory_hostname] }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
+{% for key, value in nodes_ip.iteritems() %}
+{{ network.control.address }}.{{ value }}  {{ key }}.{{ald.domain}} {{ key }}
 {% endfor %}
-{{ hostvars[common.master_node]['ansible_eth0']['ipv4']['address'] }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}
-
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
@@ -11,3 +10,4 @@ fe00::0 ip6-localnet
 ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
+

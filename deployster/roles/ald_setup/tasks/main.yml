@@ -12,7 +12,7 @@
 
 - include: ald.yml
 
-- include: ald-master.yml tags=ald-master
+- include: ald-master.yml
   when: inventory_hostname == common.master_node
 
 #- include: ald-slave.yml tags=ald-slave
@@ -30,9 +30,3 @@
 - service: name={{ item }} enabled=no
   with_items: ald.services_list
 
-#- service: name={{ item }} state=stopped
-#  with_items: ald.services_list  
-#  when: inventory_hostname in groups.nodes
-#  ignore_errors: yes
-
-#todo сделать регистрацию операции и если failed то рубить процессы killall

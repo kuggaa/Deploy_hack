@@ -1,9 +1,9 @@
 #
 # © ОАО «Северное ПКБ», 2014
 #
----        
+---
 - name: установка haveged
-  apt: pkg=haveged state=latest  
+  apt: pkg=haveged state=latest
   tags: [ packages ]
 
 - name: создание файла настройки ALD (/etc/ald/ald.conf)
@@ -11,12 +11,18 @@
   register: ald_config
   tags: [ config ]
 
+- name: настройка /etc/hosts
+  template: src=hosts.j2 dest=/etc/hosts
+
+- name: замена скрипта запуска OpenLDAP
+  copy: src=slapd.orig dest=/etc/init.d/slapd owner=root group=root mode=0755
+
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
   environment: virthostname_env
 
 - name: Make keytab for admin/admin
-  command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'    
+  command: kadmin.local -q 'ktadd -k /root/admin.keytab -norandkey admin/admin'
 
 - name: создание принципала для узлов кластера
   ald: task=host host={{ item }}.{{ ald.domain }} pass_file=/root/pass-file
@@ -42,5 +48,5 @@
 
 #- name: копирование файлов настроек для LDAP
 #  fetch: src=/etc/ldap/slapd.d/{{ item }} dest=ald-conf
-#  with_items: ldap_files   
+#  with_items: ldap_files
 

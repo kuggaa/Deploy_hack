@@ -1,7 +1,7 @@
 #
 # © ОАО «Северное ПКБ», 2014
 #
---- 
+---
 - name: добавление принципалов узлов в /etc/krb5.keytab
   command: kadmin.local -q 'ktadd -norandkey host/{{ item }}.{{ ald.domain }}'
   with_items: groups.nodes
@@ -11,8 +11,8 @@
   service: name={{ item }} state=stopped
   with_items: [krb5-kdc, krb5-admin-server]
 
-#- name: настройка /etc/hosts
-#  template: src=hosts.j2 dest=/etc/hosts
+#- name: восстановление /etc/hosts
+#  copy: src=hosts dest=/etc/hosts
 
 - name: копирование файлов настроек Kerberos с главного сервера
   fetch: src={{ item }} dest=krb-conf

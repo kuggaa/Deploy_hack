@@ -11,6 +11,7 @@
     - ${ald.kvg_admin_name}
     - ${ald.operator_user}
   tags: users
+  when: inventory_hostname == common.master_node
 
 - include: key.yml tags=users
   when: inventory_hostname == common.master_node
@@ -29,7 +30,7 @@
   when: inventory_hostname in groups.admin_stations
 
 - name: добавление ключа в список авторизованных
-  shell: cat /root/.ssh/admin.pub >> /root/.ssh/authorized_keys 
+  shell: cat /root/.ssh/admin.pub >> /root/.ssh/authorized_keys
   when: inventory_hostname in groups.admin_stations
 
 - name: удаление файла ключа

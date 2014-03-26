@@ -2,6 +2,5 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-
-- name: добавление прав в sudoers для группы администраторов ALD
-  template: src=sudo.hac.j2 dest=/etc/sudoers.d/hacadmin mode=0440
+  - name: добавление прав в sudoers для группы администраторов ALD
+    template: src=sudo.hac.j2 dest=/etc/sudoers.d/hacadmin mode=0440

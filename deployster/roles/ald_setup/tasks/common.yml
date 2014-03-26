@@ -20,7 +20,7 @@
   apt: pkg=$item state=latest
   with_items: [ald-server, ald-admin, ald-client, ald-server-common]
   tags: [ packages ]
-                     
+
 - name: остановка сервисов ALD
   service: name={{ item }} state=stopped
   with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
@@ -37,7 +37,7 @@
     - krb5.conf
     - ldap.conf
   tags: [ config ]
-  
+
 - name: замена стандартных шаблонов ALD
   template: src={{ item }} dest=/etc/ald/config-templates/{{ item }}
   with_items:
@@ -46,7 +46,7 @@
     - krb5.conf
     - ldap.conf
   tags: [ config ]
-  
+
 #- name: удаление старых каталогов KRB
 #  command: rm -rf  /var/lib/krb5kdc/*
 #  ignore_errors: yes
@@ -56,17 +56,20 @@
 #  ignore_errors: yes
 
 - name: создание каталога для домашних каталогов пользователей
-  file: path=${dirs.ald_env_users} state=directory
+  file: path={{ dirs.ald_env_users }} state=directory
 
 #- name: подмена каталога /ald_home
 #  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
 - name: подмена каталога /ald_home
   mount: name=/ald_home src={{ dirs.ald_env_users }}
          fstype=none opts=bind state=mounted
-  
+
 - name: удаление старых keytab
-  command: rm -rf /etc/krb5.keytab
-  ignore_errors: yes 
+  command: rm -rf {{ item }}
+  with_items:
+    - /etc/krb5.keytab
+    - /etc/ldap/slapd.keytab
+  ignore_errors: yes
 
 - include: virthostname.yml
 

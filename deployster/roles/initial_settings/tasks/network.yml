@@ -13,7 +13,7 @@
 
     - name: запрещаем запуск wicd-daemon
       service: name=wicd state=stopped enabled=no
-      
+
     - name: запрещаем запуск avahi-daemon
       service: name=avahi-daemon state=stopped enabled=no
 
@@ -31,6 +31,7 @@
 
     - name: настройка /etc/hosts
       template: src=hosts.j2 dest=/etc/hosts
+      tags: [restore_hosts]
 
     - name: перезапуск узла
       command: /sbin/shutdown -r -t 3 now Rebooted by ansible
@@ -43,4 +44,4 @@
     - name: ожидание запуска ssh соединения
       local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=150
       when: interfaces.changed
-      
+

@@ -20,10 +20,10 @@ pdu: { pdu_1: 1, pdu_2: 2 }
 
 repository:
     # Адрес репозитория с дистрибутивом Астры версии 1.3
-    os: http://172.16.0.211/astra
+    os: ftp://172.16.0.211/astra
 
     # Адрес репозитория с пакетами для ПК КВГ
-    hac: http://172.16.0.211/hac
+    hac: ftp://172.16.0.211/hac
 
 hac_cntrl:
     ip: 10.10.50.50
@@ -46,7 +46,7 @@ ald:
     ldap_domain: dc=${ald.domain}
 
     # Домен в записи Kerberos в верхнем регистре.
-    krb_domain: ${ald.domain.upper()}
+    krb_domain: "{{ hac_cntrl.domain.upper() }}"
 
     # Список групп, первой в списке должна всегда быть группа для пользователей с полномочиями администраторов КВГ
     groups: [administrators, users]

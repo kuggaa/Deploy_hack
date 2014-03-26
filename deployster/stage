@@ -1,7 +1,7 @@
 # list machines and nodes grouping by roles
 
 [nodes]
-hacnode3
+hacnode[1:3]
 
 [new_nodes]
 

@@ -33,13 +33,6 @@ if [ -f "/etc/default/slapd" ]; then
 	. /etc/default/slapd
 fi
 
-K5START_BIN=/usr/bin/k5start
-K5START_DESC="Keep alive Kerberos ticket"
-K5START_START=""
-K5START_PIDFILE=/run/slapd/k5start_slapd.pid
-K5START_CCREFRESH=30
-K5START_PRINCIPAL="ldap/$(hostname -f)"
-
 # Load the default location of the slapd config file
 if [ -z "$SLAPD_CONF" ]; then
 	if [ -e /etc/ldap/slapd.d ]; then
@@ -102,55 +95,6 @@ if [ "$SLAPD_GROUP" ]; then
 	SLAPD_OPTIONS="-g $SLAPD_GROUP $SLAPD_OPTIONS"
 fi
 
-# check if we should use k5start by default (sasl_mech should be GSSAPI and
-# krb5_ccname should be found)
-if [ -x "$K5START_BIN" ] && \
-   grep -q '^SASL_MECH[[:space:]]*GSSAPI[[:space:]]*$' /etc/ldap/ldap.conf && \
-   [ -n "$SLAPD_CCFILE" ]
-then
-  K5START_START="yes"
-fi
-
-k5start_start()
-{
-  if [ "$K5START_START" = "yes" ]
-  then
-    log_daemon_msg "Starting $K5START_DESC" "k5start"
-    start-stop-daemon --start \
-                      --pidfile $K5START_PIDFILE \
-                      --exec $K5START_BIN -- \
-                      -b -p $K5START_PIDFILE \
-                      -o $SLAPD_USER \
-                      -g $SLAPD_GROUP \
-                      -f $SLAPD_KEYTAB \
-                      -K $K5START_CCREFRESH \
-                      -k $SLAPD_CCFILE \
-                      $K5START_PRINCIPAL
-    log_end_msg $?
-  fi
-}
-
-k5start_stop()
-{
-  if [ "$K5START_START" = "yes" ]
-  then
-    log_daemon_msg "Stopping $K5START_DESC" "k5start"
-    start-stop-daemon --stop --oknodo --pidfile $K5START_PIDFILE
-    log_end_msg $?
-    # remove any left behind files
-    [ -n "$K5START_PIDFILE" ] && rm -f $K5START_PIDFILE
-    [ -n "$SLAPD_CCFILE" ] && rm -f $SLAPD_CCFILE
-  fi
-}
-
-k5start_status()
-{
-  if [ "$K5START_START" = "yes" ]
-  then
-    status_of_proc -p "$K5START_PIDFILE" "$K5START_BIN" "k5start"
-  fi
-}
-
 # Check whether we were configured to not start the services.
 check_for_no_start() {
 	if [ -n "$SLAPD_NO_START" ]; then
@@ -185,11 +129,9 @@ report_failure() {
 	fi
 }
 
-# Start the slapd daemon and capture the error message if any to
+# Start the slapd daemon and capture the error message if any to 
 # $reason.
 start_slapd() {
-  export KRB5_KTNAME=$SLAPD_KEYTAB
-	export KRB5CCNAME=$SLAPD_CCFILE
 	if [ -z "$SLAPD_SERVICES" ]; then
 		reason="`start-stop-daemon --start --quiet --oknodo \
 			--pidfile "$SLAPD_PIDFILE" \
@@ -235,23 +177,16 @@ stop_ldap() {
 case "$1" in
   start)
 	check_for_no_start
-	k5start_start
-	start_ldap
-        ;;
+  	start_ldap ;;
   stop)
-	stop_ldap
-	k5start_stop
-        ;;
+  	stop_ldap ;;
   restart|force-reload)
 	check_for_no_start
-	stop_ldap
-	k5start_stop
-	k5start_start
+  	stop_ldap
 	start_ldap
 	;;
   status)
 	status_of_proc -p $SLAPD_PIDFILE $SLAPD slapd
-        k5start_status
 	;;
   *)
   	echo "Usage: $0 {start|stop|restart|force-reload|status}"
