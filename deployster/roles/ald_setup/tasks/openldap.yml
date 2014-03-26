@@ -31,7 +31,7 @@
 - name: настройка файла кэша
   lineinfile: dest=/etc/default/slapd
               regexp='^SLAPD_CCFILE'
-              line='SLAPD_CCFILE=/var/lib/ldap/krb5.cache'
+              line='SLAPD_CCFILE=/var/lib/slapd/krb5.cache'
               state=present
   tags: [ config ]
 
