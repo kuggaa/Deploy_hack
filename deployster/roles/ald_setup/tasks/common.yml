@@ -2,41 +2,71 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-- name: удаление БД LDAP
-  command: rm -rf {{ item }}
-  with_items:
-    - /etc/ldap
-    - /var/lib/ldap
+#- name: удаление БД LDAP
+#  command: rm -rf {{ item }}
+#  with_items:
+#    - /etc/ldap
+#    - /var/lib/ldap
 
 - name: создание каталога /etc/ald
   file: path=/etc/ald state=directory
+
+- name: остановка сервисов ALD
+  service: name={{ item }} state=stopped
+  with_items: [aldd, aldcd, nscd, nslcd, slapd, krb5-kdc, krb5-admin-server]
+  ignore_errors: yes
 
 - name: установка пакетов для сервера ALD
   apt: pkg=$item state=latest
   with_items: [ald-server, ald-admin, ald-client, ald-server-common]
   tags: [ packages ]
                      
+- name: остановка сервисов ALD
+  service: name={{ item }} state=stopped
+  with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
+
 - name: создание файла настройки пользователей
   template: src=pass-file.j2 dest=/root/pass-file mode=0600
   tags: [ pass-file ]
-  
-- name: удаление старых каталогов KRB
-  command: rm -rf  /var/lib/krb5kdc
-  ignore_errors: yes
 
-- name: удаление старых каталогов LDAP
-  command: rm -rf  /var/lib/ldap
-  ignore_errors: yes
+- name: замена стандартных шаблонов ALD
+  template: src={{ item }} dest=/usr/lib/ald/config-templates/{{ item }}
+  with_items:
+    - slapd.d15.ldif
+    - kpropd.acl
+    - krb5.conf
+    - ldap.conf
+  tags: [ config ]
   
-- name: удаление /ald_home
-  command: rm -rf /ald_home  
+- name: замена стандартных шаблонов ALD
+  template: src={{ item }} dest=/etc/ald/config-templates/{{ item }}
+  with_items:
+    - slapd.d15.ldif
+    - kpropd.acl
+    - krb5.conf
+    - ldap.conf
+  tags: [ config ]
   
+#- name: удаление старых каталогов KRB
+#  command: rm -rf  /var/lib/krb5kdc/*
+#  ignore_errors: yes
+
+#- name: удаление старых каталогов LDAP
+#  command: rm -rf  /var/lib/ldap/*
+#  ignore_errors: yes
+
+- name: создание каталога для домашних каталогов пользователей
+  file: path=${dirs.ald_env_users} state=directory
+
+#- name: подмена каталога /ald_home
+#  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
 - name: подмена каталога /ald_home
-  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
+  mount: name=/ald_home src={{ dirs.ald_env_users }}
+         fstype=none opts=bind state=mounted
   
 - name: удаление старых keytab
   command: rm -rf /etc/krb5.keytab
-  ignore_errors: yes  
+  ignore_errors: yes 
 
 - include: virthostname.yml
 

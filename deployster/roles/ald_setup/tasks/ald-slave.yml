@@ -2,12 +2,12 @@
 # © ОАО «Северное ПКБ», 2014
 #
 --- 
-- name: остановка сервисов ALD
-  service: name={{ item }} state=stopped
-  with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
+#- name: остановка сервисов ALD
+#  service: name={{ item }} state=stopped
+#  with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
 
 - name: копирование файлов настроек для ALD
-  copy: src=ald-conf/{{ common.master_node }}${item} dest=${item} backup=yes 
+  copy: src=ald-conf/{{ common.master_node }}${item} dest=${item} backup=no
   with_items: ald_files
 
 - name: удаление исходной схемы LDAP
@@ -33,17 +33,26 @@
 - name: замена неверного файла /etc/init.d/nscd
   copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
 
-- name: удаление старой базы LDAP
-  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
+#- name: добавление сервисов LDAP
+#  command: ald-admin service-add {{ item }}/{{ inventory_hostname }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+#  with_items:
+#    - ldap
 
-- name: подмена каталога /var/lib/ldap
-  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
+#- name: добавление ключа для узла
+#  command: ald-client update-svc-keytab host/{{ inventory_hostname }}.{{ ald.domain }} -f --pass-file=/root/pass-file --ktfile=/etc/krb5.keytab
 
-- name: удаление старой базы Kerberos
-  command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
+#- name: подмена каталога /var/lib/ldap
+#  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
+#  mount: name=/var/lib/ldap src={{ gluster.mount_point }}/ldap
+#         fstype=none opts=bind state=mounted
 
-- name: подмена каталога /var/lib/krb5kdc
-  file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
+#- name: удаление старой базы Kerberos
+#  command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
+
+#- name: подмена каталога /var/lib/krb5kdc
+#  file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
+#  mount: name=/var/lib/krb5kdc src={{ gluster.mount_point }}/krb5kdc
+#         fstype=none opts=bind state=mounted
 
 - name: создание каталога /var/log/kerberos
   file: path=/var/log/kerberos state=directory

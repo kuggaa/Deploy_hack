@@ -1,0 +1,18 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+# Скрипт для создания репозитория ПК КВГ
+- hosts: admin_stations
+#  user: root
+  connection: local
+  sudo: true
+  vars: 
+    path_to_rep_root: '/srv/ftp'
+   # src_astra_rep: '/tmp/astra'
+   # src_hac_rep: '/tmp/hac'
+    
+  roles:
+   - repository
+       
+

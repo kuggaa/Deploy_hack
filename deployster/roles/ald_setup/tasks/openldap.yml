@@ -1,0 +1,80 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+--- 
+- name: остановка сервиса OpenLDAP
+  service: name=slapd state=stopped
+
+- name: установка пакета kstart
+  apt: pkg=kstart state=latest
+  tags: [ packages ]
+                     
+- name: удаление подмены имени для OpenLDAP
+  lineinfile: dest=/etc/default/slapd
+              regexp='^export LD_PRELOAD'
+              state=absent
+  tags: [ config ]
+
+- name: удаление переменной KRB5_KTNAME
+  lineinfile: dest=/etc/default/slapd
+              regexp='^export KRB5_KTNAME'
+              state=absent
+  tags: [ config ]
+
+- name: настройка файла ключей
+  lineinfile: dest=/etc/default/slapd
+              regexp='^SLAPD_KEYTAB'
+              line='SLAPD_KEYTAB=/etc/ldap/slapd.keytab'
+              state=present
+  tags: [ config ]
+
+- name: настройка файла кэша
+  lineinfile: dest=/etc/default/slapd
+              regexp='^SLAPD_CCFILE'
+              line='SLAPD_CCFILE=/var/lib/slapd/krb5.cache'
+              state=present
+  tags: [ config ]
+
+- name: замена скрипта запуска OpenLDAP
+  copy: src=slapd dest=/etc/init.d/slapd owner=root group=root mode=0755
+
+- name: удаление старого keytab
+  file: path=/etc/ldap/slapd.keytab state=absent
+
+- name: добавление принципала ldap
+  command: kadmin.local -q 'ktadd -k /etc/ldap/slapd.keytab -norandkey ldap/{{ inventory_hostname }}.{{ ald.domain }}'
+
+- name: установка прав на keytab
+  file: path=/etc/ldap/slapd.keytab state=file owner=openldap group=openldap
+
+- name: установка пакета rsync
+  apt: pkg=rsync state=latest
+  tags: [ packages ]
+
+#- name: подготовка места
+#  local_action: command rm -rf /tmp/ldap
+                     
+- name: копирование БД с сервера
+  synchronize: mode=pull src=/var/lib/ldap dest=ldap recursive=yes archive=yes
+  when: inventory_hostname == common.master_node
+
+- name: удаление копий БД
+  command: rm -fr /var/lib/ldap
+  when: inventory_hostname != common.master_node
+
+- name: копирование БД на сервер
+  synchronize: mode=push dest=/var/lib src=ldap/ldap recursive=yes archive=yes
+  when: inventory_hostname != common.master_node
+
+- name: корректировка прав доступа
+  file: path=/var/lib/ldap group=openldap owner=openldap
+        recurse=yes state=directory
+  when: inventory_hostname != common.master_node
+
+- name: запуск сервиса OpenLDAP
+  service: name=slapd state=started
+
+# С Божьей помощью, да репликация заработает!
+#- name: запуск сервиса OpenLDAP
+#  service: name=slapd state=restarted
+

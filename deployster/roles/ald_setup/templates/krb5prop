@@ -1,0 +1,16 @@
+#!/bin/sh
+
+pgrep kadmind || exit 0
+
+[ -x /usr/sbin/kprop ] || exit 0
+
+kdb5_util dump /var/lib/krb5kdc/slave_datatrans
+
+SLAVES="{% for host in groups.nodes %}{{ host }} {% endfor%}"
+
+for host in $SLAVES; do
+  if [ $host != "$(hostname)" ]; then
+    kprop $host
+  fi
+done
+

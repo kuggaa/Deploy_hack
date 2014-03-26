@@ -5,24 +5,23 @@
 - include: common.yml
 
 - include: server.yml
-  when: inventory_hostname == common.master_node
+
+- include: kerberos.yml
+
+- include: openldap.yml
+
+- include: ald.yml
 
 - include: ald-master.yml tags=ald-master
   when: inventory_hostname == common.master_node
 
-- include: ald-slave.yml tags=ald-slave
-  when: inventory_hostname != common.master_node
+#- include: ald-slave.yml tags=ald-slave
+#  when: inventory_hostname != common.master_node
 
-- name: добавление узла в домен
-  command: ald-admin host-add {{ inventory_hostname }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+- name: создание каталога apache
+  file: path=/etc/apache2 state=directory
 
-#- name: добавление сервисов NFS, CIFS
-#  command: ald-admin service-add $item/$inventory_hostname.${ald.domain} -f --pass-file=/root/pass-file
-#
-- name: добавление ключа для узла
-  command: ald-client update-svc-keytab host/{{ inventory_hostname }}.{{ ald.domain }} -f --pass-file=/root/pass-file --ktfile=/etc/krb5.keytab
-
-- name: Создание keytab для apache
+- name: копирование keytab для apache
   copy: src=krb.keytab dest=/etc/apache2/krb.keytab mode=0644 owner=www-data group=www-data
 
 - name: удаление временных файлов
@@ -30,12 +29,10 @@
 
 - service: name={{ item }} enabled=no
   with_items: ald.services_list
-  when: inventory_hostname in groups.nodes
-  ignore_errors: yes
 
-- service: name={{ item }} state=stopped
-  with_items: ald.services_list  
-  when: inventory_hostname in groups.nodes
-  ignore_errors: yes
+#- service: name={{ item }} state=stopped
+#  with_items: ald.services_list  
+#  when: inventory_hostname in groups.nodes
+#  ignore_errors: yes
 
 #todo сделать регистрацию операции и если failed то рубить процессы killall
