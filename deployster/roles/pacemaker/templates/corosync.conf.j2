@@ -68,11 +68,11 @@ logging {
         logfile: /var/log/corosync/corosync.log
         to_syslog: no
         syslog_facility: daemon
-        debug: off
+        debug: on
         timestamp: on
         logger_subsys {
                 subsys: AMF
-                debug: off
+                debug: on
                 tags: enter|leave|trace1|trace2|trace3|trace4|trace6
         }
 }

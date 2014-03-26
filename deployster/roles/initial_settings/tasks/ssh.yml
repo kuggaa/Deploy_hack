@@ -26,12 +26,6 @@
 
     - name: настройка ssh
       lineinfile: dest=/etc/ssh/ssh_config
-                  regexp="^#?.*BatchMode.*"
-                  line="    BatchMode yes"
-                  state=present
-
-    - name: настройка ssh
-      lineinfile: dest=/etc/ssh/ssh_config
                   regexp="^#?.*StrictHostKeyChecking.*"
                   line="    StrictHostKeyChecking no"
                   state=present

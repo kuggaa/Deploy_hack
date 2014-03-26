@@ -6,7 +6,7 @@
       command: 'crm -F node clearstate {{ item }}'
       with_items: groups.nodes
       ignore_errors: True
-      
+
     - name: создание файла описания ресурсов(resources)
       template: src=resources.xml.j2 dest=/tmp/resources.xml
 
@@ -15,6 +15,9 @@
 
     - name: создание файла описания ограничений(constraints)
       template: src=constraints.xml.j2 dest=/tmp/constraints.xml
+
+    - name: установка правил валидации конфигурации кластера
+      command: cibadmin -U -X '<cib validate-with="pacemaker-1.1"/>'
 
     - name: копирование файла c командами сibadmin
       copy: src=pacemaker.sh dest=/tmp/pacemaker.sh mode=0775
@@ -27,6 +30,6 @@
 
 
 
-    
+
 
 

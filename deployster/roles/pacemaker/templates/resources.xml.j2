@@ -5,7 +5,7 @@
           <nvpair id="stonith_{{ host }}-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
-          <op id="stonith_{{ host }}-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
+          <op id="stonith_{{ host }}-op-monitor-20" interval="20" name="monitor" timeout="20"/>
           <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
@@ -53,11 +53,6 @@
       </primitive>
 {% endfor %}
 {% endfor %}
-      <group id="ip_ald_apache">
-        <meta_attributes id="ip_ald_apache-meta_attributes">
-          <nvpair id="ip_ald_apache-meta_attributes-target-role" name="target-role" value="Started"/>
-          <nvpair id="ip_ald_apache-meta_attributes-is-managed" name="is-managed" value="true"/>
-        </meta_attributes>
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
           <meta_attributes id="hac_cntrl_ip-meta_attributes">
             <nvpair id="hac_cntrl_ip-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
@@ -72,35 +67,6 @@
             <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="{{hac_cntrl.cidr_netmask}}"/>
           </instance_attributes>
         </primitive>
-        <primitive class="lsb" id="krb5-kdc" type="krb5-kdc"/>
-        <primitive class="lsb" id="krb5-admin-server" type="krb5-admin-server">
-          <operations id="krb5-admin-server-operations">
-            <op id="krb5-admin-server-op-start-0" interval="0" name="start" timeout="45"/>
-            <op id="krb5-admin-server-op-stop-0" interval="0" name="stop" timeout="45"/>
-          </operations>
-        </primitive>
-        <primitive class="lsb" id="slapd" type="slapd"/>
-        <primitive class="lsb" id="nslcd" type="nslcd"/>
-        <primitive class="lsb" id="nscd" type="nscd"/>
-        <primitive class="lsb" id="aldd" type="aldd">
-          <operations id="aldd-operations">
-            <op id="aldd-op-start-0" interval="0" name="start" timeout="45"/>
-            <op id="aldd-op-stop-0" interval="0" name="stop" timeout="45"/>
-          </operations>
-          <meta_attributes id="aldd-meta_attributes">
-            <nvpair id="aldd-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
-          </meta_attributes>
-        </primitive>
-        <primitive class="lsb" id="aldcd" type="aldcd"/>
-        <primitive class="lsb" id="apache" type="apache2">
-          <operations id="apache-operations">
-            <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="30"/>
-          </operations>
-          <meta_attributes id="apache-meta_attributes">
-            <nvpair id="apache-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
-          </meta_attributes>
-        </primitive>
-      </group>
       <clone id="mount_gluster">
         <meta_attributes id="mount_gluster-meta_attributes">
           <nvpair id="mount_gluster-meta_attributes-target-role" name="target-role" value="Started"/>
@@ -110,7 +76,7 @@
             <op id="gluster_dest-op-monitor-20" interval="20" name="monitor" timeout="40"/>
           </operations>
           <instance_attributes id="gluster_dest-instance_attributes">
-            <nvpair id="gluster_dest-instance_attributes-device" name="device" value="/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
+            <nvpair id="gluster_dest-instance_attributes-device" name="device" value="/var/lib/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
             <nvpair id="gluster_dest-instance_attributes-directory" name="directory" value="{{ gluster.mount_point }}"/>
             <nvpair id="gluster_dest-instance_attributes-fstype" name="fstype" value="glusterfs"/>
             <nvpair id="gluster_dest-instance_attributes-options" name="options" value="defaults,_netdev"/>

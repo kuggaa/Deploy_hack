@@ -10,10 +10,14 @@
          groups.nodes
       when: inventory_hostname == common.master_node
 
+    - name: создание папки под volume
+      file: path={{ gluster.placedir }} state=directory
+
     - name: создание тома
       command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}
                transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
-               creates=/etc/glusterd/vols/{{ gluster.volume }}
+               creates=/var/lib/glusterd/vols/{{ gluster.volume }}
+               #creates=/etc/glusterd/vols/{{ gluster.volume }}
       when: inventory_hostname == common.master_node
 
     - name: выключение NFS
@@ -23,6 +27,7 @@
 
     - name: запуск тома
       command: gluster volume start {{ gluster.volume }}
-               creates=/etc/glusterd/vols/{{ gluster.volume }}/run/{{ common.master_node }}-srv.pid
+               creates=/var/lib/glusterd/vols/vm_storage_volume/run/{{ common.master_node }}-srv-vol.pid
+               #creates=/etc/glusterd/vols/{{ gluster.volume }}/run/{{ common.master_node }}-srv.pid
       when: inventory_hostname == common.master_node
       ignore_errors: True

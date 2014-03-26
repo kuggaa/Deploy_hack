@@ -20,11 +20,11 @@ filegen clockstats file clockstats type day enable
 # pool: <http://www.pool.ntp.org/join.html>
 #server nist1-dc.WiTime.net iburst
 #server ntp0.mcs.anl.gov
-#server 0.debian.pool.ntp.org 
+#server 0.debian.pool.ntp.org
 #server 1.debian.pool.ntp.org
 #server 2.debian.pool.ntp.org
 #server 3.debian.pool.ntp.org
-server 127.127.1.0           
+server 127.127.1.0 iburst
 fudge 127.127.1.0 stratum 8
 
 # Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
@@ -46,6 +46,7 @@ restrict ::1
 # Clients from this (example!) subnet have unlimited access, but only if
 # cryptographically authenticated.
 restrict {{ network.public.address }}.0 mask {{ network.public.mask }} nomodify notrap
+restrict {{ network.control.address }}.0 mask {{ network.control.mask }} nomodify notrap
 
 # If you want to provide time to your local subnet, change the next line.
 # (Again, the address is an example only.)

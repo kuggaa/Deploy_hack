@@ -5,7 +5,7 @@
 # for deploy workstation for manage ha cluster
 - hosts: admin_stations
   user: root
-  connection: local
+#  connection: local
 #  sudo: True
   vars_files: ['roles/initial_settings/vars/main.yml']
   vars_prompt:
@@ -18,10 +18,10 @@
 #    - include: roles/initial_settings/tasks/repo.yml
 
   roles:
-   - { role: initial_workstation, network.public.address: $from_main, network.public.mask: $from_main, network.control.address: $from_main , network.control.mask: $from_main }
-   - ald_client
-   - users
-   - firefox_vnc
+   - { role: initial_workstation, tags: [init] }
+   - { role: ald_client, tags: [ald] }
+   - { role: users, tags: [ald] }
+   - { role: firefox_vnc, tags: [vnc] }
 
   post_tasks:
     - name: Для вступления в сетевых настроек перезапустите службу networking или компьютер

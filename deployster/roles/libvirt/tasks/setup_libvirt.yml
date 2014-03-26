@@ -20,8 +20,8 @@
                   state=present
       notify: restart libvirt-bin
 
-    - name: удаление /etc/libvirt/qemu
-      command: rm -rf /etc/libvirt/qemu
+#    - name: удаление /etc/libvirt/qemu
+#      command: rm -rf /etc/libvirt/qemu
 
     - name: отмонтирование glusterfs
       command: umount {{ gluster.mount_point }}
@@ -46,8 +46,8 @@
       when: inventory_hostname == common.master_node
       ignore_errors: true
 
-    - name: делаем ссылку qemu в /etc/libvirt/
-      file: src={{ dirs.vm_images }}/qemu dest=/etc/libvirt/qemu state=link
+#    - name: делаем ссылку qemu в /etc/libvirt/
+#      file: src={{ dirs.vm_images }}/qemu dest=/etc/libvirt/qemu state=link
 
     - name: отмонтирование glusterfs
       command: umount {{ gluster.mount_point }}

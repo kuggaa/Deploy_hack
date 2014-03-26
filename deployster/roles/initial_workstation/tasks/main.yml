@@ -6,7 +6,7 @@
       service: name=wicd state=stopped enabled=no
 
     - name: запрещаем запуск avahi-daemon
-      service: name=avahi-daemon state=stopped enabled=no   
+      service: name=avahi-daemon state=stopped enabled=no
 
     - name: установка пакетов
       apt: pkg={{ item }} state=latest force=yes
@@ -36,10 +36,9 @@
              opts='defaults,_netdev'
              dump=1
              state=mounted
-    
+
     - name: настройка локального сервера времени
       template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes
-   
+
     - name: запуск сервера времени
       service: name=ntp state=started enabled=yes
-
