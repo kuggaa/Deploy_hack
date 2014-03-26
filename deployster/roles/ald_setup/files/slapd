@@ -39,7 +39,6 @@ K5START_START=""
 K5START_PIDFILE=/run/slapd/k5start_slapd.pid
 K5START_CCREFRESH=30
 K5START_PRINCIPAL="ldap/$(hostname -f)"
-K5START_CCFILE=/var/lib/ldap/krb5.cache
 
 # Load the default location of the slapd config file
 if [ -z "$SLAPD_CONF" ]; then
@@ -140,7 +139,7 @@ k5start_stop()
     log_end_msg $?
     # remove any left behind files
     [ -n "$K5START_PIDFILE" ] && rm -f $K5START_PIDFILE
-    [ -n "$K5START_CCFILE" ] && rm -f $K5START_CCFILE
+    [ -n "$SLAPD_CCFILE" ] && rm -f $SLAPD_CCFILE
   fi
 }
 

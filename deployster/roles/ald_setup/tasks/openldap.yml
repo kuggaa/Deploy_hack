@@ -31,7 +31,7 @@
 - name: настройка файла кэша
   lineinfile: dest=/etc/default/slapd
               regexp='^SLAPD_CCFILE'
-              line='SLAPD_CCFILE=/var/lib/ldap/krb5.cache'
+              line='SLAPD_CCFILE=/var/lib/slapd/krb5.cache'
               state=present
   tags: [ config ]
 
@@ -47,10 +47,34 @@
 - name: установка прав на keytab
   file: path=/etc/ldap/slapd.keytab state=file owner=openldap group=openldap
 
+- name: установка пакета rsync
+  apt: pkg=rsync state=latest
+  tags: [ packages ]
+
+#- name: подготовка места
+#  local_action: command rm -rf /tmp/ldap
+                     
+- name: копирование БД с сервера
+  synchronize: mode=pull src=/var/lib/ldap dest=ldap recursive=yes archive=yes
+  when: inventory_hostname == common.master_node
+
+- name: удаление копий БД
+  command: rm -fr /var/lib/ldap
+  when: inventory_hostname != common.master_node
+
+- name: копирование БД на сервер
+  synchronize: mode=push dest=/var/lib src=ldap/ldap recursive=yes archive=yes
+  when: inventory_hostname != common.master_node
+
+- name: корректировка прав доступа
+  file: path=/var/lib/ldap group=openldap owner=openldap
+        recurse=yes state=directory
+  when: inventory_hostname != common.master_node
+
 - name: запуск сервиса OpenLDAP
-  service: name=slapd state=restarted
+  service: name=slapd state=started
 
 # С Божьей помощью, да репликация заработает!
-- name: запуск сервиса OpenLDAP
-  service: name=slapd state=restarted
+#- name: запуск сервиса OpenLDAP
+#  service: name=slapd state=restarted
 
