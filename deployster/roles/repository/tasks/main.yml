@@ -1,0 +1,25 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: установка пакета vsftpd
+      apt: pkg=vsftpd state=latest force=yes
+
+    - name: создание корневой папки для vsftpd
+      file: path={{ path_to_rep_root }} mode=755 state=directory
+
+    - name: создание файла конфигурации для vsftpd
+      template: src=vsftpd.conf.j2 dest=/etc/vsftpd.conf
+
+    - name: перезапуск vsftpd
+      service: name=vsftpd state=restarted enabled=yes   
+      
+    #- name: создание репозитория Astra Linux
+    #  synchronize: src={{ src_astra_rep }} dest={{ path_to_rep_root }}/astra mode=755 recursive=yes mode=push 
+    #  when: src_astra_rep is defined 
+
+    #- name: создание репозитория ПК КВГ
+    #  synchronize: src={{ src_hac_rep }} dest={{ path_to_rep_root }}/hac mode=755 recursive=yes mode=push
+    #  when: src_hac_rep is defined
+
+
