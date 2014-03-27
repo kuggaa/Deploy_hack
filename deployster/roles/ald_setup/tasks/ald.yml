@@ -8,17 +8,17 @@
               state=absent
   tags: [ config ]
 
-- name: использование локального сервера OpenLDAP
-  lineinfile: dest={{ item }}
-              regexp='^uri ldap://'
-              line='uri ldap://{{ inventory_hostname }}'
-              state=present
-  with_items:
-    - /etc/nslcd.conf
-    - /etc/nss-ldapd.conf
+#- name: использование локального сервера OpenLDAP
+#  lineinfile: dest={{ item }}
+#              regexp='^uri ldap://'
+#              line='uri ldap://{{ inventory_hostname }}'
+#              state=present
+#  with_items:
+#    - /etc/nslcd.conf
+#    - /etc/nss-ldapd.conf
 
-- name: использование локального сервера OpenLDAP для PARSEC
-  lineinfile: dest=/etc/parsec/mldap.conf
-              regexp='^host '
-              line='host {{ inventory_hostname }}'
-              state=present
+#- name: использование локального сервера OpenLDAP для PARSEC
+#  lineinfile: dest=/etc/parsec/mldap.conf
+#              regexp='^host '
+#              line='host {{ inventory_hostname }}'
+#              state=present
