@@ -72,7 +72,7 @@
 
     - name: закрываем процессы ALD
       shell: killall -s 9 {{ item }}
-      with_items: services_list
+      with_items: ald.services_list
       ignore_errors: true
       tags: [ ald ]
 
@@ -105,3 +105,4 @@
 
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
+      tags: [reboot]

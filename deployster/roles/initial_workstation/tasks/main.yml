@@ -12,12 +12,12 @@
       apt: pkg={{ item }} state=latest force=yes
       with_items: ['ifenslave-2.6', 'bridge-utils', 'haveged']
 
-    - name: добавление модуля bonding в /etc/modules
-      lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+   # - name: добавление модуля bonding в /etc/modules
+   #   lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
 
-    - name: настройка interfaces
-      template: src=interfaces.j2 dest=/etc/network/interfaces
-      register: interfaces
+   # - name: настройка interfaces
+   #   template: src=interfaces.j2 dest=/etc/network/interfaces
+   #   register: interfaces
 
     - name: настройка /etc/hosts
       template: src=hosts.j2 dest=/etc/hosts

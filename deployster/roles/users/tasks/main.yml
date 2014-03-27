@@ -2,20 +2,20 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-- include: ald.yml tags=users
-  when: inventory_hostname == common.master_node
+#- include: ald.yml tags=users
+#  when: inventory_hostname == common.master_node
 
-- name: настройка доступа пользователей
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
-  with_items: groups.nodes
-  tags: users
-  when: inventory_hostname == common.master_node
+#- name: настройка доступа пользователей
+#  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
+#  with_items: groups.nodes
+#  tags: users
+#  when: inventory_hostname == common.master_node
 
-- name: настройка доступа пользователей
-  command: ald-admin user-ald-cap {{ ald.operator_user }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
-  with_items: groups.nodes
-  tags: users
-  when: inventory_hostname == common.master_node
+#- name: настройка доступа пользователей
+#  command: ald-admin user-ald-cap {{ ald.operator_user }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
+#  with_items: groups.nodes
+#  tags: users
+#  when: inventory_hostname == common.master_node
 
 - include: key.yml tags=users
   when: inventory_hostname == common.master_node

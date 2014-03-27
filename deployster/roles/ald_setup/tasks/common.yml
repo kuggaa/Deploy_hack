@@ -58,14 +58,16 @@
 #- name: удаление старой базы LDAP
 #  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
 
-- name: удаление старых каталогов ALD
-  command: rm -rf  /ald_home removes=/ald_home
+#- name: удаление старых каталогов ALD
+#  command: rm -rf  /ald_home removes=/ald_home
 
 - name: создание каталога для домашних каталогов пользователей
   file: path={{ dirs.ald_env_users }} state=directory
+  when: inventory_hostname == common.master_node
 
-- name: подмена каталога /ald_home
-  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
+#- name: подмена каталога /ald_home
+#  command: mount --bind {{ dirs.ald_env_users }} /ald_home
+#  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
 #- name: подмена каталога /ald_home
 #  mount: name=/ald_home src={{ dirs.ald_env_users }}
 #         fstype=none opts=bind state=mounted

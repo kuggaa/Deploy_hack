@@ -14,8 +14,8 @@
       private: yes
       confirm: no
 
-#  pre_tasks:
-#    - include: roles/initial_settings/tasks/repo.yml
+  pre_tasks:
+    - include: roles/initial_settings/tasks/repo.yml
 
   roles:
    - { role: initial_workstation, tags: [init] }

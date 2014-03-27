@@ -27,10 +27,11 @@
 #  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
 
 - name: подмена каталога /var/lib/ldap
+  command: mount --bind -o _netdev {{ gluster.mount_point }}/ldap /var/lib/ldap
+#  mount: name=/var/lib/ldap src={{ gluster.mount_point }}/ldap
+#         fstype=none opts=bind state=mounted
 #  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
 #        owner=openldap group=openldap
-  mount: name=/var/lib/ldap src={{ gluster.mount_point }}/ldap
-         fstype=none opts=bind state=mounted
 
 #- name: установка прав на /var/lib/ldap
 #  file: path=/var/lib/ldap state=directory

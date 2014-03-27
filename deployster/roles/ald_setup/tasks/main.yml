@@ -27,6 +27,6 @@
 - name: удаление временных файлов
   local_action: command rm -rf ald-conf
 
-- service: name={{ item }} enabled=no
+- service: name={{ item }} enabled=no state=stopped
   with_items: ald.services_list
 

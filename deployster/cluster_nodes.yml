@@ -7,8 +7,8 @@
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
-   - initial_settings
-   - glusterfs
+   - { role: initial_settings, tags: [init] }
+   - { role: glusterfs, tags: [gluster] }
    - { role: libvirt, tags: [ libvirt ] }
    - { role: hac_cntrl, tags: [hac_cntrl] }
 
@@ -53,11 +53,24 @@
    - { role: ald_setup, tags: [ ald ] }
 
   post_tasks:
+   - name: ожидание остановки сервисов ald
+     pause: seconds=10
+     tags: [ ald ]
+
+   - name: отмонтирование временно смонтированного ldap
+     command: umount /var/lib/ldap
+     ignore_errors: true
+
+#   - name: отмонтирование временно смонтированного /ald_home
+#     command: umount /ald_home
+#     ignore_errors: true
+
    - name: отмонтирование glusterfs
      command: umount {{ gluster.mount_point }}
      tags: [ ald ]
 
-   - include: roles/initial_settings/tasks/network.yml --tags=restore_hosts
+    #todo bug
+   - include: roles/initial_settings/tasks/network.yml tags=restore_hosts
      tags: [ ald ]
 
 - hosts: nodes
