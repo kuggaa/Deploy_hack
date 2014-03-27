@@ -15,12 +15,16 @@
   template: src=pass-file.j2 dest=/root/pass-file mode=0600
   tags: [ pass-file ]
   
-- name: удаление /ald_home
-  command: rm -rf /ald_home  
+#- name: удаление /ald_home
+#  command: rm -rf /ald_home  
   
-- name: подмена каталога /ald_home
-  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
+#- name: подмена каталога /ald_home
+#  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
   
+- name: размонтирование /ald_home
+  command: umount /ald_home
+  ignore_errors: true
+
 - name: удаление старых keytab
   command: rm -rf /etc/krb5.keytab
   ignore_errors: yes  
@@ -39,3 +43,6 @@
 - name: настройка клиента ALD
   command: ald-client commit-config -f --pass-file=/root/pass-file 
 
+- name: подмена каталога /ald_home
+  mount: name=/ald_home src={{ dirs.ald_env_users }}
+         fstype=none opts=bind,_netdev state=mounted
