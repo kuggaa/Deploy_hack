@@ -11,11 +11,11 @@
   register: ald_config
   tags: [ config ]
 
-- name: настройка /etc/hosts
-  template: src=hosts.j2 dest=/etc/hosts
+#- name: настройка /etc/hosts
+#  template: src=hosts.j2 dest=/etc/hosts
 
-- name: замена скрипта запуска OpenLDAP
-  copy: src=slapd.orig dest=/etc/init.d/slapd owner=root group=root mode=0755
+#- name: замена скрипта запуска OpenLDAP
+#  copy: src=slapd.orig dest=/etc/init.d/slapd owner=root group=root mode=0755
 
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
@@ -28,9 +28,13 @@
   ald: task=host host={{ item }}.{{ ald.domain }} pass_file=/root/pass-file
   with_items: groups.nodes
 
-- name: создание принципалов OpenLDAP
-  command: ald-admin service-add ldap/{{ item }}.{{ ald.domain }} -f --pass-file=/root/pass-file
-  with_items: groups.nodes
+#- name: создание принципалов OpenLDAP
+#  command: ald-admin service-add ldap/{{ item }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+#  with_items: groups.nodes
+
+#- name: создание принципалов ALDD
+#  command: ald-admin service-add aldd-server/{{ item }}.{{ ald.domain }} -f --pass-file=/root/pass-file
+#  with_items: groups.nodes
 
 - name: остановка сервисов ALD
   service: name={{ item }} state=stopped

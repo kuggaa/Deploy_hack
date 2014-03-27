@@ -1,7 +1,7 @@
 127.0.0.1	localhost
-{{ network.public.address }}.{{ nodes_ip[inventory_hostname] }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
-{% for key, value in nodes_ip.iteritems() %}
-{{ network.control.address }}.{{ value }}  {{ key }}.{{ald.domain}} {{ key }}
+{{ hac_cntrl.ip }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}
+{% for host in groups['nodes'] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }} {{ host }}.{{ ald.domain }} {{ host }}
 {% endfor %}
 
 # The following lines are desirable for IPv6 capable hosts

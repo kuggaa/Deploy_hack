@@ -18,5 +18,5 @@
   with_items:
     - /etc/default/aldd
     - /etc/default/aldcd
-    - /etc/default/slapd
+#    - /etc/default/slapd
   tags: [ config ]

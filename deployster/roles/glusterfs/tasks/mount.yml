@@ -16,3 +16,5 @@
  #            opts='defaults,_netdev'
  #            dump=1
  #            state=mounted
+    - name: монтирование glusterfs
+      command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}

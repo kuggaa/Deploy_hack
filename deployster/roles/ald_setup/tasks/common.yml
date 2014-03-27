@@ -35,7 +35,7 @@
     - slapd.d15.ldif
     - kpropd.acl
     - krb5.conf
-    - ldap.conf
+#    - ldap.conf
   tags: [ config ]
 
 - name: замена стандартных шаблонов ALD
@@ -44,8 +44,12 @@
     - slapd.d15.ldif
     - kpropd.acl
     - krb5.conf
-    - ldap.conf
+#    - ldap.conf
   tags: [ config ]
+
+- name: размонтирование /var/lib/ldap
+  command: umount /var/lib/ldap
+  ignore_errors: true
 
 #- name: удаление старых каталогов KRB
 #  command: rm -rf  /var/lib/krb5kdc/*

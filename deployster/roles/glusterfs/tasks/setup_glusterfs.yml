@@ -15,7 +15,7 @@
 
     - name: создание тома
       command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}
-               transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
+               transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }} force
                creates=/var/lib/glusterd/vols/{{ gluster.volume }}
                #creates=/etc/glusterd/vols/{{ gluster.volume }}
       when: inventory_hostname == common.master_node

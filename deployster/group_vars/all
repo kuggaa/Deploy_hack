@@ -4,7 +4,8 @@ common:
 
 # !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
-nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22 }
+#nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22 }
+nodes_ip: { 'vnode-1': 80, 'vnode-2': 81, 'vnode-3': 82 }
 nodes_ip_ipmi: { hacnode1: 7, hacnode2: 8, hacnode3: 9 }
 # Логин и пароль к IPMI интерфейсу( должен быть одинаковый на всех узлах КВГ)
 ipmi:
@@ -20,13 +21,13 @@ pdu: { pdu_1: 1, pdu_2: 2 }
 
 repository:
     # Адрес репозитория с дистрибутивом Астры версии 1.3
-    os: ftp://172.16.0.211/astra
+    os: http://packages/se13
 
     # Адрес репозитория с пакетами для ПК КВГ
-    hac: ftp://172.16.0.211/hac
+    hac: http://packages/virt/se13/vplatform
 
 hac_cntrl:
-    ip: 10.10.50.50
+    ip: "{{ hostvars[common.master_node]['ansible_eth0']['ipv4']['address'] }}"
     cidr_netmask: 24
     name: cluster
     domain: hac
