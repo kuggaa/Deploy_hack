@@ -11,6 +11,9 @@
   register: ald_config
   tags: [ config ]
 
+- name: настройка /etc/hosts
+  template: src=hosts_ald.j2 dest=/etc/hosts
+
 #- name: настройка /etc/hosts
 #  template: src=hosts.j2 dest=/etc/hosts
 

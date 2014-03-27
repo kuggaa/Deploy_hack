@@ -38,14 +38,14 @@
 #    - ldap.conf
   tags: [ config ]
 
-- name: замена стандартных шаблонов ALD
-  template: src={{ item }} dest=/etc/ald/config-templates/{{ item }}
-  with_items:
-    - slapd.d15.ldif
-    - kpropd.acl
-    - krb5.conf
+#- name: замена стандартных шаблонов ALD
+#  template: src={{ item }} dest=/etc/ald/config-templates/{{ item }}
+#  with_items:
+#    - slapd.d15.ldif
+#    - kpropd.acl
+#    - krb5.conf
 #    - ldap.conf
-  tags: [ config ]
+#  tags: [ config ]
 
 - name: размонтирование /var/lib/ldap
   command: umount /var/lib/ldap
@@ -55,18 +55,20 @@
 #  command: rm -rf  /var/lib/krb5kdc/*
 #  ignore_errors: yes
 
-#- name: удаление старых каталогов LDAP
-#  command: rm -rf  /var/lib/ldap/*
-#  ignore_errors: yes
+#- name: удаление старой базы LDAP
+#  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
+
+- name: удаление старых каталогов ALD
+  command: rm -rf  /ald_home removes=/ald_home
 
 - name: создание каталога для домашних каталогов пользователей
   file: path={{ dirs.ald_env_users }} state=directory
 
-#- name: подмена каталога /ald_home
-#  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
 - name: подмена каталога /ald_home
-  mount: name=/ald_home src={{ dirs.ald_env_users }}
-         fstype=none opts=bind state=mounted
+  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
+#- name: подмена каталога /ald_home
+#  mount: name=/ald_home src={{ dirs.ald_env_users }}
+#         fstype=none opts=bind state=mounted
 
 - name: удаление старых keytab
   command: rm -rf {{ item }}

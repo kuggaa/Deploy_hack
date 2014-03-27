@@ -5,6 +5,6 @@
 # make a initial settings on nodes
     - include: repo.yml
     - include: limits.yml
-#    - include: hugepage.yml
-#    - include: network.yml
-#    - include: ssh.yml
+    - include: hugepage.yml
+    - include: network.yml
+    - include: ssh.yml

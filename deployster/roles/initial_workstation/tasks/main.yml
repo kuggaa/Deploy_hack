@@ -31,7 +31,7 @@
 
     - name: монтирование glusterfs
       mount: name={{ gluster.mount_point }}
-             src={{ hac_cntrl.ip }}:/{{ gluster.volume}}
+             src={{ network.public.address }}.{{ hac_cntrl.ip }}:/{{ gluster.volume}}
              fstype=glusterfs
              opts='defaults,_netdev'
              dump=1
