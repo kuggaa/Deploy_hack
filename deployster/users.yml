@@ -6,6 +6,24 @@
     - nodes
 #    - admin_stations
   user: root
-  
+
+  pre_tasks:
+   - name: отмонтирование glusterfs
+     command: umount {{ gluster.mount_point }}
+     ignore_errors: true
+     tags: [ ald ]
+
+   - name: перезапуск службы glusterfs-server
+     service: name=glusterfs-server state=restarted
+     tags: [ ald ]
+
+   - name: ожидание перезапуска демон glusterfs
+     pause: seconds=10
+     tags: [ ald ]
+
+   - name: монтирование glusterfs
+     command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
+     tags: [ ald ]
+
   roles:
     - users

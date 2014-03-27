@@ -1,4 +1,4 @@
-<VirtualHost {{ hac_cntrl.ip }}:80>
+<VirtualHost {{ network.public.address }}.{{ hac_cntrl.ip }}:80>
     ServerAdmin admin@hac
     ServerName {{ hac_cntrl.name }}.{{ ald.domain }}
     ServerAlias {{ hac_cntrl.name }}

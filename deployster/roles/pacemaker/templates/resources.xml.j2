@@ -53,20 +53,6 @@
       </primitive>
 {% endfor %}
 {% endfor %}
-        <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
-          <meta_attributes id="hac_cntrl_ip-meta_attributes">
-            <nvpair id="hac_cntrl_ip-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
-          </meta_attributes>
-          <operations id="hac_cntrl_ip-operations">
-            <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
-            <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="90"/>
-            <op id="hac_cntrl_ip-op-stop-0" interval="0" name="stop" timeout="20"/>
-          </operations>
-          <instance_attributes id="hac_cntrl_ip-instance_attributes">
-            <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="{{ hac_cntrl.ip }}"/>
-            <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="{{hac_cntrl.cidr_netmask}}"/>
-          </instance_attributes>
-        </primitive>
       <clone id="mount_gluster">
         <meta_attributes id="mount_gluster-meta_attributes">
           <nvpair id="mount_gluster-meta_attributes-target-role" name="target-role" value="Started"/>
@@ -113,4 +99,79 @@
           <op id="dummy_template-op-monitor-10" interval="10" name="monitor" timeout="20"/>
         </operations>
       </template>
+      <clone id="ald_clientside">
+        <meta_attributes id="ald_clientside-meta_attributes">
+          <nvpair id="ald_clientside-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <group id="ald_client">
+          <primitive class="lsb" id="krb5-kdc_rsc" type="krb5-kdc">
+            <operations id="krb5-kdc_rsc-operations">
+              <op id="krb5-kdc_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            </operations>
+          </primitive>
+          <primitive class="lsb" id="krb5-prop_rsc" type="krb5-prop">
+            <operations id="krb5-prop_rsc-operations">
+              <op id="krb5-prop_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            </operations>
+          </primitive>
+          <primitive class="lsb" id="nscd_rcs" type="nscd">
+            <operations id="nscd_rcs-operations">
+              <op id="nscd_rcs-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            </operations>
+          </primitive>
+          <primitive class="lsb" id="nslcd_rcs" type="nslcd">
+            <operations id="nslcd_rcs-operations">
+              <op id="nslcd_rcs-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            </operations>
+          </primitive>
+          <primitive class="lsb" id="aldcd_rcs" type="aldcd">
+            <operations id="aldcd_rcs-operations">
+              <op id="aldcd_rcs-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            </operations>
+          </primitive>
+          <primitive class="lsb" id="apache" type="apache2">
+            <operations id="apache-operations">
+              <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="30"/>
+            </operations>
+          </primitive>
+        </group>
+      </clone>
+      <group id="ald_server">
+        <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
+          <meta_attributes id="hac_cntrl_ip-meta_attributes">
+            <nvpair id="hac_cntrl_ip-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
+          </meta_attributes>
+          <operations id="hac_cntrl_ip-operations">
+            <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+            <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="30"/>
+            <op id="hac_cntrl_ip-op-stop-0" interval="0" name="stop" timeout="20"/>
+          </operations>
+          <instance_attributes id="hac_cntrl_ip-instance_attributes">
+            <nvpair id="hac_cntrl_ip-instance_attributes-ip" name="ip" value="{{ network.public.address }}.{{ hac_cntrl.ip }}"/>
+            <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="{{hac_cntrl.cidr_netmask}}"/>
+        </instance_attributes>
+        </primitive>
+        <meta_attributes id="ald_server-meta_attributes">
+          <nvpair id="ald_server-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="lsb" id="krb5-admin-server_rsc" type="krb5-admin-server">
+          <operations id="krb5-admin-server_rsc-operations">
+            <op id="krb5-admin-server_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="krb5-admin-server_rsc-op-start-0" interval="0" name="start" timeout="60"/>
+            <op id="krb5-admin-server_rsc-op-stop-0" interval="0" name="stop" timeout="60"/>
+          </operations>
+        </primitive>
+        <primitive class="lsb" id="slapd_rsc" type="slapd">
+          <operations id="slapd_rsc-operations">
+            <op id="slapd_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="slapd_rsc-op-start-0" interval="0" name="start" timeout="60"/>
+            <op id="slapd_rsc-op-stop-0" interval="0" name="stop" timeout="60"/>
+          </operations>
+        </primitive>
+        <primitive class="lsb" id="aldd_rsc" type="aldd">
+          <operations id="aldd_rsc-operations">
+            <op id="aldd_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+          </operations>
+        </primitive>
+      </group>
 </resources>

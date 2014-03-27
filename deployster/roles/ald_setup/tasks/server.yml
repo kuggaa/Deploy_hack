@@ -11,8 +11,11 @@
   register: ald_config
   tags: [ config ]
 
+#- name: backup /etc/hosts
+#  fetch: src=/etc/hosts dest=roles/ald_setup/files/hosts_{{ inventory_hostname }} validate_md5=yes flat=yes fail_on_missing=yes
+
 - name: настройка /etc/hosts
-  template: src=hosts.j2 dest=/etc/hosts
+  template: src=hosts_ald.j2 dest=/etc/hosts
 
 - name: замена скрипта запуска OpenLDAP
   copy: src=slapd.orig dest=/etc/init.d/slapd owner=root group=root mode=0755

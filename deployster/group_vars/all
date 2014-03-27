@@ -26,7 +26,7 @@ repository:
     hac: ftp://172.16.0.211/hac
 
 hac_cntrl:
-    ip: 10.10.50.50
+    ip: 50
     cidr_netmask: 24
     name: cluster
     domain: hac

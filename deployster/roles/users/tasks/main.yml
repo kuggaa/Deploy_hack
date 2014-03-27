@@ -6,10 +6,14 @@
   when: inventory_hostname == common.master_node
 
 - name: настройка доступа пользователей
-  command: ald-admin user-ald-cap $item -f --pass-file=/root/pass-file --add-hosts --host={{ inventory_hostname }}.{{ ald.domain }}
-  with_items:
-    - ${ald.kvg_admin_name}
-    - ${ald.operator_user}
+  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
+  with_items: groups.nodes
+  tags: users
+  when: inventory_hostname == common.master_node
+
+- name: настройка доступа пользователей
+  command: ald-admin user-ald-cap {{ ald.operator_user }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
+  with_items: groups.nodes
   tags: users
   when: inventory_hostname == common.master_node
 

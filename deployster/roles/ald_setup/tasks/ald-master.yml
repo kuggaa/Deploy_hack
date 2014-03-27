@@ -44,6 +44,9 @@
   service: name={{ item }} state=started
   with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
 
+- name: пауза
+  pause: seconds=3
+
 - name: создание приципала для ПК Управления
   command: ald-admin service-add HTTP/{{ hac_cntrl.name }}.{{ ald.domain }} -f --pass-file=/root/pass-file
 

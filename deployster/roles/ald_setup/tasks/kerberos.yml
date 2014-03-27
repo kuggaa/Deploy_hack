@@ -12,7 +12,10 @@
   with_items: [krb5-kdc, krb5-admin-server]
 
 #- name: восстановление /etc/hosts
-#  copy: src=hosts dest=/etc/hosts
+#  copy: src=hosts_{{ inventory_hostname }} dest=/etc/hosts
+
+- name: настройка /etc/hosts
+  template: src=hosts_krb.j2 dest=/etc/hosts
 
 - name: копирование файлов настроек Kerberos с главного сервера
   fetch: src={{ item }} dest=krb-conf
