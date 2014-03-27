@@ -30,6 +30,12 @@
   register: ald_config
   tags: [ config ]
 
+- name: замена стандартных шаблонов ALD
+  template: src={{ item }} dest=/etc/ald/config-templates/{{ item }}
+  with_items:
+    - krb5.conf
+  tags: [ config ]
+
 - name: настройка клиента ALD
   command: ald-client commit-config -f --pass-file=/root/pass-file 
 

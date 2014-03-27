@@ -1,5 +1,5 @@
 VERSION=1.5
-SERVER={{ ald.master_ald_srv }}.{{ ald.domain }}
+SERVER={{ ald.master_node }}.{{ ald.domain }}
 SERVER_ID=1
 DOMAIN=.{{ ald.domain }}
 DESCRIPTION=ALD HAC
@@ -19,5 +19,5 @@ SERVER_POLLING_PERIOD=60
 SERVER_PROPAGATE_PERIOD=600
 CACHE_REFRESH_PERIOD=600
 UTF8_GECOS=1
-SERVER_ON=0
+SERVER_ON=1
 CLIENT_ON=1
