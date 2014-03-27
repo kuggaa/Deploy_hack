@@ -161,6 +161,17 @@
             <op id="krb5-admin-server_rsc-op-stop-0" interval="0" name="stop" timeout="60"/>
           </operations>
         </primitive>
+        <primitive class="ocf" id="ldap_db_mount" provider="heartbeat" type="Filesystem">
+          <operations id="ldap_db_mount-operations">
+            <op id="ldap_db_mount-op-monitor-20" interval="20" name="monitor" timeout="40"/>
+          </operations>
+          <instance_attributes id="ldap_db_mount-instance_attributes">
+            <nvpair id="ldap_db_mount-instance_attributes-device" name="device" value="{{ gluster.mount_point }}/ldap"/>
+            <nvpair id="ldap_db_mount-instance_attributes-directory" name="directory" value="/var/lib/ldap"/>
+            <nvpair id="ldap_db_mount-instance_attributes-fstype" name="fstype" value="none"/>
+            <nvpair id="ldap_db_mount-instance_attributes-options" name="options" value="bind"/>
+          </instance_attributes>
+        </primitive>
         <primitive class="lsb" id="slapd_rsc" type="slapd">
           <operations id="slapd_rsc-operations">
             <op id="slapd_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>

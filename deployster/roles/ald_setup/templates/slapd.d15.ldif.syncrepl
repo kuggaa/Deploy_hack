@@ -16,11 +16,13 @@ objectClass: olcGlobal
 cn: config
 olcArgsFile: /var/run/slapd/slapd.args
 olcPidFile: /var/run/slapd/slapd.pid
-olcSaslHost: {{ ald.master_node }}.{{ ald.domain }}
-olcAuthzRegexp: uid=([^,]*),cn=gssapi,cn=auth uid=$1,ou=users,${ldap_domain}
+#olcSaslHost: {{ ald.master_node }}.{{ ald.domain }}
+olcAuthzRegexp: {0}uid=([^,]*),cn=gssapi,cn=auth uid=$1,ou=users,${ldap_domain}
 olcDisallows: bind_simple
-olcLogLevel: none
-olcServerID: ${server_id}
+olcLogLevel: sync
+{% for host in groups.nodes %}
+olcServerID: {{ loop.index }} ldap://{{ host }}
+{% endfor %}
 #32767
 #ber filter acl stats
 
@@ -74,23 +76,43 @@ olcAccess: to dn.regex=^(.+,)?ou=([^\-]+)-services,ou=service-configs,${ldap_dom
    by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
    by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
    by group.expand=cn=$2-services,ou=ald-config,${ldap_domain} read
+   by dn.exact=uid=ldap/{{ ald.master_node }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
    by * none
 olcAccess: to dn.subtree=ou=service-configs,${ldap_domain}
    by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
    by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+   by dn.exact=uid=ldap/{{ ald.master_node }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
    by * none
 olcAccess: to dn.subtree=ou=ald-config,${ldap_domain}
    by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
    by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+   by dn.exact=uid=ldap/{{ ald.master_node }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
    by * none
 olcAccess: to attrs=x-ald-user-cap,x-ald-allowed-hosts,x-ald-allowed-host-groups
    by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
    by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+   by dn.exact=uid=ldap/{{ ald.master_node }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
    by self read
    by * none
 olcAccess: to *
    by dn.subtree=uid=admin/admin,ou=users,${ldap_domain} manage
    by group.exact=cn=administrators,ou=ald-config,${ldap_domain} manage
+   by dn.exact=uid=ldap/{{ ald.master_node }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% for host in groups.nodes %}
+   by dn.exact=uid=ldap/{{ host }}.{{ ald.domain }},ou=users,${ldap_domain} read
+{% endfor %}
    by * read
 
 
@@ -125,9 +147,25 @@ olcDbIndex: x-ald-allowed-host-groups eq
 olcDbIndex: x-ald-host-flags eq,sub
 olcDbIndex: entryCSN eq
 olcDbIndex: entryUUID eq
+{% for host in groups.nodes %}
+olcSyncrepl: rid=00{{ loop.index }}
+  provider="ldap://{{ host }}"
+  searchbase=${ldap_domain}
+  type=refreshAndPersist
+  retry="30 +"
+  attrs="*,+"
+  schemachecking=on
+  network-timeout=5
+  timeout=30
+  bindmethod=sasl
+  binddn="uid=ldap/{{ inventory_hostname }}.{{ ald.domain }},ou=users,${ldap_domain}"
+#  authcid=ldap/{{ ald.master_node }}.{{ ald.domain }}@{{ ald.krb_domain }}
+{% endfor %}
+olcMirrorMode: TRUE
 
 
 dn: olcOverlay=syncprov,olcDatabase={2}hdb,cn=config
 objectClass: olcOverlayConfig
 objectClass: olcSyncProvConfig
 olcOverlay: syncprov
+olcSpCheckpoint: 100 5

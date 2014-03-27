@@ -8,7 +8,7 @@
 
 - include: kerberos.yml
 
-- include: openldap.yml
+- include: ldapmirror.yml
 
 - include: ald.yml
 
