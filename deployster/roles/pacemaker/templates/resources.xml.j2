@@ -62,7 +62,7 @@
             <op id="gluster_dest-op-monitor-20" interval="20" name="monitor" timeout="40"/>
           </operations>
           <instance_attributes id="gluster_dest-instance_attributes">
-            <nvpair id="gluster_dest-instance_attributes-device" name="device" value="/var/lib/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
+            <nvpair id="gluster_dest-instance_attributes-device" name="device" value="/etc/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
             <nvpair id="gluster_dest-instance_attributes-directory" name="directory" value="{{ gluster.mount_point }}"/>
             <nvpair id="gluster_dest-instance_attributes-fstype" name="fstype" value="glusterfs"/>
             <nvpair id="gluster_dest-instance_attributes-options" name="options" value="defaults,_netdev"/>

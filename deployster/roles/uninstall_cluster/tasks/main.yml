@@ -80,7 +80,8 @@
       pause: prompt="press any key for continue or ctrl+c for cancel"
 
     - name: удаление пакетов glusterfs
-      apt: pkg=glusterfs-server purge=yes state=absent
+      apt: pkg={{ item }} purge=yes state=absent
+      with_items: [glusterfs-server, glusterfs-client, glusterfs-common]
       tags: [ gluster ]
 
     - name: удаление содержимого glusterfs разделов
