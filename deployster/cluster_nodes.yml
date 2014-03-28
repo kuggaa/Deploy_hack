@@ -61,16 +61,12 @@
      command: umount /var/lib/ldap
      ignore_errors: true
 
-#   - name: отмонтирование временно смонтированного /ald_home
-#     command: umount /ald_home
-#     ignore_errors: true
-
    - name: отмонтирование glusterfs
      command: umount {{ gluster.mount_point }}
      tags: [ ald ]
 
-    #todo bug
-   - include: roles/initial_settings/tasks/network.yml tags=restore_hosts
+   - name: восстановление /etc/hosts
+     template: src=roles/initial_settings/templates/hosts.j2 dest=/etc/hosts
      tags: [ ald ]
 
 - hosts: nodes
@@ -79,4 +75,3 @@
   roles:
    - { role: pacemaker, tags: [ pacemaker ] }
    - users
-

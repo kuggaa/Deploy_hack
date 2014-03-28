@@ -31,7 +31,6 @@
 
     - name: настройка /etc/hosts
       template: src=hosts.j2 dest=/etc/hosts
-      tags: [restore_hosts]
 
     - name: перезапуск узла
       command: /sbin/shutdown -r -t 3 now Rebooted by ansible

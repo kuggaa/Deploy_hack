@@ -6,8 +6,7 @@
 
     - name: установка glusterfs-server
       apt: pkg={{ item }} state=latest force=yes
-      with_items:
-        - glusterfs-server
+      with_items: [glusterfs-server, attr]
 
     - name: настройка glusterfs
       lineinfile: dest=/etc/glusterfs/glusterd.vol

@@ -6,12 +6,15 @@
 
     - name: добавление узлов в glusterfs
       command: gluster peer probe {{ item }}
-      with_items:
-         groups.nodes
+      with_items: groups.nodes
       when: inventory_hostname == common.master_node
 
     - name: создание папки под volume
       file: path={{ gluster.placedir }} state=directory
+
+    - name: удаление аттрибутов
+      command: setfattr -x trusted.glusterfs.volume-id {{ gluster.placedir }}
+      ignore_errors: true
 
     - name: создание тома
       command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}
@@ -23,11 +26,11 @@
     - name: выключение NFS
       command: gluster volume set {{ gluster.volume }} nfs.disable on
       when: inventory_hostname == common.master_node
-      ignore_errors: True
+      ignore_errors: trues
 
     - name: запуск тома
       command: gluster volume start {{ gluster.volume }}
                creates=/var/lib/glusterd/vols/vm_storage_volume/run/{{ common.master_node }}-srv-vol.pid
                #creates=/etc/glusterd/vols/{{ gluster.volume }}/run/{{ common.master_node }}-srv.pid
       when: inventory_hostname == common.master_node
-      ignore_errors: True
+      ignore_errors: true
