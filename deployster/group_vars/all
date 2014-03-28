@@ -2,6 +2,10 @@
 common:
     master_node: '{{ groups.nodes[0] }}'
 
+fencing:
+    ipmi: true
+    pdu: true
+
 # !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
 nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22 }
@@ -41,7 +45,7 @@ ald:
     master_node: ${hac_cntrl.name}
 
     # Домен
-    domain: hac
+    domain: ${hac_cntrl.domain}
 
     # Расположение информации в LDAP.
     ldap_domain: dc=${ald.domain}

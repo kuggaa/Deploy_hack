@@ -5,11 +5,16 @@
 # setup network interfaces
 
     - name: установка ifenslave-2.6
-      apt: pkg={{ item }} state=latest force=yes
-      with_items: ['ifenslave-2.6', 'bridge-utils']
+      apt: pkg=ifenslave-2.6 state=latest force=yes
+      when: network.control.bonding or network.public.bonding
+
+    - name: установка bridge-utils
+      apt: pkg=bridge-utils state=latest force=yes
+      when: network.public.bridge
 
     - name: добавление модуля bonding в /etc/modules
       lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+      when: network.control.bonding or network.public.bonding
 
     - name: запрещаем запуск wicd-daemon
       service: name=wicd state=stopped enabled=no
@@ -22,8 +27,8 @@
       register: bridge_result
 
     - name: cоздание bridge интерфейса
-      command: brctl addbr {{ network.bridge }}
-      when: bridge_result.stdout.find('{{ network.bridge }}') == -1
+      command: brctl addbr {{ network.public.bridge }}
+      when: network.public.bridge and bridge_result.stdout.find('{{ network.public.bridge }}') == -1
 
     - name: настройка interfaces
       template: src=interfaces.j2 dest=/etc/network/interfaces

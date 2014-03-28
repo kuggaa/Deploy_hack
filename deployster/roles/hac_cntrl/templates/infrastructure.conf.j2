@@ -1,4 +1,5 @@
 # IPMI devices.
+{% if fencing.ipmi %}
 {% for key, value in nodes_ip_ipmi.iteritems() %}
 
 [ipmi:{{ key }}-ipmi]
@@ -7,8 +8,10 @@ ip = {{ network.control.address }}.{{ value }}
 login = {{ ipmi.login }}
 password = {{ ipmi.password }}
 {% endfor %}
+{% endif %}
 
 # PDU devices.
+{% if fencing.pdu %}
 {% for key, value in pdu.iteritems() %}
 
 [pdu:{{ key }}]
@@ -17,3 +20,4 @@ ip = {{ network.control.address }}.{{ value }}
 outlet{{ value }} = {{ key }}
 {% endfor %}
 {% endfor %}
+{% endif %}

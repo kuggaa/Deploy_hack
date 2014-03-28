@@ -1,8 +1,11 @@
 127.0.0.1	localhost
 {{ network.public.address }}.{{ nodes_ip[inventory_hostname] }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}
+{% if not network.control.dhcp %}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.control.address }}.{{ value }}  {{ key }}.{{ald.domain}} {{ key }}
 {% endfor %}
+{% endif %}
+
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

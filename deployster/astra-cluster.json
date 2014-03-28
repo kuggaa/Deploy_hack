@@ -1,0 +1,38 @@
+# Конфигурация для стенда astra-cluster
+network:
+  control:
+    dhcp: true
+    bonding: false
+    interface: eth0
+
+  public:
+    address: '10.10.50'
+    mask: '255.255.255.0'
+    gateway:
+    dns_search:
+    dns_nameservers:
+    dhcp: false
+    bonding: false
+    interface: eth1
+    bridge:
+
+fencing:
+    ipmi: false
+    pdu: false
+
+hac_cntrl:
+  domain: npdb
+  ip: 50
+  cidr_netmask: 24
+  name: cluster
+  cd_user: 'root'
+
+nodes_ip:
+  astra-cluster-1: 20
+  astra-cluster-2: 21
+  astra-cluster-3: 22
+
+repository:
+  os: http://packages/se13
+  hac: http://packages/virt/se13/vplatform
+

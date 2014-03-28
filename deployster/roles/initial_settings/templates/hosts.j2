@@ -1,8 +1,10 @@
 127.0.0.1	localhost
 {{ network.public.address }}.{{ hac_cntrl.ip }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
+{% if not network.control.dhcp %}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.control.address }}.{{ value }}  {{ key }}.{{ald.domain}} {{ key }}
 {% endfor %}
+{% endif %}
 
 
 # The following lines are desirable for IPv6 capable hosts

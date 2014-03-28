@@ -20,7 +20,7 @@
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
    - libvirt
-   - {role: hac_cntrl, network.control.address: $from_main, network.bridge: $from_main }
+   - {role: hac_cntrl, network.control.address: $from_main, network.public.bridge: $from_main }
    - pacemaker
 
 - hosts: nodes

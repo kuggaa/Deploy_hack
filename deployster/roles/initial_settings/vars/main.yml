@@ -7,6 +7,9 @@ network:
     gateway:
     dns_search:
     dns_nameservers:
+    dhcp: false
+    bonding: true
+    interface: bond0
 
   public:
     address: '10.10.50'
@@ -15,8 +18,17 @@ network:
     gateway:
     dns_search:
     dns_nameservers:
-
-  bridge: 'br0'
+    dhcp: false
+    bonding: true
+    interface: bond1
+    bridge: br0
 
 hugepage:
    count: 10000
+
+internal:
+  control:
+    ansible: "ansible_{{ network.control.interface }}"
+  public:
+    ansible: "ansible_{{ network.public.interface }}"
+

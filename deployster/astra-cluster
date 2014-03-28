@@ -1,0 +1,12 @@
+# list machines and nodes grouping by roles
+
+[nodes]
+astra-cluster-[1:3]
+
+[new_nodes]
+
+[remove_nodes]
+
+[admin_stations]
+admin-station2 ip=211
+

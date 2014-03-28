@@ -6,7 +6,7 @@ sudo virt-install
 --cdrom={{ dirs.vm_images }}/vm.iso
 --graphics vnc,listen=0.0.0.0
 --accelerate
---network=bridge:{{ network.bridge }},model=rtl8139
+--network=bridge:{{ network.public.bridge }},model=rtl8139
 --connect=qemu:///system
 --noautoconsole
 --hugepage

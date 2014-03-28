@@ -2,9 +2,11 @@
 auto lo
 iface lo inet loopback
 
-# bond0 for network of cluster control (private network)
-auto bond0
-iface bond0 inet static
+# network of cluster control (private network)
+auto {{ network.control.interface }}
+iface {{ network.control.interface }} inet {% if network.control.dhcp -%} dhcp {%- else -%} static {%- endif %}
+
+{% if not network.control.dhcp %}
     address {{ network.control.address }}.{{ nodes_ip[inventory_hostname] }}
 {% if network.control.gateway %}
     gateway {{ network.control.gateway }}
@@ -16,22 +18,19 @@ iface bond0 inet static
     dns-nameservers {{ network.control.dns_nameservers }}
 {% endif %}
     netmask {{ network.control.mask }}
+{% endif %} {# not network.control.dhcp #}
+{% if network.control.bonding %}
     bond-mode active-backup
     bond-miimon 100
     bond-slaves {{ network.control.eth[0] }} {{ network.control.eth[1] }}
     bond-primary {{ network.control.eth[0] }} {{ network.control.eth[1] }}
+{% endif %} {# network.control.bonding #}
 
-# bond1 for network of cluster data (public network)
-auto bond1
-iface bond1 inet manual
-    bond-mode active-backup
-    bond-miimon 100
-    bond-slaves {{ network.public.eth[0] }} {{ network.public.eth[1] }}
-    bond-primary {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+{% macro pubnet(interface) %}
+auto {{ interface }}
+iface {{ interface }} inet  {% if network.public.dhcp -%} dhcp {%- else -%} static {%- endif %}
 
-auto {{ network.bridge }}
-iface {{ network.bridge }} inet static
-    bridge_ports bond1
+{% if not network.public.dhcp %}
     address {{ network.public.address }}.{{ nodes_ip[inventory_hostname] }}
 {% if network.public.gateway %}
     gateway {{ network.public.gateway }}
@@ -43,3 +42,23 @@ iface {{ network.bridge }} inet static
     dns-nameservers {{ network.public.dns_nameservers }}
 {% endif %}
     netmask {{ network.public.mask }}
+{% endif %} {# not network.control.dhcp #}
+{% endmacro %}
+
+# network of cluster data (public network)
+{% if not network.public.bridge %}
+{{ pubnet(network.public.interface) }}
+{% else %} 
+auto {{ network.public.interface }}
+iface {{ network.public.interface }} inet manual
+{% if network.control.bonding %}
+    bond-mode active-backup
+    bond-miimon 100
+    bond-slaves {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+    bond-primary {{ network.public.eth[0] }} {{ network.public.eth[1] }}
+{% endif %} {# network.control.bonding #}
+
+{{ pubnet(network.public.bridge) }}
+    bridge_ports {{ network.public.interface }}
+{% endif %} {# network.public.bridge #}
+
