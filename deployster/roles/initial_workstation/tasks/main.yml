@@ -45,3 +45,5 @@
 
     - name: запуск сервера времени
       service: name=ntp state=restarted enabled=yes
+
+    - include: haproxy.yml
