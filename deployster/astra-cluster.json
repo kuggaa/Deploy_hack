@@ -16,6 +16,9 @@ network:
     interface: eth1
     bridge:
 
+hugepage:
+    count: 0
+
 fencing:
     ipmi: false
     pdu: false
