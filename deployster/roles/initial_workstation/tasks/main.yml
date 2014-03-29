@@ -10,7 +10,7 @@
 
     - name: установка пакетов
       apt: pkg={{ item }} state=latest force=yes
-      with_items: ['ifenslave-2.6', 'bridge-utils', 'haveged']
+      with_items: ['ifenslave-2.6', 'bridge-utils', 'haveged', 'ntp']
 
    # - name: добавление модуля bonding в /etc/modules
    #   lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
@@ -39,6 +39,9 @@
 
     - name: настройка локального сервера времени
       template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes
+
+    - name: удаление старого файла конфигурации
+      command: rm /var/lib/ntp/ntp.conf.dhcp removes=/var/lib/ntp/ntp.conf.dhcp
 
     - name: запуск сервера времени
       service: name=ntp state=started enabled=yes
