@@ -1,0 +1,18 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- name: установка пакета haproxy
+  apt: pkg=haproxy state=latest
+
+- name: настройка haproxy
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+
+- name: включение haproxy
+  lineinfile: dest=/etc/default/haproxy
+              regexp='^ENABLED'
+              line='ENABLED=1'
+              state=present
+
+- name: запуск демона haproxy
+  service: name=haproxy state=started enabled=yes
