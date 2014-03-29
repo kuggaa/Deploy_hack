@@ -8,8 +8,6 @@ statsdir /var/log/ntpstats/
 logfile /var/log/ntp.log
 droadcastdelay 0.008
 restrict default notrap noquery nomodify
-#restrict {{ network.control }}.0 255.255.255.0 notrap nomodify
-#restrict {{ network.public }}.0 255.255.255.0 notrap nomodify
-restrict {{ hostvars[inventory_hostname][internal.public.ansible]['ipv4']['network'] }} mask {{ hostvars[inventory_hostname][internal.public.ansible]['ipv4']['netmask'] }} nomodify notrap
-restrict {{ hostvars[inventory_hostname][internal.control.ansible]['ipv4']['network'] }} mask {{ hostvars[inventory_hostname][internal.control.ansible]['ipv4']['netmask'] }} nomodify notrap
+restrict {{ network.control.address }}.0 255.255.255.0 notrap nomodify
+restrict {{ network.public.address }}.0 255.255.255.0 notrap nomodify
 restrict 127.0.0.1

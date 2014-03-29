@@ -44,4 +44,4 @@
       command: rm /var/lib/ntp/ntp.conf.dhcp removes=/var/lib/ntp/ntp.conf.dhcp
 
     - name: запуск сервера времени
-      service: name=ntp state=started enabled=yes
+      service: name=ntp state=restarted enabled=yes

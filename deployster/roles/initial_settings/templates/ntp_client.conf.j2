@@ -1,0 +1,8 @@
+#todo
+#server {{ network.control.address }}.{{ ip }} iburst
+#server {{ network.public.address }}.{{ ip }}
+driftfile /etc/ntp/drift
+logfile /var/log/ntp.log
+restrict default ignore
+#restrict {{ network.control.address }}.{{ groups.admin_stations[0].ip }}
+#restrict {{ network.public.address }}.{{ groups.admin_stations[0].ip }}
