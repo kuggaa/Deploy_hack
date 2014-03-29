@@ -8,5 +8,5 @@ astra-cluster-[1:3]
 [remove_nodes]
 
 [admin_stations]
-admin-station2 ip=211
+astra-admin ip=211
 

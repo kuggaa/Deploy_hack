@@ -1,8 +1,10 @@
 127.0.0.1	localhost
+{% if not network.control.dhcp %}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.control.address }}.{{ value }}  {{ key }}.{{ald.domain}} {{ key }}
 {% endfor %}
-{{ network.public.address }}.{{ nodes_ip[common.master_node] }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
+{% endif %}
+{{ network.public.address }}.{{ nodes_ip[common.master_node] }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
