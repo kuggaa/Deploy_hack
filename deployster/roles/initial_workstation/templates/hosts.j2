@@ -1,12 +1,16 @@
 127.0.0.1	localhost
 {{ network.public.address }}.{{ hac_cntrl.ip }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
 {{ network.public.address }}.{{ ip }} {{ inventory_hostname }}.{{ ald.domain }} {{ inventory_hostname }}
+{% if not network.public.dhcp %}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.public.address }}.{{ value }} {{ key }}.{{ ald.domain }} {{ key }}
 {% endfor %}
+{% endif %} {# not network.public.dhcp #}
+{% if not network.control.dhcp %}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.control.address }}.{{ value }} {{ key }}.{{ ald.domain }} {{ key }}
 {% endfor %}
+{% endif %} {# not network.control.dhcp #}
 
 
 # The following lines are desirable for IPv6 capable hosts

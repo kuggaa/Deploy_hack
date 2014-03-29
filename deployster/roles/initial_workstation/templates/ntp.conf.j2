@@ -45,8 +45,8 @@ restrict ::1
 
 # Clients from this (example!) subnet have unlimited access, but only if
 # cryptographically authenticated.
-restrict {{ network.public.address }}.0 mask {{ network.public.mask }} nomodify notrap
-restrict {{ network.control.address }}.0 mask {{ network.control.mask }} nomodify notrap
+restrict {{ hostvars[inventory_hostname][internal.public.ansible]['ipv4']['network'] }} mask {{ hostvars[inventory_hostname][internal.public.ansible]['ipv4']['netmask'] }} nomodify notrap
+restrict {{ hostvars[inventory_hostname][internal.control.ansible]['ipv4']['network'] }} mask {{ hostvars[inventory_hostname][internal.control.ansible]['ipv4']['netmask'] }} nomodify notrap
 
 # If you want to provide time to your local subnet, change the next line.
 # (Again, the address is an example only.)
