@@ -18,13 +18,13 @@ iface {{ network.control.interface }} inet {% if network.control.dhcp -%} dhcp {
     dns-nameservers {{ network.control.dns_nameservers }}
 {% endif %}
     netmask {{ network.control.mask }}
-{% endif %} {# not network.control.dhcp #}
+{% endif %}{# not network.control.dhcp #}
 {% if network.control.bonding %}
     bond-mode active-backup
     bond-miimon 100
     bond-slaves {{ network.control.eth[0] }} {{ network.control.eth[1] }}
     bond-primary {{ network.control.eth[0] }} {{ network.control.eth[1] }}
-{% endif %} {# network.control.bonding #}
+{% endif %}{# network.control.bonding #}
 
 {% macro pubnet(interface) %}
 auto {{ interface }}
@@ -42,13 +42,13 @@ iface {{ interface }} inet  {% if network.public.dhcp -%} dhcp {%- else -%} stat
     dns-nameservers {{ network.public.dns_nameservers }}
 {% endif %}
     netmask {{ network.public.mask }}
-{% endif %} {# not network.control.dhcp #}
+{% endif %}{# not network.control.dhcp #}
 {% endmacro %}
 
 # network of cluster data (public network)
 {% if not network.public.bridge %}
 {{ pubnet(network.public.interface) }}
-{% else %} 
+{% else %}
 auto {{ network.public.interface }}
 iface {{ network.public.interface }} inet manual
 {% if network.control.bonding %}
@@ -56,9 +56,9 @@ iface {{ network.public.interface }} inet manual
     bond-miimon 100
     bond-slaves {{ network.public.eth[0] }} {{ network.public.eth[1] }}
     bond-primary {{ network.public.eth[0] }} {{ network.public.eth[1] }}
-{% endif %} {# network.control.bonding #}
+{% endif %}{# network.control.bonding #}
 
 {{ pubnet(network.public.bridge) }}
     bridge_ports {{ network.public.interface }}
-{% endif %} {# network.public.bridge #}
+{% endif %}{# network.public.bridge #}
 
