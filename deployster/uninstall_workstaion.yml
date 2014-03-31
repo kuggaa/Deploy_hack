@@ -1,0 +1,30 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+- hosts: admin_stations
+  user: root
+  # connection: local
+  # sudo: True
+  vars_files: ['roles/initial_settings/vars/main.yml']
+
+  tasks:
+    - name: удаление пакетов
+      apt: pkg={{ item }} state=absent purge=yes force=yes
+      with_items: [glusterfs-client, glusterfs-common, ald-client, haproxy]
+
+    - name: очистка /etc/fstab
+      mount: name={{ gluster.mount_point }}
+             src={{ network.public.address }}.{{ hac_cntrl.ip }}:/{{ gluster.volume}}
+             fstype={{ gluster.type_mount }}
+             state=absent
+
+    - name: удаление лог файлов из /var/log/glusterfs
+      shell: rm -rf /var/log/glusterfs/*
+
+    - name: admin_stations будут перезагружены через 60 секунд...
+      pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60
+
+    - name: перезагружаем узлы
+      command: /sbin/reboot -t now
+      tags: [reboot]

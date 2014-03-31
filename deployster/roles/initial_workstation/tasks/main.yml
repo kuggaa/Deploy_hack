@@ -10,14 +10,32 @@
 
     - name: установка пакетов
       apt: pkg={{ item }} state=latest force=yes
-      with_items: ['ifenslave-2.6', 'bridge-utils', 'haveged', 'ntp']
+      with_items: ['haveged', 'ntp']
 
-   # - name: добавление модуля bonding в /etc/modules
-   #   lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+    - name: установка пакетов для bonding
+      apt: pkg={{ item }} state=latest force=yes
+      with_items: ['ifenslave-2.6', 'bridge-utils']
+      when: net.interfaces|count == 4
 
-   # - name: настройка interfaces
-   #   template: src=interfaces.j2 dest=/etc/network/interfaces
-   #   register: interfaces
+    - name: добавление модуля bonding в /etc/modules
+      lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+      when: net.interfaces|count == 4
+
+    - name: настройка interfaces для bonding
+      template: src=interfaces_bonding.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 4
+
+    - name: настройка interfaces для двуx адаптеров
+      template: src=interfaces_double_eth.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 2
+
+    - name: настройка interfaces для одного адаптера с dhcp (ДЛЯ ТЕСТОВ РАЗРАБОТЧИКА)
+      template: src=interfaces_one_eth_dhcp.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 1 and net.dhcp
+
+    - name: настройка interfaces для одного адаптера
+      template: src=interfaces_one_eth.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 1 and not net.dhcp
 
     - name: настройка /etc/hosts
       template: src=hosts.j2 dest=/etc/hosts
@@ -32,7 +50,7 @@
     - name: монтирование glusterfs
       mount: name={{ gluster.mount_point }}
              src={{ network.public.address }}.{{ hac_cntrl.ip }}:/{{ gluster.volume}}
-             fstype=glusterfs
+             fstype={{ gluster.type_mount }}
              opts='defaults,_netdev'
              dump=1
              state=mounted

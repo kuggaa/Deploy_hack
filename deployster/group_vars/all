@@ -30,6 +30,11 @@ repository:
     # Адрес репозитория с пакетами для ПК КВГ
     hac: ftp://172.16.0.211/hac
 
+# Указывается последняя цифра ip адреса ntp сервера, ntp сервером может быть
+# любой компьютер из группы компьютеров администратора (секция admin_stations из файлы stage)
+ntp:
+   ip_server: 211
+
 hac_cntrl:
     ip: 50
     cidr_netmask: 24
@@ -42,7 +47,7 @@ hac_cntrl:
 # Настройки Astra Linux Directory
 ald:
     # Узел сервера
-    master_node: ${hac_cntrl.name}
+    master_node: aldserver
 
     # Домен
     domain: ${hac_cntrl.domain}
@@ -70,6 +75,8 @@ gluster:
     mount_point: '/var/glusterfs'
     placedir: '/srv/vol'
     volume: 'vm_storage_volume'
+    # !Допустимые значения 'nfs' или 'glsuterfs'!
+    type_mount: 'nfs'
 dirs:
     vm_images: '{{ gluster.mount_point }}/vm_images_and_config'
     ald_env_users: '{{ gluster.mount_point }}/users'

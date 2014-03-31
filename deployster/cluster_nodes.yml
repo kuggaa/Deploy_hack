@@ -71,7 +71,7 @@
 
 - hosts: nodes
   user: root
-  vars_files: ['roles/initial_settings/vars/main.yml']
+  vars_files: ['roles/initial_settings/vars/main.yml', 'roles/glusterfs/vars/main.yml']
   roles:
    - { role: pacemaker, tags: [ pacemaker ] }
    - users

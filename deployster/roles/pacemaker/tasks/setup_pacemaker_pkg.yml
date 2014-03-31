@@ -4,7 +4,7 @@
 ---
 # install pacemaker packages and restart service
     - name: Перед продолжением установки убедитесь, что ssh настроен на всех узлах (подробности в руководстве системного программиста)
-      pause: prompt="press any key for continue or ctrl+c for cancel"
+      pause: prompt="press any key for continue or ctrl+c for cancel" minutes=1
 
     - name: установка pacemaker
       apt: pkg=$item state=latest force=yes

@@ -1,0 +1,5 @@
+extra_settings:
+  # Для glusterfs >= 3.3 должно быть /var/lib
+  path_to_config: '/etc'
+  # Для glusterfs >= 3.3 должно быть true
+  custom_port: false

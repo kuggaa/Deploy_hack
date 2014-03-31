@@ -15,4 +15,4 @@
               state=present
 
 - name: запуск демона haproxy
-  service: name=haproxy state=started enabled=yes
+  service: name=haproxy state=restarted enabled=yes

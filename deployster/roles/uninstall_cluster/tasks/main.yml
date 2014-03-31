@@ -20,7 +20,7 @@
       tags: [ pacemaker ]
 
     - name: продолжить удаление пакетов (будут удалены пакет ALD, ПК Виртуализации и ПК управления)?
-      pause: prompt="press any key for continue or ctrl+c for cancel"
+      pause: prompt="press any key for continue or ctrl+c for cancel" seconds=60
 
     - name: удаление пакетов ALD
       apt: pkg={{ item }} purge=yes state=absent
@@ -47,6 +47,11 @@
        - slapd
        - haveged
       tags: [ ald ]
+
+    - name: SIGKILL для всеx VM
+      command: killall -s 9 kvm
+      ignore_errors: true
+      tags: [libvirt]
 
     - name: удаление пакетов ПК Виртуализации
       apt: pkg={{ item }} purge=yes state=absent
@@ -76,8 +81,8 @@
       ignore_errors: true
       tags: [ ald ]
 
-    - name: продолжить удаление пакетов (будут удалены пакеты и компоненты ПК РФС)?
-      pause: prompt="press any key for continue or ctrl+c for cancel"
+    - name: продолжить удаление пакетов (будут удалены пакеты и компоненты ПК РФС) ?
+      pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60
 
     - name: удаление пакетов glusterfs
       apt: pkg={{ item }} purge=yes state=absent

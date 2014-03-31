@@ -1,0 +1,15 @@
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# network of cluster control (private network)
+auto {{ net.interfaces[0] }}
+iface {{ net.interfaces[0] }} inet static
+    address {{ network.control.address }}.{{ ip }}
+    netmask {{ network.control.mask }}
+
+# network of cluster data (public network)
+auto {{ net.interfaces[1] }}
+iface {{ net.interfaces[1] }} inet static
+    address {{ network.public.address }}.{{ ip }}
+    netmask {{ network.public.mask }}
