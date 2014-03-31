@@ -23,14 +23,14 @@ defaults
 	errorfile 504 /etc/haproxy/errors/504.http
 
 frontend http-in
-	bind *:9000
+	bind *:80
 	default_backend servers
 
 backend servers
 	option redispatch
 	retries 2
 	balance roundrobin
-	option httpchk GET /static/js/ololo.js
+#	option httpchk GET /static/js/ololo.js
 {% for key, value in nodes_ip.iteritems() %}
         server server{{ value }} {{ network.public.address }}.{{ value }}:80 check rise 1
 {% endfor %}

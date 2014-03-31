@@ -75,8 +75,8 @@ gluster:
     mount_point: '/var/glusterfs'
     placedir: '/srv/vol'
     volume: 'vm_storage_volume'
-    # !Допустимые значения 'nfs' или 'glsuterfs'!
-    type_mount: 'nfs'
+    # !Допустимые значения 'nfs' или 'glusterfs'!
+    type_mount: 'glusterfs'
 dirs:
     vm_images: '{{ gluster.mount_point }}/vm_images_and_config'
     ald_env_users: '{{ gluster.mount_point }}/users'

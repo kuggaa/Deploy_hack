@@ -9,6 +9,12 @@
   vars_files: ['roles/initial_settings/vars/main.yml']
 
   tasks:
+
+    - name: закрываем процессы ALD
+      shell: killall -s 9 {{ item }}
+      with_items: ald.services_list
+      ignore_errors: true
+
     - name: удаление пакетов
       apt: pkg={{ item }} state=absent purge=yes force=yes
       with_items: [glusterfs-client, glusterfs-common, ald-client, haproxy]
@@ -21,6 +27,9 @@
 
     - name: удаление лог файлов из /var/log/glusterfs
       shell: rm -rf /var/log/glusterfs/*
+
+    - name: удаление /var/glusterfs
+      command: rm -rf /var/glusterfs removes=/var/glusterfs
 
     - name: admin_stations будут перезагружены через 60 секунд...
       pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60

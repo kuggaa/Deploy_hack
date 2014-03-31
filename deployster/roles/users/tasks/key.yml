@@ -5,10 +5,16 @@
   - name: создание каталога ключей администраторов
     file: path=$admin_home/.ssh
           state=directory mode=0755
+          owner=${ald.kvg_admin_name} group=${ald.groups[0]}
 
   - name: создание SSH ключей для администраторов
     command: ssh-keygen -q -t rsa -N '' -f $admin_home/.ssh/id_rsa
              creates=$admin_home/.ssh/id_rsa
+
+  - name: установка прав на каталог ключей для администраторов
+    file: path=$admin_home/.ssh/id_rsa
+          mode=0600
+          owner=${ald.kvg_admin_name} group=${ald.groups[0]}
 
   - name: извлечение публичного ключа
     fetch: src=$admin_home/.ssh/id_rsa.pub dest=roles/users/files/id_rsa.pub flat=yes fail_on_missing=yes

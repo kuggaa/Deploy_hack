@@ -9,6 +9,7 @@
 {% for key in pdu.iterkeys() %}
       <rsc_location id="fence_loc_on_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_on" score="-INFINITY"/>
 {% endfor %}{% endfor %}
-      <rsc_order first="mount_gluster" id="order" then="vm_template"/>
+      <rsc_order first="mount_gluster" id="order_for_vm" then="vm_template"/>
+      <rsc_order first="mount_gluster" id="order_for_ald" then="ald_server"/>
 </constraints>
 
