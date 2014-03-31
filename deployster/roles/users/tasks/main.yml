@@ -24,7 +24,7 @@
   when: inventory_hostname in groups.nodes
 
 - name: копирование ключа на узел администрирования
-  copy: src=id_rsa.pub dest=/root/.ssh/admin.pub mode=0600 owner=${ald.kvg_admin_name} group=${ald.groups[0]}
+  copy: src=id_rsa.pub dest=/root/.ssh/admin.pub mode=0600
   when: inventory_hostname in groups.admin_stations
 
 - name: добавление ключа в список авторизованных
