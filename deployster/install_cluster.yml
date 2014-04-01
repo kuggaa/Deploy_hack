@@ -50,12 +50,12 @@
      tags: [ ald ]
 
   roles:
-   - { role: ald_setup, tags: [ ald ] }
+   - { role: ald_setup, tags: [ ald, pure_ald ] }
 
   post_tasks:
    - name: ожидание остановки сервисов ald
      pause: seconds=10
-     tags: [ ald ]
+     tags: [ ald, pure_ald ]
 
    - name: отмонтирование временно смонтированного ldap
      command: umount /var/lib/ldap
@@ -67,7 +67,7 @@
 
    - name: восстановление /etc/hosts
      template: src=roles/initial_settings/templates/hosts.j2 dest=/etc/hosts
-     tags: [ ald ]
+     tags: [ ald, pure_ald ]
 
 - hosts: nodes
   user: root
