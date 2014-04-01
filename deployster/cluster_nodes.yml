@@ -74,4 +74,4 @@
   vars_files: ['roles/initial_settings/vars/main.yml', 'roles/glusterfs/vars/main.yml']
   roles:
    - { role: pacemaker, tags: [ pacemaker ] }
-   - users
+   - { role: users, tags: [users] }

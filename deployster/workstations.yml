@@ -20,7 +20,7 @@
   roles:
    - { role: initial_workstation, tags: [init] }
    - { role: ald_client, tags: [ald] }
-   - { role: users, tags: [ald] }
+   - { role: users, tags: [ald, users] }
    - { role: firefox_vnc, tags: [vnc] }
 
   post_tasks:

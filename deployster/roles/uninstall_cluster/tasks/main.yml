@@ -53,6 +53,11 @@
       ignore_errors: true
       tags: [libvirt]
 
+    - name: удаление определений VM
+      shell: virsh list --inactive --name | cut -d " " -f 4 | xargs -n 1 virsh undefine
+      ignore_errors: true
+      tags: [libvirt]
+
     - name: удаление пакетов ПК Виртуализации
       apt: pkg={{ item }} purge=yes state=absent
       with_items: [libvirt-bin, virtinst, qemu-kvm]
@@ -87,6 +92,10 @@
     - name: удаление пакетов glusterfs
       apt: pkg={{ item }} purge=yes state=absent
       with_items: [glusterfs-server, glusterfs-client, glusterfs-common]
+      tags: [ gluster ]
+
+    - name: удаление точки монтирования gluster
+      shell: rm -rf {{ gluster.mount_point }}
       tags: [ gluster ]
 
     - name: удаление содержимого glusterfs разделов
