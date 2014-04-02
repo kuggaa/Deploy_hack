@@ -89,9 +89,17 @@
     - name: продолжить удаление пакетов (будут удалены пакеты и компоненты ПК РФС) ?
       pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60
 
+    - name: отмонтирование glusterfs
+      shell: umount {{ gluster.mount_point }}
+      tags: [ gluster ]
+
     - name: удаление пакетов glusterfs
       apt: pkg={{ item }} purge=yes state=absent
       with_items: [glusterfs-server, glusterfs-client, glusterfs-common]
+      tags: [ gluster ]
+
+    - name: ожидание остановки glusterfs
+      pause: seconds=5
       tags: [ gluster ]
 
     - name: удаление точки монтирования gluster
