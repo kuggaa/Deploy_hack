@@ -11,9 +11,11 @@
 - include: ldapmirror.yml
 
 - include: ald.yml
+  any_errors_fatal: true
 
 - include: ald-master.yml
   when: inventory_hostname == common.master_node
+  any_errors_fatal: true
 
 #- include: ald-slave.yml tags=ald-slave
 #  when: inventory_hostname != common.master_node

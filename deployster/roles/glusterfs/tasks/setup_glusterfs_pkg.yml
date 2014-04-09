@@ -8,6 +8,7 @@
       apt: pkg={{ item }} state=latest force=yes
       with_items: [glusterfs-server, attr]
 
+
     - name: настройка glusterfs
       lineinfile: dest=/etc/glusterfs/glusterd.vol
                   regexp="^#?.*option.*"
@@ -15,5 +16,7 @@
                   state=present
       when: extra_settings.custom_port
 
+
     - name: перезапуск службы glusterfs-server
       service: name=glusterfs-server state=restarted enabled=yes
+

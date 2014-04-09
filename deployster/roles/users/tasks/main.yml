@@ -36,7 +36,7 @@
   when: inventory_hostname in groups.admin_stations
 
 - name: установка прав на ключи
-  file: path=/ald_home/${ald.kvg_admin_name}/.ssh
-        owner=${ald.kvg_admin_name} group=${ald.groups[0]}
+  file: path={{ dirs.ald_env_users }}/{{ ald.kvg_admin_name }}/.ssh
+        owner={{ ald.kvg_admin_name }} group={{ ald.groups[0] }}
         state=directory recurse=yes
   when: inventory_hostname in groups.admin_stations

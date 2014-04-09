@@ -91,6 +91,7 @@
 
     - name: отмонтирование glusterfs
       shell: umount {{ gluster.mount_point }}
+      ignore_errors: true
       tags: [ gluster ]
 
     - name: удаление пакетов glusterfs
@@ -126,6 +127,13 @@
       shell: rm -rf /var/log/glusterfs/*
       tags: [ gluster ]
 
+    - name: killall glusterfs
+      shell: killall -s 9 {{ item }}
+      with_items: [glusterfsd, glusterfs, glusterd]
+      ignore_errors: true
+      tags: [ gluster ]
+
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
       tags: [reboot]
+

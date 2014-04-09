@@ -12,6 +12,7 @@
   tasks:
    - command: 'crm node delete {{ item }}'
      with_items: groups.remove_nodes
+     when: inventory_hostname == common.master_node
      ignore_errors: yes
 
    - name: удаление узлов из pacemaker
@@ -27,6 +28,7 @@
    - name: удаление ipmi ресурсов
      command: 'crm -F configure delete stonith_{{ item }}'
      with_items: groups.remove_nodes
+     when: inventory_hostname == common.master_node
      ignore_errors: yes
 
    - name: остановка fenceapc ресурсов
@@ -35,6 +37,7 @@
         - groups.remove_nodes
         - pdu.keys()
         - ['on', 'off']
+     when: inventory_hostname == common.master_node
      ignore_errors: yes
 
    - name: удаление fenceapc ресурсов
@@ -43,6 +46,7 @@
         - groups.remove_nodes
         - pdu.keys()
         - ['on', 'off']
+     when: inventory_hostname == common.master_node
      ignore_errors: yes
 
    - name: Удаление brick из glusterfs на удаляемых узлах
@@ -56,4 +60,9 @@
      with_items: groups.remove_nodes
      when: inventory_hostname == common.master_node
      ignore_errors: yes
+
+- hosts: remove_nodes
+  user: root
+  roles:
+   - uninstall_cluster
 

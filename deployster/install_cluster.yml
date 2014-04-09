@@ -1,5 +1,5 @@
 #
-# © ОАО «Северное ПКБ», 2013
+# © ОАО «Северное ПКБ», 2013-2014
 #
 ---
 # for deploy cluster nodes
@@ -72,6 +72,12 @@
 - hosts: nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml', 'roles/glusterfs/vars/main.yml']
+
   roles:
    - { role: pacemaker, tags: [ pacemaker ] }
    - { role: users, tags: [users] }
+
+  post_tasks:
+   - name: удаление пакета haveged
+     apt: pkg=haveged purge=yes state=absent
+

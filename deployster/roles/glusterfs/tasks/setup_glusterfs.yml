@@ -14,6 +14,7 @@
       command: gluster peer probe {{ item }}
       with_items: groups.nodes
       when: inventory_hostname == common.master_node
+      any_errors_fatal: true
 
     - name: перезапуск службы glusterfs-server
       service: name=glusterfs-server state=restarted
@@ -26,6 +27,7 @@
                transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}
                creates={{ extra_settings.path_to_config }}/glusterd/vols/{{ gluster.volume }}
       when: inventory_hostname == common.master_node
+      any_errors_fatal: true
 
     - name: выключение NFS
       command: gluster volume set {{ gluster.volume }} nfs.disable on
@@ -37,3 +39,4 @@
                creates={{ extra_settings.path_to_config }}/glusterd/vols/{{ gluster.volume }}/run/{{ common.master_node }}-srv-vol.pid
       when: inventory_hostname == common.master_node
       ignore_errors: true
+      any_errors_fatal: true

@@ -7,7 +7,24 @@
       ignore_errors: True
 
     - name: настройка firefox
-      template: src=firefox.js.j2 dest={{ firefox.path_to_settings }}/firefox.js owner=root group=root mode=0644
+      template: src=firefox.js.j2 dest={{ firefox.path_to_settings }}/firefox.js
+                owner=root group=root mode=0644
 
     - name: создание прокси vncviewer для открытия vnc-ссылок из firefox
       copy: src=vncviewer-firefox dest=/usr/bin owner=root group=root mode=0777
+
+    - name: создание каталогов для профилей firefox
+      file: path={{ dirs.ald_env_users }}/{{ ald.kvg_admin_name }}/.mozilla/firefox/{{ ald.kvg_admin_name }}.default
+            state=directory owner={{ ald.kvg_admin_name }} group={{ ald.groups[0] }}
+      ignore_errors: true
+
+    - name: создание профиля пользователя
+      template: src=profiles.ini.j2
+                dest={{ dirs.ald_env_users }}/{{ ald.kvg_admin_name }}/.mozilla/firefox/profiles.ini
+                owner={{ ald.kvg_admin_name }} group={{ ald.groups[0] }}
+
+    - name: создание mimeTypes в профиле пользователя firefox
+      copy: src=mimeTypes.rdf
+            dest={{ dirs.ald_env_users }}/{{ ald.kvg_admin_name }}/.mozilla/firefox/{{ ald.kvg_admin_name }}.default/
+            owner={{ ald.kvg_admin_name }} group={{ ald.groups[0] }}
+

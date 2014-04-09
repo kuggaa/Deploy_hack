@@ -30,3 +30,7 @@
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
       tags: [reboot]
+
+    - name: удаление пакета haveged
+      apt: pkg=haveged purge=yes state=absent
+

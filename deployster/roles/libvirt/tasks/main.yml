@@ -4,4 +4,6 @@
 ---
 # make libvirt settings on nodes
     - include: setup_libvirt_pkg.yml
+      any_errors_fatal: true
     - include: setup_libvirt.yml
+      any_errors_fatal: true

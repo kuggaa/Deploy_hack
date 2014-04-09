@@ -4,8 +4,10 @@
 ---
 # make a initial settings on nodes
     - include: repo.yml
+      any_errors_fatal: true
     - include: limits.yml
     - include: hugepage.yml
     - include: network.yml
+      any_errors_fatal: true
     - include: ssh.yml
     - include: ntp.yml
