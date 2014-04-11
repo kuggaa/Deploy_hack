@@ -9,7 +9,7 @@
   roles:
    - { role: initial_settings, tags: [init] }
    - { role: glusterfs, tags: [gluster] }
-   - { role: libvirt, tags: [ libvirt ] }
+   - { role: libvirt, tags: [libvirt] }
    - { role: hac_cntrl, tags: [hac_cntrl] }
 
 - hosts: nodes

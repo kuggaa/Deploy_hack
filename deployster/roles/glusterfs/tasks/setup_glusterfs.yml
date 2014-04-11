@@ -3,13 +3,6 @@
 #
 ---
 # setup main settings of glusterfs
-    - name: создание папки под volume
-      file: path={{ gluster.placedir }} state=directory
-
-    - name: удаление аттрибутов
-      command: setfattr -x trusted.glusterfs.volume-id {{ gluster.placedir }}
-      ignore_errors: true
-
     - name: добавление узлов в glusterfs
       command: gluster peer probe {{ item }}
       with_items: groups.nodes

@@ -3,30 +3,104 @@
 #
 ---
 # add new node(s) to cluster
+- hosts: nodes
+  user: root
+  tasks:
+   - name: проверям если узлы в группе [new_nodes] файла stage
+     fail: msg="Not defined nodes in [new_nodes] group in stage file!"
+     when: groups['new_nodes']|count == 0 and inventory_hostname == common.master_node
+     any_errors_fatal: true
+
 - hosts: new_nodes
   user: root
+  vars_files: ['roles/glusterfs/vars/main.yml']
   roles:
-   - initial_settings
+   - { role: initial_settings, tags: [init] }
   post_tasks:
    - include: roles/glusterfs/tasks/setup_glusterfs_pkg.yml
+     tags: gluster
 
 - hosts: nodes
   user: root
   roles:
-   - add_node_glusterfs
+   - {role: add_node_glusterfs, when: inventory_hostname == common.master_node, tags: [gluster] }
 
 - hosts: new_nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
-   - libvirt
-   - {role: hac_cntrl, tags: [hac_cntrl] }
-   - pacemaker
+   - { role: libvirt, tags: [libvirt] }
+   - { role: hac_cntrl, tags: [hac_cntrl] }
+
+- hosts: new_nodes
+  user: root
+  vars_files: ['roles/initial_settings/vars/main.yml']
+  vars_prompt:
+    - name: "ald_password"
+      prompt: "Input password ALD admin (admin/admin)"
+      private: yes
+      confirm: yes
+
+    - name: "admin_password"
+      prompt: "Input password HAC admin (kvg_admin)"
+      private: yes
+      confirm: yes
+
+    - name: "user_password"
+      prompt: "Input password HAC user (kvg_user)"
+      private: yes
+      confirm: yes
+
+  pre_tasks:
+   - name: отмонтирование glusterfs
+     command: umount {{ gluster.mount_point }}
+     ignore_errors: true
+     tags: [ ald ]
+
+   - name: перезапуск службы glusterfs-server
+     service: name=glusterfs-server state=restarted
+     tags: [ ald ]
+
+   - name: ожидание перезапуска демон glusterfs
+     pause: seconds=10
+     tags: [ ald ]
+
+   - name: монтирование glusterfs
+     command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
+     tags: [ ald ]
+
+  roles:
+   - { role: ald_setup, tags: [ ald, pure_ald ] }
+
+  post_tasks:
+   - name: ожидание остановки сервисов ald
+     pause: seconds=10
+     tags: [ ald, pure_ald ]
+
+   - name: отмонтирование временно смонтированного ldap
+     command: umount /var/lib/ldap
+     ignore_errors: true
+
+   - name: отмонтирование glusterfs
+     command: umount {{ gluster.mount_point }}
+     tags: [ ald ]
+
+   - name: восстановление /etc/hosts
+     template: src=roles/initial_settings/templates/hosts.j2 dest=/etc/hosts
+     tags: [ ald, pure_ald ]
+
+- hosts: new_nodes
+  user: root
+  vars_files: ['roles/initial_settings/vars/main.yml']
+  roles:
+   - { role: pacemaker, tags: [pacemaker] }
 
 - hosts: nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
-   - { role: add_node_pacemaker, tags: [pacemaker] }
+   - { role: add_node_pacemaker, tags: [pacemaker], when: inventory_hostname == common.master_node }
+  post_tasks:
+   - include: roles/users/tasks/sudo.yml tags=users
 
 

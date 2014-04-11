@@ -4,9 +4,10 @@
 hacnode[1:2]
 
 [new_nodes]
+hacnode3
 
 [remove_nodes]
-hacnode3
 
 [admin_stations]
 admin-station2 ip=211
+

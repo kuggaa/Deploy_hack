@@ -7,14 +7,16 @@
       command: gluster peer probe {{ item }}
       with_items:
          groups.new_nodes
-      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
 
     - name: добавление нового узла в том
       command: gluster volume add-brick {{ gluster.volume }} {{ item }}:{{ gluster.placedir }}
       with_items:
          groups.new_nodes
-      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
 
     - name: запуска ребалансировки тома
       command: gluster volume rebalance {{ gluster.volume }} start
-      when: inventory_hostname == common.master_node
+      register: result
+      failed_when: "'nothing to rebalance ' not in result.stdout and result.rc != 0"
+

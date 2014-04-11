@@ -9,6 +9,8 @@
   vars_files: ['roles/initial_settings/vars/main.yml']
 
   tasks:
+    - name: Перед выполнением деинсталляции убедитесь, что вы завершили сеансы пользователей ALD!
+      pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=30
 
     - name: закрываем процессы ALD
       shell: killall -s 9 {{ item }}

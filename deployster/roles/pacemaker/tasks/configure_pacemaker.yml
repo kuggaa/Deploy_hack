@@ -28,8 +28,3 @@
     - name: ожидание создания ресурсов КВГ
       local_action: pause seconds=40 prompt="Wait please......."
 
-
-
-
-
-

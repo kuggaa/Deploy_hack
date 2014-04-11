@@ -4,6 +4,7 @@
 ---
 - hosts: nodes
   user: root
-   
+
   roles:
     - uninstall_cluster
+

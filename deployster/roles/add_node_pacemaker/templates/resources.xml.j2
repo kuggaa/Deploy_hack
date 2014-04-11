@@ -1,11 +1,12 @@
+<resources>
 {% for host in groups['new_nodes'] %}
       <primitive class="stonith" id="stonith_{{ host }}" type="external/ipmi">
         <meta_attributes id="stonith_{{ host }}-meta_attributes">
           <nvpair id="stonith_{{ host }}-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
-          <op id="stonith_{{ host }}-op-monitor-3600" interval="3600" name="monitor" timeout="20"/>
-          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" timeout="60"/>
+          <op id="stonith_{{ host }}-op-monitor-20" interval="20" name="monitor" timeout="20"/>
+          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
         <instance_attributes id="stonith_{{ host }}-instance_attributes">
@@ -13,19 +14,30 @@
           <nvpair id="stonith_{{ host }}-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ nodes_ip_ipmi[host] }}"/>
           <nvpair id="stonith_{{ host }}-instance_attributes-userid" name="userid" value="{{ ipmi.login }}"/>
           <nvpair id="stonith_{{ host }}-instance_attributes-passwd" name="passwd" value="{{ ipmi.password }}"/>
-          <nvpair id="stonith_{{ host }}-instance_attributes-interface" name="interface" value="lanplus"/>odeses
+          <nvpair id="stonith_{{ host }}-instance_attributes-interface" name="interface" value="lanplus"/>
         </instance_attributes>
       </primitive>
 {% for key, value in pdu.iteritems() %}
       <primitive class="stonith" id="fence_{{ host }}_{{ key }}_on" type="fence_apc_snmp">
+        <meta_attributes id="fence_{{ host }}_{{ key }}_on-meta_attributes">
+          <nvpair id="fence_{{ host }}_{{ key }}_on-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
         <instance_attributes id="fence_{{ host }}_{{ key }}_on-instance_attributes">
           <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
           <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-action" name="action" value="on"/>
           <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-port" name="port" value="{{ pdu_connections[host] }}"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}/>
+          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}"/>
         </instance_attributes>
+        <operations>
+          <op id="fence_{{ host }}_{{ key }}_on-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
+        </operations>
       </primitive>
       <primitive class="stonith" id="fence_{{ host }}_{{ key }}_off" type="fence_apc_snmp">
+        <meta_attributes id="fence_{{ host }}_{{ key }}_off-meta_attributes">
+          <nvpair id="fence_{{ host }}_{{ key }}_off-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
         <instance_attributes id="fence_{{ host }}_{{ key }}_off-instance_attributes">
           <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
           <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-action" name="action" value="off"/>
@@ -35,8 +47,10 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
 {% endfor %}
 {% endfor %}
-
+</resources>

@@ -7,7 +7,7 @@
       pause: prompt="press any key for continue or ctrl+c for cancel" minutes=1
 
     - name: установка pacemaker
-      apt: pkg=$item state=latest force=yes
+      apt: pkg={{ item }} state=latest force=yes
       with_items: [pacemaker, pacemaker-mgmt, pacemaker-mgmt-client, corosync, fence-agents]
 
     - name: создание каталога

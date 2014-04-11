@@ -2,6 +2,14 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
+- hosts: nodes
+  user: root
+  tasks:
+   - name: проверям если узлы в группе [remove_nodes] файла stage
+     fail: msg="Not defined nodes in [remove_nodes] group in stage file!"
+     when: groups['remove_nodes']|count == 0 and inventory_hostname == common.master_node
+     any_errors_fatal: true
+
 - hosts: remove_nodes
   user: root
   roles:
@@ -23,13 +31,16 @@
    - name: остановка ipmi ресурсов
      command: 'crm -F resource stop stonith_{{ item }}'
      with_items: groups.remove_nodes
+     when: inventory_hostname == common.master_node
      ignore_errors: yes
+     tags: test
 
    - name: удаление ipmi ресурсов
      command: 'crm -F configure delete stonith_{{ item }}'
      with_items: groups.remove_nodes
      when: inventory_hostname == common.master_node
      ignore_errors: yes
+     tags: test
 
    - name: остановка fenceapc ресурсов
      command: 'crm -F resource stop fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
