@@ -65,12 +65,14 @@
      with_items: groups.remove_nodes
      when: inventory_hostname == common.master_node
      ignore_errors: yes
+     any_errors_fatal: true
 
    - name: Удаление узлов из glusterfs
      command: gluster peer detach {{ item }}
      with_items: groups.remove_nodes
      when: inventory_hostname == common.master_node
      ignore_errors: yes
+     any_errors_fatal: true
 
 - hosts: remove_nodes
   user: root

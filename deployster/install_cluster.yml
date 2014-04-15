@@ -6,6 +6,14 @@
 - hosts: nodes
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
+  pre_tasks:
+    - name: проверям настроен ли кластер
+      shell: crm resource status | grep lsb:slapd
+      register: cmd_result
+      failed_when: "'Started' in cmd_result.stdout"
+      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
+
   roles:
    - { role: initial_settings, tags: [init] }
    - { role: glusterfs, tags: [gluster] }

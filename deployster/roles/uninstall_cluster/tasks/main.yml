@@ -103,6 +103,12 @@
       pause: seconds=5
       tags: [ gluster ]
 
+    - name: killall glusterfs
+      shell: killall -s 9 {{ item }}
+      with_items: [glusterfsd, glusterfs, glusterd]
+      ignore_errors: true
+      tags: [ gluster ]
+
     - name: удаление точки монтирования gluster
       shell: rm -rf {{ gluster.mount_point }}
       tags: [ gluster ]
@@ -125,12 +131,6 @@
 
     - name: удаление лог файлов из /var/log/glusterfs
       shell: rm -rf /var/log/glusterfs/*
-      tags: [ gluster ]
-
-    - name: killall glusterfs
-      shell: killall -s 9 {{ item }}
-      with_items: [glusterfsd, glusterfs, glusterd]
-      ignore_errors: true
       tags: [ gluster ]
 
     - name: перезагружаем узлы
