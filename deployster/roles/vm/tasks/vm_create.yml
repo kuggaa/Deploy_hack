@@ -12,7 +12,7 @@
     with_items: vms
 
   - name: создание ресурса VirtualDomain в КВГ
-    command:  cibadmin -M -c -o resources --xml-text '<primitive id="{{ item.name }}" template="vm_template"><instance_attributes id="{{ item.name }}-instance_attributes"><nvpair id="{{ item.name }}-instance_attributes-config" name="config" value="/etc/libvirt/qemu/{{ item.name }}.xml"/></instance_attributes></primitive>'
+    command:  cibadmin -M -c -o resources --xml-text '<primitive id="{{ item.name }}" template="vm_template"><instance_attributes id="{{ item.name }}-instance_attributes"><nvpair id="{{ item.name }}-instance_attributes-config" name="config" value="{{ dirs.vm_images }}/qemu/{{ item.name }}.xml"/></instance_attributes></primitive>'
     with_items: vms
 
   ## устаревший вариант создания ВМ без шаблона  
