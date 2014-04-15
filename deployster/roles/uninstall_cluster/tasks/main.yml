@@ -2,7 +2,9 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-# full uninstall HA cluster
+# полное удаление ПК КВГ с узлов из группы [nodes]
+# если необходимо удалить один из узлов следует использовать remove_cluster_nodes
+# предварительно заполнить группу [remove_nodes] в файле stage
 
     - name: Останавливаем работающие сервисы corosync и pacemaker
       command: killall -s 9 {{ item }}
