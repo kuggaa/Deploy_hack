@@ -4,7 +4,7 @@
 ---
 # script for make a VM in ha cluster
   - name: копирование конфигурации ВМ
-    copy: src={{ item.path }}{{ item.config }} dest=/etc/libvirt/qemu/{{ item.name }}.xml mode=0777
+    copy: src={{ item.path }}{{ item.config }} dest={{ dirs.vm_images }}/qemu/{{ item.name }}.xml mode=0777
     with_items: vms
 
   - name: копирование образа ВМ
