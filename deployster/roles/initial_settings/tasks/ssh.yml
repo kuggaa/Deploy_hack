@@ -5,6 +5,9 @@
     - name: создание каталога ssh ключей root
       file: path=/root/.ssh state=directory mode=0755
 
+    - name: удаление старого known_hosts
+      file: path=/root/.ssh/known_hosts state=absent
+
     - name: создание SSH ключей для root
       command: ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa
                creates=/root/.ssh/id_rsa

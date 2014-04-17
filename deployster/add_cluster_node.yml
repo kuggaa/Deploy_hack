@@ -102,5 +102,7 @@
    - { role: add_node_pacemaker, tags: [pacemaker], when: inventory_hostname == common.master_node }
   post_tasks:
    - include: roles/users/tasks/sudo.yml tags=users
-
+   - name: Операция по добавлению узла закончена, переместите его в файле stage из cекции [new_nodes] в секцию [nodes] и запустите 'ansible-playbook install_cluster --tags=ssh'
+     pause: prompt="Don't forget update stage file and start ansible-playbook install_cluster --tags=ssh. Press any key for finish..."
+     when: inventory_hostname == common.master_node
 

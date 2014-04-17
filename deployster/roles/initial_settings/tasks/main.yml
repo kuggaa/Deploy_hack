@@ -10,4 +10,5 @@
     - include: network.yml
       any_errors_fatal: true
     - include: ssh.yml
+      tags: ssh
     - include: ntp.yml
