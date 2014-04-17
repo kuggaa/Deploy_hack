@@ -39,6 +39,17 @@
         - ['on', 'off']
      ignore_errors: yes
 
+   - name: удаление fence_topology
+     shell: cibadmin --delete --xml-text '<fencing-level devices="stonith_{{ item }}"/>'
+     with_items: groups.remove_nodes
+     ignore_errors: yes
+     tags: ttt
+
+   - shell: cibadmin --delete --xml-text '<fencing-level devices="fence_{{ item }}_{{ pdu.keys()[0] }}_off,fence_{{ item }}_{{ pdu.keys()[1] }}_off,fence_{{ item }}_{{ pdu.keys()[0] }}_on,fence_{{ item }}_{{ pdu.keys()[1] }}_on"/>'
+     with_items: groups.remove_nodes
+     ignore_errors: yes
+     tags: ttt
+
    - name: Удаление brick из glusterfs на удаляемых узлах
      shell: 'yes | gluster volume remove-brick {{ gluster.volume }} {{ item }}:{{ gluster.placedir }}'
      with_items: groups.remove_nodes
