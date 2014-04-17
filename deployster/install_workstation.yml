@@ -24,13 +24,13 @@
    - { role: firefox_vnc, tags: [vnc] }
 
   post_tasks:
+    - name: удаление пакета haveged
+      apt: pkg=haveged purge=yes state=absent
+
     - name: Для вступления в силу изменений компьютер(ы) будет перезагружен через 60 секунд...
       pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60
 
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
       tags: [reboot]
-
-    - name: удаление пакета haveged
-      apt: pkg=haveged purge=yes state=absent
 

@@ -13,69 +13,17 @@
 - hosts: remove_nodes
   user: root
   roles:
-   - remove_node
+   - { role: remove_node, tags: remove_node }
 
 - hosts: nodes
   user: root
   tasks:
-   - command: 'crm node delete {{ item }}'
-     with_items: groups.remove_nodes
+   - include: roles/remove_node/tasks/active_nodes_ops.yml
      when: inventory_hostname == common.master_node
-     ignore_errors: yes
-
-   - name: удаление узлов из pacemaker
-     command: 'crm_node --force -R {{ item }}'
-     with_items: groups.remove_nodes
-     ignore_errors: yes
-
-   - name: остановка ipmi ресурсов
-     command: 'crm -F resource stop stonith_{{ item }}'
-     with_items: groups.remove_nodes
-     when: inventory_hostname == common.master_node
-     ignore_errors: yes
-     tags: test
-
-   - name: удаление ipmi ресурсов
-     command: 'crm -F configure delete stonith_{{ item }}'
-     with_items: groups.remove_nodes
-     when: inventory_hostname == common.master_node
-     ignore_errors: yes
-     tags: test
-
-   - name: остановка fenceapc ресурсов
-     command: 'crm -F resource stop fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
-     with_nested:
-        - groups.remove_nodes
-        - pdu.keys()
-        - ['on', 'off']
-     when: inventory_hostname == common.master_node
-     ignore_errors: yes
-
-   - name: удаление fenceapc ресурсов
-     command: 'crm -F configure delete fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
-     with_nested:
-        - groups.remove_nodes
-        - pdu.keys()
-        - ['on', 'off']
-     when: inventory_hostname == common.master_node
-     ignore_errors: yes
-
-   - name: Удаление brick из glusterfs на удаляемых узлах
-     command: bash -c 'yes | gluster volume remove-brick {{ gluster.volume }} {{ item }}:{{ gluster.placedir }}'
-     with_items: groups.remove_nodes
-     when: inventory_hostname == common.master_node
-     ignore_errors: yes
-     any_errors_fatal: true
-
-   - name: Удаление узлов из glusterfs
-     command: gluster peer detach {{ item }}
-     with_items: groups.remove_nodes
-     when: inventory_hostname == common.master_node
-     ignore_errors: yes
-     any_errors_fatal: true
+     tags: [remove_from_active_nodes]
 
 - hosts: remove_nodes
   user: root
   roles:
-   - uninstall_cluster
+   - { role: uninstall_cluster, tags: uninstall_node }
 

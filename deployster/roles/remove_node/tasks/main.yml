@@ -3,19 +3,12 @@
 #
 ---
 # remove node from cluster
-    - name: Переводим удалямые узлы в standby режим
+    - name: переводим удалямые узлы в standby режим
       command: crm_standby -v true
 
     - name: ожидание выполнения операции перевода в standby
       pause: seconds=60
 
-    - name: Останавливаем corosync на удаляемых узлах
-      service: name=corosync enabled=no
-
-    - name: Останавливаем работающие сервисы corosync и pacemaker
-      command: killall -s 9 {{ item }}
-      with_items: [cib, stonithd, lrmd, attrd, pengine, crmd, mgmtd, corosync]
-      ignore_errors: true
-
-
+    - name: исключение corosync на удаляемых узлах из автозагрузки
+      service: name=corosync enabled=no state=stopped
 
