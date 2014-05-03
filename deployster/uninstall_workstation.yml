@@ -21,7 +21,7 @@
 
     - name: удаление пакетов
       apt: pkg={{ item }} state=absent purge=yes force=yes
-      with_items: [glusterfs-client, glusterfs-common, ald-client, haproxy]
+      with_items: [glusterfs-client, glusterfs-common, ald-client, haproxy, ald-admin-common, nscd, nslcd]
 
     - name: очистка /etc/fstab
       mount: name={{ gluster.mount_point }}
