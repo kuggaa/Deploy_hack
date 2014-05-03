@@ -6,6 +6,7 @@
   apt: pkg=$item state=latest
   with_items:
     - ald-admin
+    - ald-admin-common
     - ald-client
     - ald-client-common
     - smolensk-security-ald

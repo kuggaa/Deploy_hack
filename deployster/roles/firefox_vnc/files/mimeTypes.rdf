@@ -24,6 +24,9 @@
   <RDF:Description RDF:about="urn:scheme:externalApplication:vnc"
                    NC:prettyName="vncviewer-firefox"
                    NC:path="/usr/bin/vncviewer-firefox" />
+  <RDF:Description RDF:about="urn:scheme:externalApplication:rdp"
+                   NC:prettyName="xfreerdp-firefox"
+                   NC:path="/usr/bin/xfreerdp-firefox" />
   <RDF:Description RDF:about="urn:scheme:webcal"
                    NC:value="webcal">
     <NC:handlerProp RDF:resource="urn:scheme:handler:webcal"/>
@@ -39,9 +42,17 @@
                    NC:alwaysAsk="false">
     <NC:externalApplication RDF:resource="urn:scheme:externalApplication:vnc"/>
   </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:handler:rdp"
+                   NC:alwaysAsk="false">
+    <NC:externalApplication RDF:resource="urn:scheme:externalApplication:rdp"/>
+  </RDF:Description>
   <RDF:Description RDF:about="urn:scheme:vnc"
                    NC:value="vnc">
     <NC:handlerProp RDF:resource="urn:scheme:handler:vnc"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:rdp"
+                   NC:value="rdp">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:rdp"/>
   </RDF:Description>
   <RDF:Seq RDF:about="urn:schemes:root">
     <RDF:li RDF:resource="urn:scheme:webcal"/>
@@ -49,6 +60,7 @@
     <RDF:li RDF:resource="urn:scheme:mailto"/>
     <RDF:li RDF:resource="urn:scheme:irc"/>
     <RDF:li RDF:resource="urn:scheme:vnc"/>
+    <RDF:li RDF:resource="urn:scheme:rdp"/>
   </RDF:Seq>
   <RDF:Description RDF:about="urn:handler:web:http://compose.mail.yahoo.com/?To=%s"
                    NC:prettyName="Yahoo! Mail"

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+xfreerdp `echo "$@" | sed s"/.*\/\///"`
+
+

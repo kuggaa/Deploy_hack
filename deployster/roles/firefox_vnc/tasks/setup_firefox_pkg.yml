@@ -5,4 +5,4 @@
 # setup firefox and vnc-viewer
     - name: установка firefox и vnc-viewer
       apt: pkg={{ item }} state=latest force=yes
-      with_items: ['firefox', 'xvnc4viewer']
+      with_items: ['firefox', 'xvnc4viewer', 'freerdp-x11']

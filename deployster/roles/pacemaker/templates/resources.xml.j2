@@ -197,4 +197,14 @@
           </operations>
         </primitive>
       </group>
+      <clone id="rdp_server_clone">
+        <meta_attributes id="rdp_server_clone-meta_attributes">
+          <nvpair id="rdp_server_clone-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="lsb" id="rdp_server" type="xrdp">
+          <operations id="rdp_server-operations">
+            <op id="rdp_server-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+          </operations>
+        </primitive>
+      </clone>
 </resources>

@@ -55,7 +55,7 @@
              dump=1
              state=mounted
 
-    - name: настройка локального сервера времени
+    - name: настройка локального сервера времени (ntp сервер)
       template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes
 
     - name: удаление старого файла конфигурации

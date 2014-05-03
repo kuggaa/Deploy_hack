@@ -80,6 +80,7 @@
        - hac-control
        - python-django-hac
        - python-hac-tools
+       - xrdp
       tags: [hac_cntrl]
 
     - name: закрываем процессы ALD

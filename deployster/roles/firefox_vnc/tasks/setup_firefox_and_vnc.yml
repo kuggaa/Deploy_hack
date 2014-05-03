@@ -4,7 +4,7 @@
 ---
     - name: создание каталога для настроек firefox
       file: path={{ firefox.path_to_settings }} state=directory
-      ignore_errors: True
+      ignore_errors: true
 
     - name: настройка firefox
       template: src=firefox.js.j2 dest={{ firefox.path_to_settings }}/firefox.js
@@ -12,6 +12,9 @@
 
     - name: создание прокси vncviewer для открытия vnc-ссылок из firefox
       copy: src=vncviewer-firefox dest=/usr/bin owner=root group=root mode=0777
+
+    - name: создание прокси xfreerdp для открытия rdp-ссылок из firefox
+      copy: src=xfreerdp-firefox dest=/usr/bin owner=root group=root mode=0777
 
     - name: создание каталогов для профилей firefox
       file: path={{ dirs.ald_env_users }}/{{ ald.kvg_admin_name }}/.mozilla/firefox/{{ ald.kvg_admin_name }}.default

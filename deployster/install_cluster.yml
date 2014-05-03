@@ -19,6 +19,7 @@
    - { role: glusterfs, tags: [gluster] }
    - { role: libvirt, tags: [libvirt] }
    - { role: hac_cntrl, tags: [hac_cntrl] }
+   - { role: xrdp, tags: [rdp] }
 
 - hosts: nodes
   user: root

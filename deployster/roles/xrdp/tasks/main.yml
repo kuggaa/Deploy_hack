@@ -1,0 +1,16 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+# setup&configure rdp server
+    - name: установка RDP сервера 
+      apt: pkg=xrdp state=latest force=yes
+
+    - name: настройка конфигурационного файла RDP сервера 
+      copy: src=xrdp.ini dest=/etc/xrdp owner=xrdp group=xrdp mode=644
+
+    - name: остановка и отключение автозапуска служб RDP сервера
+      service: name=xrdp state=stopped enabled=no
+      
+    - name: замена файлов автозапуска RDP сервера
+      copy: src=xrdp dest=/etc/init.d owner=root group=root mode=755
