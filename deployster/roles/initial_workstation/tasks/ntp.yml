@@ -1,0 +1,16 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: установка пакета ntp
+      apt: pkg=ntp state=latest force=yes
+      
+    - name: настройка локального сервера времени (ntp сервер)
+      template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes
+
+    - name: удаление старого файла конфигурации
+      command: rm /var/lib/ntp/ntp.conf.dhcp removes=/var/lib/ntp/ntp.conf.dhcp
+
+    - name: запуск сервера времени
+      service: name=ntp state=restarted enabled=yes
+

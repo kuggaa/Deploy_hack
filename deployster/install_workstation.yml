@@ -17,6 +17,10 @@
   pre_tasks:
     - include: roles/initial_settings/tasks/repo.yml
 
+    - name: установка пакетов
+      apt: pkg=haveged state=latest force=yes
+      tags: [ald, users]
+
   roles:
    - { role: initial_workstation, tags: [init] }
    - { role: ald_client, tags: [ald] }
@@ -26,6 +30,7 @@
   post_tasks:
     - name: удаление пакета haveged
       apt: pkg=haveged purge=yes state=absent
+      tags: [ald, users]
 
     - name: Для вступления в силу изменений компьютер(ы) будет перезагружен через 60 секунд...
       pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60

@@ -1,0 +1,19 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: установка клиента glusterfs
+      apt: pkg=glusterfs-client state=latest force=yes
+  
+    - name: создание точки монтирования
+      file: path={{ gluster.mount_point }} state=directory
+      ignore_errors: true
+
+    - name: монтирование glusterfs
+      mount: name={{ gluster.mount_point }}
+             src={{ network.public.address }}.{{ hac_cntrl.ip }}:/{{ gluster.volume}}
+             fstype={{ gluster.type_mount }}
+             opts='defaults,_netdev'
+             dump=1
+             state=mounted
+

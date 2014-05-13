@@ -3,5 +3,7 @@
 #
 ---
 # set up firefox
+    - include: haproxy.yml
     - include: setup_firefox_pkg.yml
     - include: setup_firefox_and_vnc.yml
+

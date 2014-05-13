@@ -1,0 +1,36 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: запрещаем запуск wicd-daemon и avahi-daemon
+      service: name={{ item }} state=stopped enabled=no
+      with_items: [wicd, avahi-daemon]
+
+    - name: установка пакетов для bonding
+      apt: pkg={{ item }} state=latest force=yes
+      with_items: ['ifenslave-2.6', 'bridge-utils']
+      when: net.interfaces|count == 4
+
+    - name: добавление модуля bonding в /etc/modules
+      lineinfile: dest=/etc/modules regexp='.*bonding' line='bonding' state=present
+      when: net.interfaces|count == 4
+
+    - name: настройка interfaces для bonding
+      template: src=interfaces_bonding.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 4
+
+    - name: настройка interfaces для двуx адаптеров
+      template: src=interfaces_double_eth.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 2
+
+    - name: настройка interfaces для одного адаптера с dhcp (ДЛЯ ТЕСТОВ РАЗРАБОТЧИКА)
+      template: src=interfaces_one_eth_dhcp.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 1 and net.dhcp
+
+    - name: настройка interfaces для одного адаптера
+      template: src=interfaces_one_eth.j2 dest=/etc/network/interfaces
+      when: net.interfaces|count == 1 and not net.dhcp
+
+    - name: настройка /etc/hosts
+      template: src=hosts.j2 dest=/etc/hosts
+
