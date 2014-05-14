@@ -59,7 +59,7 @@
      tags: [ ald ]
 
   roles:
-   - { role: ald_setup, tags: [ ald, pure_ald ] }
+   - { role: ald_setup, tags: [ald, pure_ald] }
 
   post_tasks:
    - name: ожидание остановки сервисов ald
@@ -83,7 +83,7 @@
   vars_files: ['roles/initial_settings/vars/main.yml', 'roles/glusterfs/vars/main.yml']
 
   roles:
-   - { role: pacemaker, tags: [ pacemaker ] }
+   - { role: pacemaker, tags: [pacemaker] }
    - { role: users, tags: [users] }
 
   post_tasks:
