@@ -25,7 +25,7 @@
    - { role: initial_workstation, tags: [init] }
    - { role: ald_client, tags: [ald] }
    - { role: users, tags: [ald, users] }
-   - { role: firefox_vnc, tags: [vnc] }
+   - { role: firefox_vnc, tags: [vnc, init] }
 
   post_tasks:
     - name: удаление пакета haveged

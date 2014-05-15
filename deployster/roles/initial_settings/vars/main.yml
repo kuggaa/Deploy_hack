@@ -26,9 +26,3 @@ network:
 hugepage:
    count: 10000
 
-internal:
-  control:
-    ansible: "ansible_{{ network.control.interface }}"
-  public:
-    ansible: "ansible_{{ network.public.interface }}"
-

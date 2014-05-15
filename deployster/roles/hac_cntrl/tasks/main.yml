@@ -21,11 +21,27 @@
       template: src={{ item }}.j2 dest=/etc/hac-control/{{ item }}
       with_items: ['hac.conf','infrastructure.conf','virt_install_cmd','policy.conf']
 
+    - name: настройка конфигурационных файлов apache2 для ПК Управления
+      template: src=hac-control.j2 dest=/etc/apache2/sites-available/hac-control
+
+    - name: отмонтирование glusterfs
+      command: umount {{ gluster.mount_point }}
+      ignore_errors: true
+
+    - name: перезапуск службы glusterfs-server
+      service: name=glusterfs-server state=restarted
+
+    - name: ожидание перезапуска демон glusterfs
+      pause: seconds=10
+
+    - name: монтирование glusterfs
+      command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
+
     - name: создание каталога для файлового кэша ПК управления
       file: path={{ gluster.mount_point }}/hac-control-cache state=directory mode=0777
 
-    - name: настройка конфигурационных файлов apache2 для ПК Управления
-      template: src=hac-control.j2 dest=/etc/apache2/sites-available/hac-control
+    - name: отмонтирование glusterfs
+      command: umount {{ gluster.mount_point }}
 
     - name: остановка и отключение автозапуска служб apache2
       service: name=apache2 state=stopped enabled=no
