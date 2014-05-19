@@ -18,7 +18,7 @@
 #  template: src=hosts.j2 dest=/etc/hosts
 
 - name: копирование файлов настроек Kerberos с главного сервера
-  fetch: src={{ item }} dest=krb-conf
+  fetch: src={{ item }} dest=krb-conf/ flat=yes
   with_items:
     - /etc/krb5kdc/kadm5.keytab
     - /etc/krb5kdc/stash
@@ -30,11 +30,11 @@
   when: inventory_hostname != common.master_node
 
 - name: копирование файлов настроек для Kerberos
-  copy: src=krb-conf/{{ common.master_node }}{{ item }} dest=${item} backup=no
+  copy: src=krb-conf/{{ item.file }} dest={{ item.path }} backup=no
   with_items:
-    - /etc/krb5kdc/kadm5.keytab
-    - /etc/krb5kdc/stash
-    - /etc/krb5.keytab
+    - { file: 'kadm5.keytab', path: '/etc/krb5kdc/' }
+    - { file: 'stash', path: '/etc/krb5kdc/' }
+    - { file: 'krb5.keytab', path: '/etc/' }
   when: inventory_hostname != common.master_node
 
 - name: установка файла службы для kpropd
