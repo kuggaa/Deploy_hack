@@ -14,7 +14,15 @@
 
     - name: удаление pacemaker и сorosync
       apt: pkg={{ item }} purge=yes state=absent
-      with_items: [pacemaker-mgmt, pacemaker-mgmt-client, pacemaker, corosync]
+      with_items: 
+        - pacemaker-mgmt
+        - pacemaker-mgmt-client
+        - pacemaker 
+        - corosync
+        - resource-agents
+        - libstonithd1
+        - libcrmcommon2
+        - cluster-glue
       tags: [ pacemaker ]
 
     - name: удаление базы cib

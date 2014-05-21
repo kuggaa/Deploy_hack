@@ -12,7 +12,6 @@
          - apache2
          - libapache2-mod-wsgi
          - libapache2-mod-auth-kerb
-         - pacemaker-mgmt
          - python-netsnmp
          - ipmitool
          - hac-control-apache
