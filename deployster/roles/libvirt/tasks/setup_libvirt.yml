@@ -35,6 +35,7 @@
 
     - name: монтирование glusterfs
       command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
+      when: inventory_hostname == common.master_node
 
     - name: создание каталога для ВМ (образы)
       file: path={{ dirs.vm_images }} state=directory mode=0777
@@ -51,4 +52,5 @@
 
     - name: отмонтирование glusterfs
       command: umount {{ gluster.mount_point }}
+      when: inventory_hostname == common.master_node
 
