@@ -14,9 +14,6 @@
 - name: настройка /etc/hosts
   template: src=hosts_krb.j2 dest=/etc/hosts
 
-#- name: восстановление /etc/hosts
-#  template: src=hosts.j2 dest=/etc/hosts
-
 - name: копирование файлов настроек Kerberos с главного сервера
   fetch: src={{ item }} dest=krb-conf/ flat=yes
   with_items:
@@ -66,11 +63,4 @@
 
 - name: настройка периодической синхронизации
   template: src=krb5prop dest=/etc/cron.hourly owner=root group=root mode=0755
-
-#- name: удаление /etc/krb5.keytab
-#  file: path=/etc/krb5.keytab state=absent
-
-#- name: добавление принципала узла в /etc/krb5.keytab
-#  command: kadmin.local -q 'ktadd -norandkey host/{{ inventory_hostname }}.{{ ald.domain }}'
-
 

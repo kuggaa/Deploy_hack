@@ -17,9 +17,6 @@
   when: inventory_hostname == common.master_node
   any_errors_fatal: true
 
-#- include: ald-slave.yml tags=ald-slave
-#  when: inventory_hostname != common.master_node
-
 - name: создание каталога apache
   file: path=/etc/apache2 state=directory
 

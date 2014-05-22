@@ -11,8 +11,8 @@
     path_to_rep_root: '/srv/ftp'
    # src_astra_rep: '/tmp/astra'
    # src_hac_rep: '/tmp/hac'
-    
+
   roles:
    - repository
-       
+
 

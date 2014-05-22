@@ -14,12 +14,6 @@
 - name: настройка /etc/hosts
   template: src=hosts_ald.j2 dest=/etc/hosts
 
-#- name: настройка /etc/hosts
-#  template: src=hosts.j2 dest=/etc/hosts
-
-#- name: замена скрипта запуска OpenLDAP
-#  copy: src=slapd.orig dest=/etc/init.d/slapd owner=root group=root mode=0755
-
 - name: настройка ALD сервера
   command: ald-init init -f --pass-file=/root/pass-file
   environment: virthostname_env
@@ -31,29 +25,10 @@
   ald: task=host host={{ item }}.{{ ald.domain }} pass_file=/root/pass-file
   with_items: groups.nodes
 
-#- name: создание принципалов OpenLDAP
-#  command: ald-admin service-add ldap/{{ item }}.{{ ald.domain }} -f --pass-file=/root/pass-file
-#  with_items: groups.nodes
-
-#- name: создание принципалов ALDD
-#  command: ald-admin service-add aldd-server/{{ item }}.{{ ald.domain }} -f --pass-file=/root/pass-file
-#  with_items: groups.nodes
-
 - name: остановка сервисов ALD
   service: name={{ item }} state=stopped
   with_items: [aldd, aldcd, samba, nslcd, nscd, slapd, krb5-kdc, krb5-admin-server]
 
 - name: замена неверного файла /etc/init.d/nscd
   copy: src=nscd dest=/etc/init.d/nscd owner=root group=root mode=0755
-
-#- name: изменение /etc/hosts
-#  lineinfile: dest=/etc/hosts
-#              regexp='{{ ald.master_node }}.{{ ald.domain }} ald'
-#              line="{{ hostvars[common.master_node]['ansible_eth0']['ipv4']['address'] }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}"
-#              state=present
-#  when: inventory_hostname != common.master_node
-
-#- name: копирование файлов настроек для LDAP
-#  fetch: src=/etc/ldap/slapd.d/{{ item }} dest=ald-conf
-#  with_items: ldap_files
 

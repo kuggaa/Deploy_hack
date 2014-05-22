@@ -2,44 +2,6 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-#- name: остановка OpenLDAP и ALD
-#  service: name={{ item }} state=stopped
-#  with_items: [aldd, aldcd, nscd, nslcd, slapd]
-
-#- name: создание каталога LDAP на общем хранилище
-#  file: path={{ gluster.mount_point }}/ldap state=directory
-#        owner=openldap group=openldap mode=0700
-
-#- name: перенос на Gluster базы LDAP
-#  command: cp -pfR /var/lib/ldap {{ gluster.mount_point }}
-
-#- name: удаление старой базы LDAP
-#  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
-
-#- name: подмена каталога /var/lib/ldap
-#  file: src={{ gluster.mount_point }}/ldap dest=/var/lib/ldap state=link
-#  mount: name=/var/lib/ldap src={{ gluster.mount_point }}/ldap
-#         fstype=none opts=bind state=mounted
-
-#- name: создание каталога Kerberos на общем хранилище
-#  file: path={{ gluster.mount_point }}/krb5kdc state=directory
-#        owner=root group=root mode=0700
-
-#- name: остановка сервисов Kerberos
-#  service: name={{ item }} state=stopped
-#  with_items: [krb5-kdc, krb5-admin-server]
-
-#- name: перенос на Gluster базы Kerberos
-#  command: cp -pfR /var/lib/krb5kdc {{ gluster.mount_point }}
-
-#- name: удаление старой базы Kerberos
-#  command: rm -rf /var/lib/krb5kdc removes=/var/lib/krb5kdc
-
-#- name: подмена каталога /var/lib/krb5kdc
-#  file: src={{ gluster.mount_point }}/krb5kdc dest=/var/lib/krb5kdc state=link
-#  mount: name=/var/lib/krb5kdc src={{ gluster.mount_point }}/krb5kdc
-#         fstype=none opts=bind state=mounted
-
 - name: запуск сервисов ALD
   service: name={{ item }} state=started
   with_items: [krb5-kdc, krb5-admin-server, slapd, nscd, nslcd, aldcd, aldd]
@@ -60,19 +22,19 @@
   fetch: src=/root/krb.keytab dest=roles/ald_setup/files/krb.keytab validate_md5=yes flat=yes fail_on_missing=yes
 
 - name: создание групп пользователей
-  ald: task=group group={{ item }} pass_file=/root/pass-file
-  with_items: ald.groups
+  ald: task=group group={{ item.1.group }} pass_file=/root/pass-file
+  with_items: ald.users|dictsort
   tags: users
 
 - name: создание учетной записи администратора в ALD
-  ald: task=user pass_file=/root/pass-file group={{ ald.groups[0] }}
-       full_name='Administrator' user_desc='Administrator HAC' user={{ ald.kvg_admin_name }}
+  ald: task=user pass_file=/root/pass-file group={{ ald.users.admin.group }}
+       full_name='Administrator' user_desc='Administrator HAC' user={{ ald.users.admin.login }}
   register: create_users
   tags: users
 
 - name: создание учетной записи оператора в ALD
-  ald: task=user pass_file=/root/pass-file group={{ ald.groups[1] }}
-       full_name='User' user_desc='User HAC' user={{ ald.operator_user }}
+  ald: task=user pass_file=/root/pass-file group={{ ald.users.user.group }}
+       full_name='User' user_desc='User HAC' user={{ ald.users.user.login }}
   tags: users
 
 - name: ожидание создания пользователей
@@ -80,22 +42,17 @@
   when: create_users.changed
   tags: users
 
-#- name: Добавление пользователя в группу administrators
-#  command: ald-admin group-mod {{ item }} -f --pass-file=/root/pass-file --add-users --user={{ ald.kvg_admin_name }}
-#  with_items: ald.groups
-#  when: inventory_hostname == ald.master_ald_srv
-
 - name: добавление привилегий для администратора
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1
+  command: ald-admin user-ald-cap {{ ald.users.admin.login }} -f --pass-file=/root/pass-file --c-admin=1 --c-all-hosts-add=1 --c-adm-user=1
   tags: users
 
 - name: настройка доступа для администраторов
-  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
+  command: ald-admin user-ald-cap {{ ald.users.admin.login }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
   with_items: groups.nodes
   tags: users
 
 - name: настройка доступа для пользователей
-  command: ald-admin user-ald-cap {{ ald.operator_user }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
+  command: ald-admin user-ald-cap {{ ald.users.user.login }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
   with_items: groups.nodes
   tags: users
 
@@ -105,3 +62,4 @@
 - name: синхронизация БД Kerberos
   command: kprop {{ item }}
   with_items: groups.nodes[1:]
+

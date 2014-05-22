@@ -2,21 +2,6 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-#- include: ald.yml tags=users
-#  when: inventory_hostname == common.master_node
-
-#- name: настройка доступа пользователей
-#  command: ald-admin user-ald-cap {{ ald.kvg_admin_name }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
-#  with_items: groups.nodes
-#  tags: users
-#  when: inventory_hostname == common.master_node
-
-#- name: настройка доступа пользователей
-#  command: ald-admin user-ald-cap {{ ald.operator_user }} -f --pass-file=/root/pass-file --add-hosts --host={{ item }}.{{ ald.domain }}
-#  with_items: groups.nodes
-#  tags: users
-#  when: inventory_hostname == common.master_node
-
 - include: key.yml tags=users
   when: inventory_hostname == common.master_node
 
@@ -36,7 +21,7 @@
   when: inventory_hostname in groups.admin_stations
 
 - name: установка прав на ключи
-  file: path={{ dirs.ald_env_users }}/{{ ald.kvg_admin_name }}/.ssh
-        owner={{ ald.kvg_admin_name }} group={{ ald.groups[0] }}
+  file: path={{ dirs.ald_env_users }}/{{ ald.users.admin.login }}/.ssh
+        owner={{ ald.users.admin.login }} group={{ ald.users.admin.group }}
         state=directory recurse=yes
   when: inventory_hostname in groups.admin_stations

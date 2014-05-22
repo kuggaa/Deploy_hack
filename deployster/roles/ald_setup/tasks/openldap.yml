@@ -50,9 +50,6 @@
 - name: установка пакета rsync
   apt: pkg=rsync state=latest
   tags: [ packages ]
-
-#- name: подготовка места
-#  local_action: command rm -rf /tmp/ldap
                      
 - name: копирование БД с сервера
   synchronize: mode=pull src=/var/lib/ldap dest=ldap recursive=yes archive=yes
@@ -73,8 +70,4 @@
 
 - name: запуск сервиса OpenLDAP
   service: name=slapd state=started
-
-# С Божьей помощью, да репликация заработает!
-#- name: запуск сервиса OpenLDAP
-#  service: name=slapd state=restarted
 

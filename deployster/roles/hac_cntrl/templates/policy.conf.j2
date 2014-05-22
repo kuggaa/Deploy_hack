@@ -3,9 +3,9 @@
 # Usage:
 # role1 = linux_group1, linux_group2, linux_group3
 
-all = ${ald.groups}
-admins = ${ald.groups[0]}
-operators = ${ald.groups[1]}
+all = {{ ald.users.admin.group }},{{ ald.users.user.group }}
+admins = {{ ald.users.admin.group }}
+operators = {{ ald.users.user.group }}
 
 [nodes_policy]
 can_see = all

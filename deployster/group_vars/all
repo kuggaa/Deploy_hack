@@ -58,17 +58,12 @@ ald:
     # Домен в записи Kerberos в верхнем регистре.
     krb_domain: "{{ hac_cntrl.domain.upper() }}"
 
-    # Список групп, первой в списке должна всегда быть группа для 
-    # пользователей с полномочиями администраторов КВГ
-    # второй всегда должна быть группа для пользователей с 
-    # полномочиями операторов КВГ
-    groups: [administrators, users]
-
-    # Имя администратора КВГ
-    kvg_admin_name: kvg_admin
-
-    # Пользователь для оператора
-    operator_user: kvg_user
+    # Группы и пользователи ALD
+    users:
+        # Имя администратора и имя группы администратора КВГ
+        admin: { group: 'administrators', login: 'kvg_admin' }
+        # Имя пользователя и имя группы пользователя КВГ
+        user: { group: 'users', login: 'kvg_user' }
 
     # Сервисы
     services_list: [krb5-kdc, krb5-admin-server, slapd, nslcd, nscd, aldd, aldcd]

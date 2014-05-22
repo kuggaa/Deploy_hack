@@ -2,12 +2,6 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-#- name: удаление БД LDAP
-#  command: rm -rf {{ item }}
-#  with_items:
-#    - /etc/ldap
-#    - /var/lib/ldap
-
 - name: создание каталога /etc/ald
   file: path=/etc/ald state=directory
 
@@ -35,42 +29,15 @@
     - slapd.d15.ldif
     - kpropd.acl
     - krb5.conf
-#    - ldap.conf
   tags: [ config ]
-
-#- name: замена стандартных шаблонов ALD
-#  template: src={{ item }} dest=/etc/ald/config-templates/{{ item }}
-#  with_items:
-#    - slapd.d15.ldif
-#    - kpropd.acl
-#    - krb5.conf
-#    - ldap.conf
-#  tags: [ config ]
 
 - name: размонтирование /var/lib/ldap
   command: umount /var/lib/ldap
   ignore_errors: true
 
-#- name: удаление старых каталогов KRB
-#  command: rm -rf  /var/lib/krb5kdc/*
-#  ignore_errors: yes
-
-#- name: удаление старой базы LDAP
-#  command: rm -rf /var/lib/ldap removes=/var/lib/ldap
-
-#- name: удаление старых каталогов ALD
-#  command: rm -rf  /ald_home removes=/ald_home
-
 - name: создание каталога для домашних каталогов пользователей
   file: path={{ dirs.ald_env_users }} state=directory
   when: inventory_hostname == common.master_node
-
-#- name: подмена каталога /ald_home
-#  command: mount --bind {{ dirs.ald_env_users }} /ald_home
-#  file: src={{ dirs.ald_env_users }} dest=/ald_home state=link
-#- name: подмена каталога /ald_home
-#  mount: name=/ald_home src={{ dirs.ald_env_users }}
-#         fstype=none opts=bind state=mounted
 
 - name: удаление старых keytab
   command: rm -rf {{ item }}
