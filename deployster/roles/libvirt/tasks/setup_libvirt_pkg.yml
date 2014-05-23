@@ -17,3 +17,4 @@
 
     - name: перезапуск службы libvirt-bin
       service: name=libvirt-bin  state=restarted  enabled=yes
+

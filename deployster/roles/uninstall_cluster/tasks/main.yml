@@ -144,6 +144,10 @@
       shell: rm -rf /var/log/glusterfs/*
       tags: [ gluster ]
 
+    - name: удаление заданий на синхронизацию времени из crontab
+      cron: name="sync time with admin's computer (control network)" state=absent
+    - cron: name="sync time with admin's computer (public network)" state=absent
+
     - name: перезагружаем узлы
       command: /sbin/reboot -t now
       tags: [reboot]

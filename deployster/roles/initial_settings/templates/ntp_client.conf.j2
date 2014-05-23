@@ -1,8 +1,0 @@
-server {{ network.control.address }}.{{ ntp.ip_server }} iburst
-server {{ network.public.address }}.{{ ntp.ip_server }}
-driftfile /etc/ntp/drift
-logfile /var/log/ntp.log
-restrict default ignore
-restrict {{ network.control.address }}.{{ ntp.ip_server }}
-restrict {{ network.public.address }}.{{ ntp.ip_server }}
-

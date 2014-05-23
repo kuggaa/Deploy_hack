@@ -2,11 +2,18 @@
 # © ОАО «Северное ПКБ», 2014
 #
 ---
-   - name: настройка локального сервера времени
-     template: src=ntp_client.conf.j2 dest=/etc/ntp.conf backup=yes
+   - name: остановка сервер времени
+     service: name=ntp state=stopped enabled=no
 
-   - name: удаление старого файла конфигурации
-     command: rm /var/lib/ntp/ntp.conf.dhcp removes=/var/lib/ntp/ntp.conf.dhcp
+   - name: установка в cron задачи по синхронизации времени по сети управления
+     cron:
+        name="sync time with admin's computer (control network)"
+        special_time=hourly
+        job="ntpdate {{ network.control.address }}.{{ ntp.ip_server }} 1>/dev/null && ntpdate {{ network.control.address }}.{{ ntp.ip_server }} 1>/dev/null"
 
-   - name: запуск сервера времени
-     service: name=ntp state=restarted enabled=yes
+   - name: установка в cron задачи по синхронизации времени по сети данных
+     cron:
+        name="sync time with admin's computer (public network)"
+        special_time=daily
+        job="ntpdate {{ network.public.address }}.{{ ntp.ip_server }} 1>/dev/null && ntpdate {{ network.public.address }}.{{ ntp.ip_server }} 1>/dev/null"
+

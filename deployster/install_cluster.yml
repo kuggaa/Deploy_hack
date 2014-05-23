@@ -90,3 +90,7 @@
    - name: удаление пакета haveged
      apt: pkg=haveged purge=yes state=absent
 
+   - name: удаление pass-file
+     file: path=/root/pass-file state=absent
+     tags: [ ald, pure_ald ]
+

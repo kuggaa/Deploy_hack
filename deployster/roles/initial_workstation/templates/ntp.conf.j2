@@ -3,11 +3,11 @@
 server 127.127.1.1
 fudge 127.127.1.1 stratum 12
 driftfile ...
-multicastdelay ...
 statsdir /var/log/ntpstats/
 logfile /var/log/ntp.log
-droadcastdelay 0.008
+broadcastdelay 0.008
 restrict default notrap noquery nomodify nopeer
 restrict {{ network.control.address }}.0 255.255.255.0 notrap nomodify
 restrict {{ network.public.address }}.0 255.255.255.0 notrap nomodify
 restrict 127.0.0.1
+
