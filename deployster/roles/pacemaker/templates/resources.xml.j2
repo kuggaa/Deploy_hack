@@ -6,7 +6,7 @@
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
           <op id="stonith_{{ host }}-op-monitor-20" interval="20" name="monitor" timeout="20"/>
-          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
+          <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
         <instance_attributes id="stonith_{{ host }}-instance_attributes">
@@ -30,7 +30,7 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_on-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
           <op id="fence_{{ host }}_{{ key }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
@@ -47,7 +47,7 @@
         </instance_attributes>
         <operations>
           <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="30" timeout="120"/>
+          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
           <op id="fence_{{ host }}_{{ key }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
