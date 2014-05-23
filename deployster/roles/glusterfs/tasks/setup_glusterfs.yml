@@ -9,11 +9,17 @@
       when: inventory_hostname == common.master_node
       any_errors_fatal: true
 
-    - name: перезапуск службы glusterfs-server
-      service: name=glusterfs-server state=restarted
+    - name: добавление узлов в glusterfs
+      command: gluster peer probe {{ item }}
+      with_items: groups.nodes
+      when: inventory_hostname != common.master_node
+      any_errors_fatal: true
 
-    - name: ожидание перезапуска glusterfs-server
-      pause: seconds=10
+#    - name: перезапуск службы glusterfs-server
+#      service: name=glusterfs-server state=restarted
+
+#    - name: ожидание перезапуска glusterfs-server
+#      pause: seconds=10
 
     - name: создание тома
       command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}

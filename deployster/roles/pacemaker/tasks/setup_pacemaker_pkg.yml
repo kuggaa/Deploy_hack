@@ -5,7 +5,7 @@
 # install pacemaker packages and restart service
     - name: установка pacemaker
       apt: pkg={{ item }} state=latest force=yes
-      with_items: [pacemaker, pacemaker-mgmt, pacemaker-mgmt-client, corosync, fence-agents, resource-agents]
+      with_items: [pacemaker, pacemaker-mgmt, pacemaker-mgmt-client, corosync, fence-agents, resource-agents, stonithd]
 
     - name: создание каталога
       command: mkdir -p /var/lib/heartbeat/cores/root creates=/var/lib/heartbeat/cores/root

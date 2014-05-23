@@ -19,6 +19,8 @@
         - pacemaker-mgmt-client
         - pacemaker 
         - corosync
+        - stonithd
+        - fence-agents
         - resource-agents
         - libstonithd1
         - libcrmcommon2

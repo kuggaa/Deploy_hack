@@ -20,19 +20,19 @@
                   state=present
       notify: restart libvirt-bin
 
-    - name: отмонтирование glusterfs
-      command: umount {{ gluster.mount_point }}
-      ignore_errors: true
+    #- name: отмонтирование glusterfs
+    #  command: umount {{ gluster.mount_point }}
+    #  ignore_errors: true
 
-    - name: перезапуск службы glusterfs-server
-      service: name=glusterfs-server state=restarted
+    #- name: перезапуск службы glusterfs-server
+    #  service: name=glusterfs-server state=restarted
 
-    - name: ожидание перезапуска демон glusterfs
-      pause: seconds=10
+    #- name: ожидание перезапуска демон glusterfs
+    #  pause: seconds=10
 
-    - name: монтирование glusterfs
-      command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
-      when: inventory_hostname == common.master_node
+    #- name: монтирование glusterfs
+    #  command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
+    #  when: inventory_hostname == common.master_node
 
     - name: создание каталога для ВМ (образы)
       file: path={{ dirs.vm_images }} state=directory mode=0777
@@ -44,7 +44,7 @@
       when: inventory_hostname == common.master_node
       ignore_errors: true
 
-    - name: отмонтирование glusterfs
-      command: umount {{ gluster.mount_point }}
-      when: inventory_hostname == common.master_node
+    #- name: отмонтирование glusterfs
+    #  command: umount {{ gluster.mount_point }}
+    #  when: inventory_hostname == common.master_node
 

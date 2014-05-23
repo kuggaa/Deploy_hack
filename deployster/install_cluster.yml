@@ -17,12 +17,40 @@
   roles:
    - { role: initial_settings, tags: [init] }
    - { role: glusterfs, tags: [gluster] }
-   - { role: libvirt, tags: [libvirt] }
-   - { role: hac_cntrl, tags: [hac_cntrl] }
    - { role: xrdp, tags: [rdp] }
 
 - hosts: nodes
   user: root
+  gather_facts: false
+  vars_files: ['roles/initial_settings/vars/main.yml']
+  pre_tasks:
+    - name: отмонтирование glusterfs
+      command: umount {{ gluster.mount_point }}
+      ignore_errors: true
+
+    - name: перезапуск службы glusterfs-server
+      service: name=glusterfs-server state=restarted
+
+    - name: ожидание перезапуска демон glusterfs
+      pause: seconds=10
+
+    - name: монтирование glusterfs
+      command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
+      when: inventory_hostname == common.master_node
+
+  roles:
+   - { role: libvirt, tags: [libvirt] }
+   - { role: hac_cntrl, tags: [hac_cntrl] }
+
+  post_tasks:
+    - name: отмонтирование glusterfs
+      command: umount {{ gluster.mount_point }}
+      when: inventory_hostname == common.master_node
+
+
+- hosts: nodes
+  user: root
+  gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml']
   vars_prompt:
     - name: "ald_password"
@@ -80,6 +108,7 @@
 
 - hosts: nodes
   user: root
+  gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml', 'roles/glusterfs/vars/main.yml']
 
   roles:
