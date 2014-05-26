@@ -63,6 +63,19 @@
           </operations>
         </primitive>
       </clone>
+      <clone id="gluster_volume">
+        <meta_attributes id="gluster_volume-meta_attributes">
+          <nvpair id="gluster_volume-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="ocf" id="volume_demon" provider="heartbeat" type="volume">
+          <operations id="volume_demon-operations">
+            <op id="volume_demon-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+          </operations>
+          <instance_attributes id="volume_demon-instance_attributes">
+            <nvpair id="volume_demon-instance_attributes-volname" name="volname" value="{{ gluster.volume }}"/>
+          </instance_attributes>
+        </primitive>
+      </clone>
       <clone id="mount_gluster">
         <meta_attributes id="mount_gluster-meta_attributes">
           <nvpair id="mount_gluster-meta_attributes-target-role" name="target-role" value="Started"/>
