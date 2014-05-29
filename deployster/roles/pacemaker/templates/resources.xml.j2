@@ -161,9 +161,6 @@
       </clone>
       <group id="ald_server">
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
-          <meta_attributes id="hac_cntrl_ip-meta_attributes">
-            <nvpair id="hac_cntrl_ip-meta_attributes-resource-stickiness" name="resource-stickiness" value="1000"/>
-          </meta_attributes>
           <operations id="hac_cntrl_ip-operations">
             <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
             <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="30"/>
@@ -176,6 +173,7 @@
         </primitive>
         <meta_attributes id="ald_server-meta_attributes">
           <nvpair id="ald_server-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="ald_server-meta_attributes-resource-stickiness" name="resource-stickiness" value="10000"/>
         </meta_attributes>
         <primitive class="lsb" id="krb5-admin-server_rsc" type="krb5-admin-server">
           <operations id="krb5-admin-server_rsc-operations">

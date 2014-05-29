@@ -19,6 +19,9 @@
     - name: установка правил валидации конфигурации кластера
       command: cibadmin -U -X '<cib validate-with="pacemaker-1.1"/>'
 
+    - name: установка значения по-умолчанию свойства resource-stickiness для ресурсов
+      command: crm_attribute --type rsc_defaults --attr-name resource-stickiness --attr-value 500
+
     - name: копирование файла c командами сibadmin
       copy: src=pacemaker.sh dest=/tmp/pacemaker.sh mode=0775
 
