@@ -7,7 +7,7 @@
                removes={{ ftp.path_to_ftp_root }}/{{ ftp.astra_rep_name }}
       when: ftp.astra_rep_name is defined and ftp.src_with_astra_rep is defined
       tags: astra_rep
-      
+
     - name: создание каталога для репозитория Astra Linux
       command: mkdir {{ ftp.path_to_ftp_root }}/{{ ftp.astra_rep_name }}
       when: ftp.astra_rep_name is defined and ftp.src_with_astra_rep is defined

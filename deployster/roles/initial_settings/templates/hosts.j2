@@ -7,7 +7,7 @@
 {% endif %}
 
 {% if not network.public.dhcp %}
-{{ network.public.address }}.{{ nodes_ip[inventory_hostname] }} {{ ald.master_node }}.{{ ald.domain }} {{ ald.master_node }}
+{{ network.public.address }}.{{ nodes_ip[inventory_hostname] }} {{ hac_cntrl.name }}.{{ ald.domain }} {{ hac_cntrl.name }}
 {% for key, value in nodes_ip.iteritems() %}
 {{ network.public.address }}.{{ value }} {{ key }}
 {% endfor %}
