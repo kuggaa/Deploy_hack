@@ -98,9 +98,11 @@
    - name: отмонтирование временно смонтированного ldap
      command: umount /var/lib/ldap
      ignore_errors: true
+     tags: [ ald ]
 
    - name: отмонтирование glusterfs
      command: umount {{ gluster.mount_point }}
+     ignore_errors: true
      tags: [ ald ]
 
    - name: восстановление /etc/hosts
