@@ -113,7 +113,6 @@
   user: root
   gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml', 'roles/glusterfs/vars/main.yml']
-
   roles:
    - { role: pacemaker, tags: [pacemaker] }
    - { role: users, tags: [users] }
