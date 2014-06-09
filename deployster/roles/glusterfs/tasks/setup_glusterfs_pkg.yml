@@ -29,11 +29,6 @@
     - name: создание папки под volume
       file: path={{ gluster.placedir }} state=directory
 
-    - name: удаление аттрибутов
-      command: setfattr -x trusted.glusterfs.volume-id {{ gluster.placedir }}
-      ignore_errors: true
-
     - name: создание точки монтирования
       file: path={{ gluster.mount_point }} state=directory
       ignore_errors: true
-
