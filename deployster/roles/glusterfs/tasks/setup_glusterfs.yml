@@ -15,12 +15,6 @@
       when: inventory_hostname != common.master_node
       any_errors_fatal: true
 
-#    - name: перезапуск службы glusterfs-server
-#      service: name=glusterfs-server state=restarted
-
-#    - name: ожидание перезапуска glusterfs-server
-#      pause: seconds=10
-
     - name: создание тома
       command: gluster volume create {{ gluster.volume }} replica {{ groups['nodes']|length() }}
                transport tcp {{ groups['nodes']|join(":${gluster.placedir} ") }}:{{ gluster.placedir }}

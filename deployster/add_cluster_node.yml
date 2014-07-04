@@ -16,24 +16,29 @@
   vars_files: ['roles/glusterfs/vars/main.yml']
   roles:
    - { role: initial_settings, tags: [init] }
+   - { role: xrdp, tags: [rdp] }
   post_tasks:
    - include: roles/glusterfs/tasks/setup_glusterfs_pkg.yml
      tags: gluster
 
 - hosts: nodes
   user: root
+  gather_facts: false
   roles:
    - {role: add_node_glusterfs, when: inventory_hostname == common.master_node, tags: [gluster] }
 
 - hosts: new_nodes
   user: root
+  gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
    - { role: libvirt, tags: [libvirt] }
    - { role: hac_cntrl, tags: [hac_cntrl] }
+   - { role: firefox_vnc, tags: [vnc] }
 
 - hosts: new_nodes
   user: root
+  gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml']
   vars_prompt:
     - name: "ald_password"
@@ -80,9 +85,11 @@
    - name: отмонтирование временно смонтированного ldap
      command: umount /var/lib/ldap
      ignore_errors: true
+     tags: [ ald ]
 
    - name: отмонтирование glusterfs
      command: umount {{ gluster.mount_point }}
+     ignore_errors: true
      tags: [ ald ]
 
    - name: восстановление /etc/hosts
@@ -91,18 +98,23 @@
 
 - hosts: new_nodes
   user: root
+  gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
    - { role: pacemaker, tags: [pacemaker] }
 
 - hosts: nodes
   user: root
+  gather_facts: false
   vars_files: ['roles/initial_settings/vars/main.yml']
   roles:
    - { role: add_node_pacemaker, tags: [pacemaker], when: inventory_hostname == common.master_node }
   post_tasks:
    - include: roles/users/tasks/sudo.yml tags=users
+
+   - name: удаление пакета haveged
+     apt: pkg=haveged purge=yes state=absent
+
    - name: Операция по добавлению узла закончена, переместите его в файле stage из cекции [new_nodes] в секцию [nodes] и запустите 'ansible-playbook install_cluster --tags=ssh'
      pause: prompt="Don't forget update stage file and start ansible-playbook install_cluster --tags=ssh. Press any key for finish..."
      when: inventory_hostname == common.master_node
-

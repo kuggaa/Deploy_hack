@@ -27,9 +27,9 @@
         - pdu.keys()
         - ['on', 'off']
      ignore_errors: yes
-     
+
    - name: ожидание остановки fenceapc ресурсов
-     pause: seconds=60  
+     pause: seconds=60
 
    - name: удаление fenceapc ресурсов
      command: 'crm -F configure delete fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
@@ -40,7 +40,7 @@
      ignore_errors: yes
 
    - name: удаление fence_topology
-     shell: cibadmin --delete --xml-text '<fencing-level target="{{ item }}"/>' && cibadmin --delete --xml-text '<fencing-level target="{{ item }}"/>' 
+     shell: cibadmin --delete --xml-text '<fencing-level target="{{ item }}"/>' && cibadmin --delete --xml-text '<fencing-level target="{{ item }}"/>'
      with_items: groups.remove_nodes
      ignore_errors: yes
 
