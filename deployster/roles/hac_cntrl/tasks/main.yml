@@ -26,27 +26,16 @@
     - name: остановка и отключение автозапуска служб apache2
       service: name=apache2 state=stopped enabled=no
 
-  #  - name: отмонтирование glusterfs
-  #    command: umount {{ gluster.mount_point }}
-  #    ignore_errors: true
-
-  #  - name: перезапуск службы glusterfs-server
-  #    service: name=glusterfs-server state=restarted
-
-  # - name: ожидание перезапуска демон glusterfs
-  #   pause: seconds=10
-
-  #  - name: монтирование glusterfs
-  #    command: mount.glusterfs {{ common.master_node }}:/{{ gluster.volume }} {{ gluster.mount_point }}
-  #    when: inventory_hostname == common.master_node
-
     - name: создание каталога для файлового кэша ПК управления
       file: path={{ gluster.mount_point }}/hac-control-cache state=directory mode=0777
       when: inventory_hostname == common.master_node
 
-   # - name: отмонтирование glusterfs
-   #   command: umount {{ gluster.mount_point }}
-   #   when: inventory_hostname == common.master_node
+    - name: создание cron файла по-умолчанию для бэкапа ALD
+      template: src=ald_backup.j2 dest={{ dirs.path_to_cron_file }}
+                mode=0644 owner=root group=root
+      when: inventory_hostname == common.master_node
 
-
+    - name: создание ccылок на cron файла из /etc/cron.d
+      file: src={{ dirs.path_to_cron_file }} dest=/etc/cron.d/ald_backup state=link
+            mode=0644 owner=root group=root
 

@@ -9,11 +9,11 @@
      cron:
         name="sync time with admin's computer (control network)"
         special_time=hourly
-        job="ntpdate {{ network.control.address }}.{{ ntp.ip_server }} 1>/dev/null && ntpdate {{ network.control.address }}.{{ ntp.ip_server }} 1>/dev/null"
+        job="/usr/sbin/ntpdate {{ network.control.address }}.{{ ntp.ip_server }} 1>/dev/null && /usr/sbin/ntpdate {{ network.control.address }}.{{ ntp.ip_server }} 1>/dev/null"
 
    - name: установка в cron задачи по синхронизации времени по сети данных
      cron:
         name="sync time with admin's computer (public network)"
         special_time=daily
-        job="ntpdate {{ network.public.address }}.{{ ntp.ip_server }} 1>/dev/null && ntpdate {{ network.public.address }}.{{ ntp.ip_server }} 1>/dev/null"
+        job="/usr/sbin/ntpdate {{ network.public.address }}.{{ ntp.ip_server }} 1>/dev/null && /usr/sbin/ntpdate {{ network.public.address }}.{{ ntp.ip_server }} 1>/dev/null"
 

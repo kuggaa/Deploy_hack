@@ -1,0 +1,5 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+
+00 21 * * FRI root /usr/lib/hac-control/ald_backup.sh root {{ network.public.address }}.{{ hostvars[groups.admin_stations[0]]['ip'] }} {{ dirs.backup_default_path }} # ALD backup
+
