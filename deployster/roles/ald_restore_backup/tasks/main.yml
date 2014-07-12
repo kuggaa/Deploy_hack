@@ -1,0 +1,42 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: остановка ресурса КВГ управляющего серверной частью ALD
+      command: crm -F resource stop {{ resource_id.ald_server }}
+      when: inventory_hostname == common.master_node
+
+    - name: остановка ресурса КВГ управляющего клиентской частью ALD
+      command: crm -F resource stop {{ resource_id.ald_client }}
+      when: inventory_hostname == common.master_node
+
+    - name: ожидание остановки ресурсов...
+      pause: seconds=20
+
+    - name: создание каталога
+      file: path=/root/.ald/ state=directory
+
+    - name: копирование файла с резервными данными(ключи) на узлы КВГ
+      copy: src={{ path_to_backup }}/{{ key_file }}
+            dest=/root/.ald/ald-keys.tar.gz
+            owner=root group=root mode=0644
+
+    - name: копирование файла с резервными данными(БД) на узлы КВГ
+      copy: src={{ path_to_backup }}/{{ db_file}}
+            dest=/root/.ald/ald-base.tar.gz
+            owner=root group=root mode=0644
+
+    - name: восстановление ALD
+      command: bash -c 'ald-init restore-backup -f --no-stop'
+
+    - name: запуск ресурса КВГ управляющего клиентской частью ALD
+      command: crm -F resource start {{ resource_id.ald_client }}
+      when: inventory_hostname == common.master_node
+
+    - name: запуск ресурса КВГ управляющего серверной частью ALD
+      command: crm -F resource start {{ resource_id.ald_server }}
+      when: inventory_hostname == common.master_node
+      
+    - name: ожидание восстановления ALD...
+      pause: seconds=60   
+

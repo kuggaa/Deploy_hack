@@ -124,9 +124,9 @@
           <op id="dummy_template-op-monitor-10" interval="10" name="monitor" timeout="20"/>
         </operations>
       </template>
-      <clone id="ald_clientside">
-        <meta_attributes id="ald_clientside-meta_attributes">
-          <nvpair id="ald_clientside-meta_attributes-target-role" name="target-role" value="Started"/>
+      <clone id="{{ resource_id.ald_client }}">
+        <meta_attributes id="{{ resource_id.ald_client }}-meta_attributes">
+          <nvpair id="{{ resource_id.ald_client }}-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
         <group id="ald_client">
           <primitive class="lsb" id="krb5-kdc_rsc" type="krb5-kdc">
@@ -161,7 +161,7 @@
           </primitive>
         </group>
       </clone>
-      <group id="ald_server">
+      <group id="{{ resource_id.ald_server }}">
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
           <operations id="hac_cntrl_ip-operations">
             <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
@@ -173,9 +173,9 @@
             <nvpair id="hac_cntrl_ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="{{hac_cntrl.cidr_netmask}}"/>
         </instance_attributes>
         </primitive>
-        <meta_attributes id="ald_server-meta_attributes">
-          <nvpair id="ald_server-meta_attributes-target-role" name="target-role" value="Started"/>
-          <nvpair id="ald_server-meta_attributes-resource-stickiness" name="resource-stickiness" value="10000"/>
+        <meta_attributes id="{{ resource_id.ald_server }}-meta_attributes">
+          <nvpair id="{{ resource_id.ald_server }}-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="{{ resource_id.ald_server }}-meta_attributes-resource-stickiness" name="resource-stickiness" value="10000"/>
         </meta_attributes>
         <primitive class="lsb" id="krb5-admin-server_rsc" type="krb5-admin-server">
           <operations id="krb5-admin-server_rsc-operations">

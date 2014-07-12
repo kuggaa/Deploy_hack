@@ -5,3 +5,8 @@ corosync:
   mcastaddr: 239.255.1.1
   # 4000
   mcastport: 4001
+
+resource_id:
+   ald_client: 'ald_clientside'
+   ald_server: 'ald_server'
+

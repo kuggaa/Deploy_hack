@@ -3,6 +3,25 @@
 #
 ---
 # script for make a VM in ha cluster
+  - name: проверка, что с ВМ указанным именем не запущена в КВГ
+    command: crm resource status {{ item.name }}
+    register: cmd_result
+    failed_when: "'is running on' in cmd_result.stdout"
+    any_errors_fatal: true
+    with_items: vms
+
+  - name: удаление ресурса из КВГ
+    command: crm -F configure delete {{ item.name }}
+    with_items: vms
+
+  - name: удаление файлов с образом ВМ из КВГ (ПК РФС)
+    file: path={{ dirs.vm_images }}/{{ item.name }}.img state=absent
+    with_items: vms
+
+  - name: удаление конфигурационных файлов ВМ из КВГ (ПК РФС)
+    file: path={{ dirs.vm_images }}/qemu/{{ item.name }}.xml state=absent
+    with_items: vms
+
   - name: копирование конфигурации ВМ
     copy: src={{ item.path }}{{ item.config }} dest={{ dirs.vm_images }}/qemu/{{ item.name }}.xml mode=0777
     with_items: vms

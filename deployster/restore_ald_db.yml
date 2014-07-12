@@ -1,0 +1,21 @@
+#
+# © ОАО «Северное ПКБ», 2013-2014
+#
+---
+# for deploy cluster nodes
+- hosts: nodes
+  user: root
+  vars_files: ['roles/pacemaker/vars/main.yml']
+  # полный путь до файлов cодержащих данные для восстановления ALD
+  # пример:
+  #  path_to_backup: '/root/ald_backup'
+  #  key_file: ald_keys.tar.gz
+  #  db_file: ald_base.tar.gz
+  vars:
+    path_to_backup: '/home/artem/temp'
+    key_file: 2014-07-12--16-44--ald_keys.tar.gz
+    db_file: 2014-07-12--16-44--ald_base.tar.gz
+  
+  roles:
+   - ald_restore_backup
+
