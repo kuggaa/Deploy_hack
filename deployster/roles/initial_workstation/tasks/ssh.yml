@@ -1,0 +1,19 @@
+#
+# © ОАО «Северное ПКБ», 2014
+#
+---
+    - name: создание каталога ssh ключей root
+      file: path=/root/.ssh state=directory mode=0755
+      
+    - name: копирование открытой части ключей узлов кластера на ЭВМ администратора
+      copy: src=roles/initial_settings/files/id_rsa_{{ item }}.pub 
+            dest=/root owner=root group=root mode=0644
+      with_items: groups.nodes
+
+    - name: добавление ключа в список авторизованных
+      shell: cat /root/id_rsa_{{ item }}.pub >> /root/.ssh/authorized_keys
+      with_items: groups.nodes
+
+    - name: очистка временных файлов
+      command: rm /root/id_rsa_{{ item }}.pub
+      with_items: groups.nodes

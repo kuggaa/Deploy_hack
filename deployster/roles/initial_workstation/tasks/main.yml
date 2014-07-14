@@ -3,6 +3,7 @@
 #
 ---
     - include: network.yml
+    - include: ssh.yml
     - include: glusterfs.yml
     - include: ntp.yml
 
