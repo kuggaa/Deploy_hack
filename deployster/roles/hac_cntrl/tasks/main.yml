@@ -20,8 +20,8 @@
       template: src={{ item }}.j2 dest=/etc/hac-control/{{ item }}
       with_items: ['hac.conf', 'infrastructure.conf', 'policy.conf']
       
-    - name: настройка конфигурационных файлов ПК Управления
-      template: src={{ item }}.j2 dest=/etc/hac-control/commands/{{ item }} mode=0755
+    - name: настройка файлов с шаблонами команд для ПК Управления
+      template: src={{ item }}.j2 dest=/etc/hac-control/commands/{{ item }} mode=0644
       with_items: ['virt_install_cmd']
 
     - name: настройка конфигурационных файлов apache2 для ПК Управления
