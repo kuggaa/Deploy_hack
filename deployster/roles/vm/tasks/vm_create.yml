@@ -12,6 +12,7 @@
 
   - name: удаление ресурса из КВГ
     command: crm -F configure delete {{ item.name }}
+    ignore_errors: true
     with_items: vms
 
   - name: удаление файлов с образом ВМ из КВГ (ПК РФС)
