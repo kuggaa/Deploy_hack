@@ -9,6 +9,7 @@
      fail: msg="Not defined nodes in [remove_nodes] group in stage file!"
      when: groups['remove_nodes']|count == 0 and inventory_hostname == common.master_node
      any_errors_fatal: true
+     tags: [remove_from_active_nodes]
 
 - hosts: remove_nodes
   user: root
