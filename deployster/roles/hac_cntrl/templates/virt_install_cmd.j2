@@ -5,6 +5,12 @@ sudo virt-install
 --vcpus {cpus_qty}
 --cdrom={{ dirs.vm_images }}/vm.iso
 --graphics vnc,listen=0.0.0.0
+--controller usb,model=ich9-ehci1,address=0:0:4.0,index=0
+--controller usb,model=ich9-uhci1,address=0:0:7.0,index=0,master=0
+--controller usb,model=ich9-uhci2,address=0:0:8.0,index=0,master=2
+--controller usb,model=ich9-uhci3,address=0:0:9.0,index=0,master=4
+--redirdev usb,type=spicevmc
+--redirdev usb,type=spicevmc
 --accelerate
 --network=bridge:{{ network.public.bridge }},model=rtl8139
 --connect=qemu:///system
