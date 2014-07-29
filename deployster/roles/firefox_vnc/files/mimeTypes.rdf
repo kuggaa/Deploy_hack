@@ -27,6 +27,9 @@
   <RDF:Description RDF:about="urn:scheme:externalApplication:rdp"
                    NC:prettyName="xfreerdp-firefox"
                    NC:path="/usr/bin/xfreerdp-firefox" />
+  <RDF:Description RDF:about="urn:scheme:externalApplication:spice"
+                   NC:prettyName="spicy-firefox"
+                   NC:path="/usr/bin/spicy-firefox" />
   <RDF:Description RDF:about="urn:scheme:webcal"
                    NC:value="webcal">
     <NC:handlerProp RDF:resource="urn:scheme:handler:webcal"/>
@@ -46,6 +49,10 @@
                    NC:alwaysAsk="false">
     <NC:externalApplication RDF:resource="urn:scheme:externalApplication:rdp"/>
   </RDF:Description>
+    <RDF:Description RDF:about="urn:scheme:handler:spice"
+                   NC:alwaysAsk="false">
+    <NC:externalApplication RDF:resource="urn:scheme:externalApplication:spice"/>
+  </RDF:Description>
   <RDF:Description RDF:about="urn:scheme:vnc"
                    NC:value="vnc">
     <NC:handlerProp RDF:resource="urn:scheme:handler:vnc"/>
@@ -54,6 +61,10 @@
                    NC:value="rdp">
     <NC:handlerProp RDF:resource="urn:scheme:handler:rdp"/>
   </RDF:Description>
+  <RDF:Description RDF:about="urn:scheme:spice"
+                   NC:value="spice">
+    <NC:handlerProp RDF:resource="urn:scheme:handler:spice"/>
+  </RDF:Description>
   <RDF:Seq RDF:about="urn:schemes:root">
     <RDF:li RDF:resource="urn:scheme:webcal"/>
     <RDF:li RDF:resource="urn:scheme:ircs"/>
@@ -61,6 +72,7 @@
     <RDF:li RDF:resource="urn:scheme:irc"/>
     <RDF:li RDF:resource="urn:scheme:vnc"/>
     <RDF:li RDF:resource="urn:scheme:rdp"/>
+    <RDF:li RDF:resource="urn:scheme:spice"/>
   </RDF:Seq>
   <RDF:Description RDF:about="urn:handler:web:http://compose.mail.yahoo.com/?To=%s"
                    NC:prettyName="Yahoo! Mail"

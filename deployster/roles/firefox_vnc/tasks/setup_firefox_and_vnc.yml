@@ -16,6 +16,9 @@
     - name: создание прокси xfreerdp для открытия rdp-ссылок из firefox
       copy: src=xfreerdp-firefox dest=/usr/bin owner=root group=root mode=0777
 
+    - name: создание прокси spicy-gtk-client для открытия vnc-ссылок из firefox
+      copy: src=spicy-firefox dest=/usr/bin owner=root group=root mode=0777
+
     - name: создание каталогов для профилей firefox
       file: path={{ dirs.ald_env_users }}/{{ ald.users.admin.login }}/.mozilla/firefox/{{ ald.users.admin.login }}.default
             state=directory owner={{ ald.users.admin.login }} group={{ ald.users.admin.group }}

@@ -1,0 +1,3 @@
+#!/bin/bash
+spicy -h `echo "$@" | sed s"/.*\/\///" | sed s"/:/ -p /"`
+
