@@ -19,6 +19,11 @@
     - name: создание прокси spicy-gtk-client для открытия vnc-ссылок из firefox
       copy: src=spicy-firefox dest=/usr/bin owner=root group=root mode=0777
 
+    - name: настройка профиля policykit для spice
+      copy: src=org.spice-space.lowlevelusbaccess.policy
+            dest=/usr/share/polkit-1/actions/
+            owner=root group=root
+
     - name: создание каталогов для профилей firefox
       file: path={{ dirs.ald_env_users }}/{{ ald.users.admin.login }}/.mozilla/firefox/{{ ald.users.admin.login }}.default
             state=directory owner={{ ald.users.admin.login }} group={{ ald.users.admin.group }}
@@ -36,4 +41,5 @@
             dest={{ dirs.ald_env_users }}/{{ ald.users.admin.login }}/.mozilla/firefox/{{ ald.users.admin.login }}.default/
             owner={{ ald.users.admin.login }} group={{ ald.users.admin.group }}
       when: inventory_hostname in groups.admin_stations
+
 
