@@ -6,4 +6,4 @@ net:
     interfaces: [eth0]
 
     #!ТОЛЬКО для целей тестирования установлено в true, должно быть false!
-    dhcp: true
+    dhcp: false
