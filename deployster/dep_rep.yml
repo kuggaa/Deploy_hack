@@ -12,11 +12,14 @@
         # корневой каталог репозитория с пакетами Astra Linux SE 1.3 и ПК КВГ
         path_to_ftp_root: '/home/ftp'
         # каталог с пакетами Astra Linux SE 1.3
-        astra_rep_name: 'astra_repository'
+        astra_rep_name: 'astra'
+        dev_astra_rep_name: 'astra_dev'
         # каталог с пакетами ПК КВГ
-        hac_rep_name: 'hac_repository'
+        hac_rep_name: 'hac'
         # пусть к источнику пакетов Astra Linux SE 1.3 (обычно cd c Astra Linux)
         src_with_astra_rep: '/media/cdrom'
+        # пусть к источнику пакетов для разработчика Astra Linux SE 1.3 devel
+        src_with_dev_astra_rep: '/media/cdrom'
         # пусть к источнику пакетов ПК КВГ
         # полный путь до каталога содержащего пакеты ПК КВГ
         # указанный каталог должен содержать след. папки -> conf  db  dists  pool
