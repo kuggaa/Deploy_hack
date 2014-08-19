@@ -7,6 +7,12 @@
   user: root
   vars_files: ['roles/initial_settings/vars/main.yml']
   pre_tasks:
+    - name:  проверям что в списке серверов указано больше одного сервера
+      shell: echo
+      failed_when: groups['nodes']|count == 1
+      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
+
     - name: проверям настроен ли кластер
       shell: crm resource status | grep lsb:slapd
       register: cmd_result

@@ -1,5 +1,5 @@
 deb {{ repository.os}} stable main contrib non-free
 deb {{ repository.hac }} testing main contrib non-free
-{% if repository.dev %}
+{% if repository.dev is defined and repository.dev %}
 deb {{ repository.dev }} stable main non-free
 {% endif %}
