@@ -10,6 +10,7 @@
       <rsc_location id="fence_loc_on_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_on" score="-INFINITY"/>
 {% endfor %}{% endfor %}
       <rsc_order first="glusterd" id="order_for_gluster" then="gluster_volume"/>
+      <rsc_order first="gluster_volume" id="order_for_gluster_mount" then="mount_gluster"/>
       <rsc_order first="mount_gluster" id="order_for_vm" then="vm_template"/>
       <rsc_order first="mount_gluster" id="order_for_ald" then="ald_server"/>
 </constraints>
