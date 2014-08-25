@@ -7,4 +7,4 @@
   - include: configure_corosync.yml
   - include: configure_pacemaker.yml
     when: inventory_hostname == common.master_node
-
+  - include: configure_acpi_option.yml
