@@ -26,3 +26,6 @@ network:
 hugepage:
    count: 10000
 
+memory:
+   swappiness: 0
+

@@ -14,4 +14,3 @@
 - name: обновление списка пакетов
   apt: update_cache=yes
 
-
