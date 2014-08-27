@@ -3,7 +3,7 @@
 #
 ---
     - name: добавляем отключение ВМ если нажата кнопка power off на узле(сервере)
-    - lineinfile: dest=/etc/acpi/powerbtn-acpi-support.sh
+      lineinfile: dest=/etc/acpi/powerbtn-acpi-support.sh
                   regexp=".\ virsh list*" insertbefore="Power button pressed"
                   line='        virsh list  --name | cut -d " " -f 4 | xargs -n 1 crm resource stop && sleep 40'
                   backup=yes
