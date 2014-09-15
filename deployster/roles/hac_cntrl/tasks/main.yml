@@ -39,7 +39,8 @@
                 mode=0644 owner=root group=root
       when: inventory_hostname == common.master_node
 
-    - name: создание ccылок на cron файла из /etc/cron.d
-      file: src={{ dirs.path_to_cron_file }} dest=/etc/cron.d/ald_backup state=link
-            mode=0644 owner=root group=root
+# Ссылка создается как ресурс кластера для корректного выключения КВГ
+#    - name: создание ccылок на cron файла из /etc/cron.d
+#      file: src={{ dirs.path_to_cron_file }} dest=/etc/cron.d/ald_backup state=link
+#            mode=0644 owner=root group=root
 

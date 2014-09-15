@@ -221,4 +221,18 @@
           </operations>
         </primitive>
       </clone>
+      <clone id="ald_backup_timetable">
+        <meta_attributes id="ald_backup_timetable-meta_attributes">
+          <nvpair id="ald_backup_timetable-meta_attributes-target-role" name="target-role" value="Started"/>
+        </meta_attributes>
+        <primitive class="ocf" id="ald_backup_cron_task" provider="heartbeat" type="symlink">
+          <operations id="ald_backup_cron_task-operations">
+            <op id="ald_backup_cron_task-op-monitor-60" interval="60" name="monitor" timeout="15"/>
+          </operations>
+          <instance_attributes id="ald_backup_cron_task-instance_attributes">
+            <nvpair id="ald_backup_cron_task-instance_attributes-link" name="link" value="/etc/cron.d/ald_backup"/>
+            <nvpair id="ald_backup_cron_task-instance_attributes-target" name="target" value="{{ dirs.path_to_cron_file }}"/>
+          </instance_attributes>
+        </primitive>
+      </clone>
 </resources>

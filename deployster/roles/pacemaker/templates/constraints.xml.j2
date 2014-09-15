@@ -12,5 +12,6 @@
       <rsc_order first="glusterd" id="order_for_gluster" then="gluster_volume"/>
       <rsc_order first="mount_gluster" id="order_for_vm" then="vm_template"/>
       <rsc_order first="mount_gluster" id="order_for_ald" then="ald_server"/>
+      <rsc_order first="mount_gluster" id="order_for_ald_backup" then="ald_backup_timetable"/>
 </constraints>
 
