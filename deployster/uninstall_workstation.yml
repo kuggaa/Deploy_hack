@@ -32,7 +32,7 @@
     - name: admin_stations будут перезагружены через 60 секунд...
       pause: prompt="press any key for continue or ctrl+c for cancel"  seconds=60
 
-    - name: перезагружаем узлы
+    - name: перезагружаем ЭВМ администратора
       command: /sbin/reboot -t now
       tags: [reboot]
 
