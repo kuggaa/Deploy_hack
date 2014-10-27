@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # переменные
 NODES=(hacnode1 hacnode2 hacnode3)
