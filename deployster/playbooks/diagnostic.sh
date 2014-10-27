@@ -12,9 +12,9 @@ USER=root
 function check_time 
 {
     local list=("${!1}")
-    for item in ${list[@]}
+    for node in ${list[@]}
     do
-        ssh $USER@$item date
+        ssh $USER@$node date
     done
 }
 #------------------------------------------------------------
@@ -24,11 +24,9 @@ function sync_time
 {
     local list=("${!1}")
     local server=${2}
-    echo $server
-    for item in ${list[@]}
+    for node in ${list[@]}
     do
-        echo "test"
-        ssh $USER@$item ntpdate $server 
+        ssh $USER@$node ntpdate $server
     done
 }
 #------------------------------------------------------------
@@ -36,23 +34,53 @@ function sync_time
 #------------------------------------------------------------
 function cleanup_logs
 {
-    local list=("${!1}")
-    local server=${2}
-    echo $server
-    for item in ${list[@]}
+    local list_of_services=(corosync glusterfs-common apache2 hac-control libvirtd libvirt.qemu)
+    local list_of_nodes=("${!1}")
+    for service in ${list_of_services[@]}
     do
-        echo "test"
-        ssh $USER@$item ntpdate $server 
+        for node in ${list_of_nodes[@]}
+        do
+            ssh $USER@$node logrotate -f /etc/logrotate.d/$service
+        done
     done
 }
 #------------------------------------------------------------
 # получить логи
 #------------------------------------------------------------
-
+function get_logs
+{
+    local list_of_services=(corosync glusterfs-common apache2 hac-control libvirtd libvirt.qemu)
+    local list_of_nodes=("${!1}")
+    for service in ${list_of_services[@]}
+    do
+        for node in ${list_of_nodes[@]}
+        do
+            ssh $USER@$node logrotate -f logrotate -f /etc/logrotate.d/$service
+        done
+    done
+}
 #------------------------------------------------------------
 # получить cib
 #------------------------------------------------------------
+function get_cib
+{
+    local section_name=${2}
+    local list=("${!1}")
 
+    if [[ ! ($section_name == "all" || $section_name == "configuration" || $section_name == "status") ]]; then
+        echo " У данной команды допустимы следующие опции: all, configuration или status"
+        exit 1
+    fi
+
+    for node in ${list[@]}
+    do
+        ssh $USER@$node cibadmin --query --scope $section_name
+        if [ $? == 0 ] ; then
+            break
+        fi
+    done
+
+}
 #------------------------------------------------------------
 # получить cведения о использовании скрипта
 #------------------------------------------------------------
@@ -69,7 +97,8 @@ cat << EOF
    -t      Запросить время с узлов
    -s      Синхронизировать время на узлах (необходимо указывать hostname или IP-адрес)
    -l      Собрать логи с узлов
-   -r      Получить CIB
+   -c      Очистить логи (используется принудительный вызов logrotate)
+   -r      Получить CIB (необходимо указывать опцию: all, configuration, status)
 EOF
 }
 
@@ -82,12 +111,11 @@ if [ -z "$NODES" ]; then
     exit 1
 fi    
 
-while getopts “htlr:s:” OPTION
+while getopts “htl:сr:s:” OPTION
 do
      case $OPTION in
          h)
              usage
-             exit 0
              ;;
          t)
              check_time NODES[@]
@@ -100,9 +128,11 @@ do
              echo "l"
              ;;
          r)
-             echo "r"
-             OUTPUT_PATH=${OPTARG}
-             echo $OUTPUT_PATH
+             section=${OPTARG}
+             get_cib NODES[@] $section
+             ;;
+         с)
+	     cleanup_logs NODES[@]
              ;;
          ?)
              usage
@@ -110,7 +140,7 @@ do
              ;;
      esac
 done
-
+exit 0
 
 ################################################################################
 ################################################################################
