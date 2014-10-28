@@ -98,13 +98,13 @@ function get_logs
 
         for log in ${list_of_logs[@]}
         do
-            ssh $USER@$node test -f /var/log/${log} && scp $USER@$node:/var/log/${log} ./${node}/ || echo "Файл ${log} не найден на ${node}"
+            ssh $USER@$node test -f /var/log/${log} && scp $USER@$node:/var/log/${log} ./${node}/ || echo "$(tput setaf 3)Файл ${log} не найден на ${node}$(tput sgr 0)"
         done
     done
 
     for node in ${list_of_nodes[@]}
     do
-        ssh $USER@$node test -d /var/log/libvirt/qemu && scp -r $USER@$node:/var/log/libvirt/qemu/ ./vm_logs_${node}
+        ssh $USER@$node test -d /var/log/libvirt/qemu && scp -r $USER@$node:/var/log/libvirt/qemu ./vm_logs_${node}
     done
 }
 #------------------------------------------------------------
@@ -127,7 +127,21 @@ function get_cib
             break
         fi
     done
+}
+#------------------------------------------------------------
+# получить статус ресурсов КВГ
+#------------------------------------------------------------
+function get_resources_status
+{
+    local list=("${!1}")
 
+    for node in ${list[@]}
+    do
+        ssh $USER@$node crm_mon -1
+        if [ $? == 0 ] ; then
+            break
+        fi
+    done
 }
 #------------------------------------------------------------
 # получить cведения о использовании скрипта
@@ -147,6 +161,7 @@ cat << EOF
    -l      Собрать логи с узлов
    -c      Очистить логи (используется принудительный вызов logrotate)
    -r      Получить CIB (необходимо указывать опцию: all, configuration, status)
+   -m      Запросить текущий статус ресурсов кластера
 EOF
 }
 
@@ -159,7 +174,7 @@ if [ -z "$NODES" ]; then
     exit 1
 fi
 
-while getopts “ht:l:r:s:c” OPTION
+while getopts “ht:l:r:s:cm” OPTION
 do
      case $OPTION in
          h)
@@ -183,6 +198,9 @@ do
              ;;
          c)
 	     cleanup_logs NODES[@]
+             ;;
+         m)
+             get_resources_status NODES[@]
              ;;
          ?)
              usage
