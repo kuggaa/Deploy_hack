@@ -58,6 +58,7 @@
       <clone id="glusterd">
         <meta_attributes id="glusterd-meta_attributes">
           <nvpair id="glusterd-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="glusterd-meta_attributes-interleave" name="interleave" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="demon" provider="heartbeat" type="glusterd">
           <operations id="demon-operations">
@@ -68,6 +69,7 @@
       <clone id="gluster_volume">
         <meta_attributes id="gluster_volume-meta_attributes">
           <nvpair id="gluster_volume-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="gluster_volume-meta_attributes-interleave" name="interleave" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="volume_demon" provider="heartbeat" type="volume">
           <operations id="volume_demon-operations">
@@ -81,10 +83,11 @@
       <clone id="mount_gluster">
         <meta_attributes id="mount_gluster-meta_attributes">
           <nvpair id="mount_gluster-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="mount_gluster-meta_attributes-interleave" name="interleave" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="gluster_dest" provider="heartbeat" type="Filesystem">
           <operations id="gluster_dest-operations">
-            <op id="gluster_dest-op-monitor-20" interval="20" name="monitor" timeout="40"/>
+            <op id="gluster_dest-op-monitor-20" interval="20" name="monitor" on-fail="restart" timeout="40"/>
           </operations>
           <instance_attributes id="gluster_dest-instance_attributes">
             <nvpair id="gluster_dest-instance_attributes-device" name="device" value="{{ extra_settings.path_to_config }}/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
@@ -128,6 +131,7 @@
       <clone id="{{ resource_id.ald_client }}">
         <meta_attributes id="{{ resource_id.ald_client }}-meta_attributes">
           <nvpair id="{{ resource_id.ald_client }}-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="{{ resource_id.ald_client }}-meta_attributes-interleave" name="interleave" value="true"/>
         </meta_attributes>
         <group id="ald_client">
           <primitive class="lsb" id="krb5-kdc_rsc" type="krb5-kdc">
@@ -214,6 +218,7 @@
       <clone id="rdp_server_clone">
         <meta_attributes id="rdp_server_clone-meta_attributes">
           <nvpair id="rdp_server_clone-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="rdp_server_clone-meta_attributes-interleave" name="interleave" value="true"/>
         </meta_attributes>
         <primitive class="lsb" id="rdp_server" type="xrdp">
           <operations id="rdp_server-operations">
@@ -224,6 +229,7 @@
       <clone id="ald_backup_timetable">
         <meta_attributes id="ald_backup_timetable-meta_attributes">
           <nvpair id="ald_backup_timetable-meta_attributes-target-role" name="target-role" value="Started"/>
+          <nvpair id="ald_backup_timetable-meta_attributes-interleave" name="interleave" value="true"/>
         </meta_attributes>
         <primitive class="ocf" id="ald_backup_cron_task" provider="heartbeat" type="symlink">
           <operations id="ald_backup_cron_task-operations">
