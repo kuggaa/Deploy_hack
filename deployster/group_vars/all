@@ -6,7 +6,7 @@ fencing:
     ipmi: true
     pdu: true
 
-# !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_connections
+# !ВНИМАНИЕ! имена и количество узлов в переменных nodes_ip, nodes_ip_ipmi, pdu_fencing
 # должны совпадать cо списком узлов в файле stage в разделе [nodes]
 nodes_ip: { hacnode1: 20, hacnode2: 21, hacnode3: 22 }
 #nodes_ip: { 'vnode-1': 80, 'vnode-2': 81, 'vnode-3': 82 }
@@ -16,12 +16,12 @@ ipmi:
   login: 'ADMIN'
   password: 'ADMINADMIN'
 
-# Значения в словаре - это номер розетки на pdu, к которой подключен сервер,
-# если pdu дублируются, то узлы должны быть подключены семмитрично, т.е. hacnode1 к 1 розетке на обоих pdu.
-pdu_connections: { hacnode1: 1, hacnode2: 2, hacnode3: 3 }
-
-# Настройки PDU: имя и последняя цифра ip-адреса
-pdu: { pdu_1: 1, pdu_2: 2 }
+# Настройка PDU
+# Значения в словаре для ключа pdu это последние цифры ip адреса устройств\устройства
+# для ключа nodes пары host-имя и номер розетки к которым подключен узел с данным host-именем
+# если в pdu кол-во устройств больше одного, то узлы должны быть подключены семмитрично, т.е. hacnode1 к 1 розетке на всех pdu.
+pdu_fencing:
+  - { pdu: [1, 2], nodes: { hacnode1 : 1, hacnode2 : 2, hacnode3 : 3 } }
 
 repository:
     # Адрес репозитория с дистрибутивом Астры версии 1.3
@@ -86,4 +86,3 @@ dirs:
     ald_env_users: '{{ gluster.mount_point }}/users'
     backup_default_path: '/root/ald_backup'
     path_to_cron_file: '{{ gluster.mount_point }}/ald_backup'
-

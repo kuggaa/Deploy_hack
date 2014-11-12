@@ -20,23 +20,11 @@
      with_items: groups.remove_nodes
      ignore_errors: yes
 
-   - name: остановка fenceapc ресурсов
-     command: 'crm -F resource stop fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
-     with_nested:
-        - groups.remove_nodes
-        - pdu.keys()
-        - ['on', 'off']
-     ignore_errors: yes
+   - name: создание сценария для остановки и удаления pdu ресурсов
+     template: src=remove_pdu_fencing.sh.j2 dest=/tmp/remove_pdu_fencing.sh mode=0775
 
-   - name: ожидание остановки fenceapc ресурсов
-     pause: seconds=60
-
-   - name: удаление fenceapc ресурсов
-     command: 'crm -F configure delete fence_{{ item.0 }}_{{ item.1 }}_{{ item.2 }}'
-     with_nested:
-        - groups.remove_nodes
-        - pdu.keys()
-        - ['on', 'off']
+   - name: выполнение сценария остановки и удаления pdu ресурсов
+     command: /tmp/remove_pdu_fencing.sh
      ignore_errors: yes
 
    - name: удаление fence_topology

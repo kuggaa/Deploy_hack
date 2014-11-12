@@ -42,4 +42,3 @@
             owner={{ ald.users.admin.login }} group={{ ald.users.admin.group }}
       when: inventory_hostname in groups.admin_stations
 
-

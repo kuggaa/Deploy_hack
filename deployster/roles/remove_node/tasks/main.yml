@@ -9,6 +9,5 @@
     - name: ожидание выполнения операции перевода в standby
       pause: seconds=60
 
-    - name: исключение corosync на удаляемых узлах из автозагрузки
+    - name: исключение corosync на удаляемых узлах из автозагрузки и остановка
       service: name=corosync enabled=no state=stopped
-

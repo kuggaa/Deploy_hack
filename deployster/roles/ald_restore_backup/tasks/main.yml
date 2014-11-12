@@ -37,6 +37,6 @@
       command: crm -F resource start {{ resource_id.ald_server }}
       when: inventory_hostname == common.master_node
       
-    - name: ожидание восстановления ALD...
+    - name: ожидание восстановления ALD
       pause: seconds=60   
 

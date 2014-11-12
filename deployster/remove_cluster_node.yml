@@ -27,4 +27,3 @@
   user: root
   roles:
    - { role: uninstall_cluster, tags: uninstall_node }
-

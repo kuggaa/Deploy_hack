@@ -1,0 +1,24 @@
+#!/bin/sh
+{% if pdu_fencing is defined and pdu_fencing%}
+{% for host in groups['remove_nodes'] %}
+{% for row in pdu_fencing %}
+{% if row.pdu is defined and row.pdu and row.nodes is defined and row.nodes and host in row.nodes.iterkeys() %}
+{% for ip in row.pdu %}
+crm -F resource stop fence_{{ host }}_pdu{{ ip }}_off
+crm -F resource stop fence_{{ host }}_pdu{{ ip }}_on
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+sleep 60
+{% for host in groups['remove_nodes'] %}
+{% for row in pdu_fencing %}
+{% if row.pdu is defined and row.pdu and row.nodes is defined and row.nodes and host in row.nodes.iterkeys() %}
+{% for ip in row.pdu %}
+crm -F configure delete fence_{{ host }}_pdu{{ ip }}_off
+crm -F configure delete fence_{{ host }}_pdu{{ ip }}_on
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}

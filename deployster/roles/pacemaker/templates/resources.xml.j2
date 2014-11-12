@@ -19,42 +19,50 @@
           <nvpair id="stonith_{{ host }}-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="reboot"/>
         </instance_attributes>
       </primitive>
-{% for key, value in pdu.iteritems() %}
-      <primitive class="stonith" id="fence_{{ host }}_{{ key }}_on" type="fence_apc_snmp">
-        <meta_attributes id="fence_{{ host }}_{{ key }}_on-meta_attributes">
-          <nvpair id="fence_{{ host }}_{{ key }}_on-meta_attributes-target-role" name="target-role" value="Started"/>
+{% endfor %}
+{% if pdu_fencing is defined and pdu_fencing%}
+{% for row in pdu_fencing %}
+{% if row.pdu is defined and row.pdu and row.nodes is defined and row.nodes %}
+{% for key, value in row.nodes.iteritems() %}
+{% for ip in row.pdu %}
+      <primitive class="stonith" id="fence_{{ key }}_pdu{{ ip }}_on" type="fence_apc_snmp">
+        <meta_attributes id="fence_{{ key }}_pdu{{ ip }}_on-meta_attributes">
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
-        <instance_attributes id="fence_{{ host }}_{{ key }}_on-instance_attributes">
-          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="on"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-port" name="port" value="{{ pdu_connections[host] }}"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}"/>
+        <instance_attributes id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes">
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="on"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-port" name="port" value="{{ value }}"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ key }}"/>
         </instance_attributes>
         <operations>
-          <op id="fence_{{ host }}_{{ key }}_on-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
-          <op id="fence_{{ host }}_{{ key }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_on-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
-      <primitive class="stonith" id="fence_{{ host }}_{{ key }}_off" type="fence_apc_snmp">
-        <meta_attributes id="fence_{{ host }}_{{ key }}_off-meta_attributes">
-          <nvpair id="fence_{{ host }}_{{ key }}_off-meta_attributes-target-role" name="target-role" value="Started"/>
+      <primitive class="stonith" id="fence_{{ key }}_pdu{{ ip }}_off" type="fence_apc_snmp">
+        <meta_attributes id="fence_{{ key }}_pdu{{ ip }}_off-meta_attributes">
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
-        <instance_attributes id="fence_{{ host }}_{{ key }}_off-instance_attributes">
-          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="off"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-port" name="port" value="{{ pdu_connections[host] }}"/>
-          <nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ host }}"/>
-         {% if loop.last %}<nvpair id="fence_{{ host }}_{{ key }}_off-instance_attributes-power_wait" name="power_wait" value="5"/>{% endif %}
+        <instance_attributes id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes">
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="off"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-port" name="port" value="{{ value }}"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ key }}"/>
+         {% if loop.last %}<nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-power_wait" name="power_wait" value="5"/>{% endif %}
         </instance_attributes>
         <operations>
-          <op id="fence_{{ host }}_{{ key }}_off-monitor-60s" interval="60s" name="monitor"/>
-          <op id="fence_{{ host }}_{{ key }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
-          <op id="fence_{{ host }}_{{ key }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_off-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
       </primitive>
 {% endfor %}
 {% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
       <clone id="glusterd">
         <meta_attributes id="glusterd-meta_attributes">
           <nvpair id="glusterd-meta_attributes-target-role" name="target-role" value="Started"/>

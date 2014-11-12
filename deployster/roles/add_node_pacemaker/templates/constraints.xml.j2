@@ -1,12 +1,15 @@
 <constraints>
 {% for host in groups['new_nodes'] %}
       <rsc_location id="stonith_{{ host }}_loc" node="{{ host }}" rsc="stonith_{{ host }}" score="-INFINITY"/>
-{% endfor %}      
-{% for host in groups['new_nodes'] %}
-{% for key in pdu.iterkeys() %}
-      <rsc_location id="fence_loc_off_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_off" score="-INFINITY"/>
 {% endfor %}
-{% for key in pdu.iterkeys() %}
-      <rsc_location id="fence_loc_on_{{ host }}_{{ key }}" node="{{ host }}" rsc="fence_{{ host }}_{{ key }}_on" score="-INFINITY"/>
-{% endfor %}{% endfor %}
+{% if pdu_fencing is defined and pdu_fencing%}
+{% for row in pdu_fencing %}
+{% if row.pdu is defined and row.pdu and row.nodes is defined and row.nodes %}
+{% for host in row.nodes.iterkeys() %}
+{% for ip in row.pdu %}
+      <rsc_location id="fence_loc_off_{{ host }}_pdu{{ ip }}" node="{{ host }}" rsc="fence_{{ host }}_pdu{{ ip }}_off" score="-INFINITY"/>
+{% endfor %}
+{% for ip in row.pdu %}
+      <rsc_location id="fence_loc_on_{{ host }}_pdu{{ ip }}" node="{{ host }}" rsc="fence_{{ host }}_pdu{{ ip }}_on" score="-INFINITY"/>
+{% endfor %}{% endfor %}{% endif %}{% endfor %}{% endif %}
 </constraints>

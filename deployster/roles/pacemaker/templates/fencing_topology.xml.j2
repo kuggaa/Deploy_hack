@@ -1,7 +1,9 @@
 <fencing-topology>
 {% for host in groups['nodes'] %}
+{% if pdu_fencing is defined and pdu_fencing%}
+{% for row in pdu_fencing %}
+{% if row.pdu is defined and row.pdu and row.nodes is defined and row.nodes and host in row.nodes.iterkeys() %}
       <fencing-level devices="stonith_{{ host }}" id="fencing-{{ host }}-level-1" index="1" target="{{ host }}"/>
-      <fencing-level devices="{% for key in pdu.iterkeys() %}fence_{{ host }}_{{ key }}_off,{% endfor %}{% for key in pdu.iterkeys() %}fence_{{ host }}_{{ key }}_on{% if not loop.last %},{% endif %}{% endfor %}" id="fencing-{{ host }}-level-2" index="2" target="{{ host }}"/>
-{% endfor %}
+      <fencing-level devices="{% for ip in row.pdu %}fence_{{ host }}_pdu{{ ip }}_off,{% endfor %}{% for ip in row.pdu %}fence_{{ host }}_pdu{{ ip }}_on{% if not loop.last %},{% endif %}{% endfor %}" id="fencing-{{ host }}-level-2" index="2" target="{{ host }}"/>
+{% endif %}{% endfor %}{% endif %}{% endfor %}
 </fencing-topology>
-
