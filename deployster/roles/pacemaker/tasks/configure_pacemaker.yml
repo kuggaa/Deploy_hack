@@ -22,6 +22,9 @@
     - name: установка значения по-умолчанию свойства resource-stickiness для ресурсов
       command: crm_attribute --type rsc_defaults --attr-name resource-stickiness --attr-value 500
 
+    - name: установка значения по-умолчанию timeout операций для ресурсов
+      command: crm_attribute --type op_defaults --attr-name timeout --attr-value 130s
+
     - name: копирование файла c командами сibadmin
       copy: src=pacemaker.sh dest=/tmp/pacemaker.sh mode=0775
 

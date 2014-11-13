@@ -5,7 +5,7 @@
           <nvpair id="stonith_{{ host }}-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
         <operations id="stonith_{{ host }}-operations">
-          <op id="stonith_{{ host }}-op-monitor-20" interval="20" name="monitor" timeout="20"/>
+          <op id="stonith_{{ host }}-op-monitor-1800" interval="1800" name="monitor" timeout="30"/>
           <op id="stonith_{{ host }}-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
           <op id="stonith_{{ host }}-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
@@ -30,13 +30,13 @@
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
         <instance_attributes id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes">
-          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ ip }}"/>
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="on"/>
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-port" name="port" value="{{ value }}"/>
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_on-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ key }}"/>
         </instance_attributes>
         <operations>
-          <op id="fence_{{ key }}_pdu{{ ip }}_on-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_on-monitor-1800" interval="1800" name="monitor" timeout="30"/>
           <op id="fence_{{ key }}_pdu{{ ip }}_on-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
           <op id="fence_{{ key }}_pdu{{ ip }}_on-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
@@ -46,14 +46,14 @@
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-meta_attributes-target-role" name="target-role" value="Started"/>
         </meta_attributes>
         <instance_attributes id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes">
-          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ value }}"/>
+          <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-ipaddr" name="ipaddr" value="{{ network.control.address }}.{{ ip }}"/>
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-pcmk_reboot_action" name="pcmk_reboot_action" value="off"/>
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-port" name="port" value="{{ value }}"/>
           <nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="{{ key }}"/>
          {% if loop.last %}<nvpair id="fence_{{ key }}_pdu{{ ip }}_off-instance_attributes-power_wait" name="power_wait" value="5"/>{% endif %}
         </instance_attributes>
         <operations>
-          <op id="fence_{{ key }}_pdu{{ ip }}_off-monitor-60s" interval="60s" name="monitor"/>
+          <op id="fence_{{ key }}_pdu{{ ip }}_off-monitor-1800" interval="1800" name="monitor" timeout="30"/>
           <op id="fence_{{ key }}_pdu{{ ip }}_off-op-start-0" interval="0" name="start" on-fail="restart" start-delay="5" timeout="120"/>
           <op id="fence_{{ key }}_pdu{{ ip }}_off-op-stop-0" interval="0" name="stop" timeout="60"/>
         </operations>
@@ -70,7 +70,7 @@
         </meta_attributes>
         <primitive class="ocf" id="demon" provider="heartbeat" type="glusterd">
           <operations id="demon-operations">
-            <op id="demon-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+            <op id="demon-op-monitor-60" interval="60" name="monitor" timeout="20"/>
           </operations>
         </primitive>
       </clone>
@@ -81,7 +81,7 @@
         </meta_attributes>
         <primitive class="ocf" id="volume_demon" provider="heartbeat" type="volume">
           <operations id="volume_demon-operations">
-            <op id="volume_demon-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+            <op id="volume_demon-op-monitor-60" interval="60" name="monitor" timeout="20"/>
           </operations>
           <instance_attributes id="volume_demon-instance_attributes">
             <nvpair id="volume_demon-instance_attributes-volname" name="volname" value="{{ gluster.volume }}"/>
@@ -95,7 +95,7 @@
         </meta_attributes>
         <primitive class="ocf" id="gluster_dest" provider="heartbeat" type="Filesystem">
           <operations id="gluster_dest-operations">
-            <op id="gluster_dest-op-monitor-20" interval="20" name="monitor" on-fail="restart" timeout="40"/>
+            <op id="gluster_dest-op-monitor-40" interval="40" name="monitor" on-fail="restart" timeout="40"/>
           </operations>
           <instance_attributes id="gluster_dest-instance_attributes">
             <nvpair id="gluster_dest-instance_attributes-device" name="device" value="{{ extra_settings.path_to_config }}/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
@@ -115,7 +115,7 @@
           <nvpair id="vm_template-meta_attributes-allow-migrate" name="allow-migrate" value="true"/>
         </meta_attributes>
         <operations id="vm_template-operations">
-          <op id="vm_template-op-monitor-10" interval="10" name="monitor" timeout="30"/>
+          <op id="vm_template-op-monitor-40" interval="40" name="monitor" timeout="30"/>
           <op id="vm_template-op-start-0-0" interval="0" name="start" timeout="120"/>
           <op id="vm_template-op-stop-0" interval="0" name="stop" timeout="120"/>
           <op id="vm_template-op-migrate_from-0" interval="0" name="migrate_from" timeout="120"/>
@@ -144,32 +144,32 @@
         <group id="ald_client">
           <primitive class="lsb" id="krb5-kdc_rsc" type="krb5-kdc">
             <operations id="krb5-kdc_rsc-operations">
-              <op id="krb5-kdc_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+              <op id="krb5-kdc_rsc-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             </operations>
           </primitive>
           <primitive class="lsb" id="krb5-prop_rsc" type="krb5-prop">
             <operations id="krb5-prop_rsc-operations">
-              <op id="krb5-prop_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+              <op id="krb5-prop_rsc-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             </operations>
           </primitive>
           <primitive class="lsb" id="nscd_rcs" type="nscd">
             <operations id="nscd_rcs-operations">
-              <op id="nscd_rcs-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+              <op id="nscd_rcs-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             </operations>
           </primitive>
           <primitive class="lsb" id="nslcd_rcs" type="nslcd">
             <operations id="nslcd_rcs-operations">
-              <op id="nslcd_rcs-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+              <op id="nslcd_rcs-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             </operations>
           </primitive>
           <primitive class="lsb" id="aldcd_rcs" type="aldcd">
             <operations id="aldcd_rcs-operations">
-              <op id="aldcd_rcs-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+              <op id="aldcd_rcs-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             </operations>
           </primitive>
           <primitive class="lsb" id="apache" type="apache2">
             <operations id="apache-operations">
-              <op id="apache-op-monitor-15" interval="15" name="monitor" timeout="30"/>
+              <op id="apache-op-monitor-50" interval="50" name="monitor" timeout="30"/>
             </operations>
           </primitive>
         </group>
@@ -177,7 +177,7 @@
       <group id="{{ resource_id.ald_server }}">
         <primitive class="ocf" id="hac_cntrl_ip" provider="heartbeat" type="IPaddr2">
           <operations id="hac_cntrl_ip-operations">
-            <op id="hac_cntrl_ip-op-monitor-10" interval="10" name="monitor" timeout="20"/>
+            <op id="hac_cntrl_ip-op-monitor-100" interval="100" name="monitor" timeout="20"/>
             <op id="hac_cntrl_ip-op-start-0" interval="0" name="start" timeout="30"/>
             <op id="hac_cntrl_ip-op-stop-0" interval="0" name="stop" timeout="20"/>
           </operations>
@@ -192,14 +192,14 @@
         </meta_attributes>
         <primitive class="lsb" id="krb5-admin-server_rsc" type="krb5-admin-server">
           <operations id="krb5-admin-server_rsc-operations">
-            <op id="krb5-admin-server_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="krb5-admin-server_rsc-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             <op id="krb5-admin-server_rsc-op-start-0" interval="0" name="start" timeout="60"/>
             <op id="krb5-admin-server_rsc-op-stop-0" interval="0" name="stop" timeout="60"/>
           </operations>
         </primitive>
         <primitive class="ocf" id="ldap_db_mount" provider="heartbeat" type="Filesystem">
           <operations id="ldap_db_mount-operations">
-            <op id="ldap_db_mount-op-monitor-20" interval="20" name="monitor" timeout="40"/>
+            <op id="ldap_db_mount-op-monitor-60" interval="60" name="monitor" timeout="40"/>
             <op id="ldap_db_mount-op-start-0" interval="0" name="start" timeout="60"/>
             <op id="ldap_db_mount-op-stop-0" interval="0" name="stop" timeout="60"/>
           </operations>
@@ -212,14 +212,14 @@
         </primitive>
         <primitive class="lsb" id="slapd_rsc" type="slapd">
           <operations id="slapd_rsc-operations">
-            <op id="slapd_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="slapd_rsc-op-monitor-50" interval="50" name="monitor" timeout="15"/>
             <op id="slapd_rsc-op-start-0" interval="0" name="start" timeout="60"/>
             <op id="slapd_rsc-op-stop-0" interval="0" name="stop" timeout="60"/>
           </operations>
         </primitive>
         <primitive class="lsb" id="aldd_rsc" type="aldd">
           <operations id="aldd_rsc-operations">
-            <op id="aldd_rsc-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="aldd_rsc-op-monitor-50" interval="50" name="monitor" timeout="15"/>
           </operations>
         </primitive>
       </group>
@@ -230,7 +230,7 @@
         </meta_attributes>
         <primitive class="lsb" id="rdp_server" type="xrdp">
           <operations id="rdp_server-operations">
-            <op id="rdp_server-op-monitor-15" interval="15" name="monitor" timeout="15"/>
+            <op id="rdp_server-op-monitor-80" interval="80" name="monitor" timeout="15"/>
           </operations>
         </primitive>
       </clone>
