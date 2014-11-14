@@ -19,10 +19,10 @@
     - name: настройка конфигурационных файлов ПК Управления
       template: src={{ item }}.j2 dest=/etc/hac-control/{{ item }}
       with_items: ['hac.conf', 'infrastructure.conf', 'policy.conf']
-      
+
     - name: настройка файлов с шаблонами команд для ПК Управления
       template: src={{ item }}.j2 dest=/etc/hac-control/commands/{{ item }} mode=0644
-      with_items: ['virt_install_cmd']
+      with_items: ['virt_install_cmd', 'on_total_sutdown_cmd']
 
     - name: настройка конфигурационных файлов apache2 для ПК Управления
       template: src=hac-control.j2 dest=/etc/apache2/sites-available/hac-control
@@ -38,9 +38,3 @@
       template: src=ald_backup.j2 dest={{ dirs.path_to_cron_file }}
                 mode=0644 owner=root group=root
       when: inventory_hostname == common.master_node
-
-# Ссылка создается как ресурс кластера для корректного выключения КВГ
-#    - name: создание ccылок на cron файла из /etc/cron.d
-#      file: src={{ dirs.path_to_cron_file }} dest=/etc/cron.d/ald_backup state=link
-#            mode=0644 owner=root group=root
-
