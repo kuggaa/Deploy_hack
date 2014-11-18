@@ -22,10 +22,30 @@
       when: inventory_hostname == common.master_node
       any_errors_fatal: true
 
+    - name: устанавливаем timeouts
+      command: gluster volume set {{ gluster.volume }} network.ping-timeout {{ extra_settings.ping_timeout }}
+      when: inventory_hostname == common.master_node
+      ignore_errors: true
+ 
     - name: выключение NFS
       command: gluster volume set {{ gluster.volume }} nfs.disable on
       when: inventory_hostname == common.master_node and gluster.type_mount == 'glusterfs'
       ignore_errors: true
+
+    - name: установка кворума для pool
+      command: gluster volume set all cluster.server-quorum-ratio 51%
+      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
+
+    - name: установка типа кворума для glusterfs
+      command: gluster volume set {{ gluster.volume }} cluster.quorum-type {{ extra_settings.quorum_type }}
+      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
+
+    - name: установка размера кворума для glusterfs
+      command: gluster volume set {{ gluster.volume }} cluster.quorum-count {{ (groups['nodes']|count/2)|round|int }}
+      when: inventory_hostname == common.master_node
+      any_errors_fatal: true
 
     - name: запуск тома
       command: gluster volume start {{ gluster.volume }}

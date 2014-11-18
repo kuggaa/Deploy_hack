@@ -11,13 +11,17 @@ password = {{ ipmi.password }}
 {% endif %}
 
 # PDU devices.
-{% if fencing.pdu %}
-{% for key, value in pdu.iteritems() %}
-
-[pdu:{{ key }}]
-ip = {{ network.control.address }}.{{ value }}
-{% for key, value in pdu_connections.iteritems() %}
+{% if pdu_fencing is defined and pdu_fencing%}
+{% for row in pdu_fencing %}
+{% if row.pdu is defined and row.pdu and row.nodes is defined and row.nodes %}
+{% for ip in row.pdu %}
+[pdu:pdu_{{ ip }}]
+ip = {{ network.control.address }}.{{ ip }}
+{% for key, value in row.nodes.iteritems() %}
 outlet{{ value }} = {{ key }}
 {% endfor %}
+
+{% endfor %}
+{% endif %}
 {% endfor %}
 {% endif %}

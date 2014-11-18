@@ -3,3 +3,5 @@ extra_settings:
   path_to_config: '/etc'
   # Для glusterfs >= 3.3 должно быть true и false для glusterfs < 3.3
   custom_port: true
+  quorum_type: fixed
+  ping_timeout: 20
