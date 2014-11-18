@@ -22,7 +22,7 @@
 
     - name: настройка файлов с шаблонами команд для ПК Управления
       template: src={{ item }}.j2 dest=/etc/hac-control/commands/{{ item }} mode=0644
-      with_items: ['virt_install_cmd', 'on_total_sutdown_cmd']
+      with_items: ['virt_install_cmd', 'on_total_shutdown_cmd']
 
     - name: настройка конфигурационных файлов apache2 для ПК Управления
       template: src=hac-control.j2 dest=/etc/apache2/sites-available/hac-control
