@@ -95,10 +95,11 @@
         </meta_attributes>
         <primitive class="ocf" id="gluster_dest" provider="heartbeat" type="Filesystem">
           <operations id="gluster_dest-operations">
-            <op id="gluster_dest-op-monitor-40" interval="40" name="monitor" on-fail="{{ cluster_fs.on_fail_operation }}" timeout="40"/>
+            <op id="gluster_dest-op-monitor-40" interval="40" name="monitor" on-fail="{{ cluster_fs.on_fail_operation }}" timeout="40">
             <instance_attributes id="gluster_dest-op-monitor-40-instance_attributes">
               <nvpair id="gluster_dest-op-monitor-40-instance_attributes-OCF_CHECK_LEVEL" name="OCF_CHECK_LEVEL" value="{{ cluster_fs.check_level }}"/>
             </instance_attributes>
+            </op>
           </operations>
           <instance_attributes id="gluster_dest-instance_attributes">
             <nvpair id="gluster_dest-instance_attributes-device" name="device" value="{{ extra_settings.path_to_config }}/glusterd/vols/{{ gluster.volume }}/{{ gluster.volume }}-fuse.vol"/>
@@ -106,7 +107,7 @@
             <nvpair id="gluster_dest-instance_attributes-fstype" name="fstype" value="glusterfs"/>
             <nvpair id="gluster_dest-instance_attributes-options" name="options" value="defaults,_netdev"/>
             <nvpair id="gluster_dest-instance_attributes-force_clones" name="force_clones" value="true"/>
-	    <nvpair id="gluster_dest-instance_attributes-run_fsck" name="run_fsck" value="no"/>
+            <nvpair id="gluster_dest-instance_attributes-run_fsck" name="run_fsck" value="no"/>
           </instance_attributes>
           <meta_attributes id="gluster_dest-meta_attributes">
             <nvpair id="gluster_dest-meta_attributes-target-role" name="target-role" value="Started"/>
