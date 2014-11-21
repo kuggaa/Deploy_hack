@@ -10,3 +10,12 @@ resource_id:
    ald_client: 'ald_clientside'
    ald_server: 'ald_server'
 
+cluster_fs:
+   # Допустимые значения
+   # 0(проверка, что том смонтирован)
+   # 10(проверка, что позволяется операция чтения данных с тома)
+   # 20(проверка, что позволяется операция записи данных на том)
+   check_level: 0
+   # Допустимые значения смотрите в документации Pacemaker (5.7.1. Monitoring Resources for Failure)
+   on_fail_operation: 'stop'
+
