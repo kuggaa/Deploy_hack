@@ -28,6 +28,16 @@
 
     - name: восстановление ALD
       command: bash -c 'ald-init restore-backup -f --no-stop'
+      any_errors_fatal: true
+
+    - name: создание каталога LDAP на общем хранилище
+      file: path={{ gluster.mount_point }}/ldap state=directory
+            owner=openldap group=openldap mode=0700
+      when: inventory_hostname == common.master_node
+
+    - name: перенос на Gluster восстановленной базы LDAP
+      command: cp -pfR /var/lib/ldap {{ gluster.mount_point }}
+      when: inventory_hostname == common.master_node
 
     - name: запуск ресурса КВГ управляющего клиентской частью ALD
       command: crm -F resource start {{ resource_id.ald_client }}
